@@ -13,7 +13,7 @@ final public class pathvariables {
     public String getrdf() { return this.rdffolder; }
     public String getgraph() { return this.graphfolder; }
     private void setpaths() throws IOException{
-        BufferedReader in = new BufferedReader(new FileReader("/home/enigmatus/NetBeansProjects/test/KeywordSearch/conf/keywordsearch.properties"));
+        BufferedReader in = new BufferedReader(new FileReader("conf/keywordsearch.properties"));
         String line="";
         while((line=in.readLine())!=null){
             if(line.contains("#")||line.equals("")){

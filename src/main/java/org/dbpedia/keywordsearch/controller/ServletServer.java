@@ -96,18 +96,18 @@ public class ServletServer extends HttpServlet {
         long startClusterTime = System.currentTimeMillis();
         /*Indexing of classes*/
         try {
-            esnode.lemoncluster("/home/enigmatus/NetBeansProjects/test/KeywordSearch/resources/dbpedia_3Eng_class.ttl", "classes");
+            esnode.lemoncluster("resources/dbpedia_3Eng_class.ttl", "classes");
 
             /*Indexing of Properties*/
-            esnode.lemoncluster("/home/enigmatus/NetBeansProjects/test/KeywordSearch/resources/dbpedia_3Eng_property.ttl", "properties");
+            esnode.lemoncluster("resources/dbpedia_3Eng_property.ttl", "properties");
 
             /*Enriching them with surfaceforms*/
-            esnode.rdfcluster("/home/enigmatus/NetBeansProjects/test/KeywordSearch/resources/en_surface_forms.ttl", "surfaceforms");
+            esnode.rdfcluster("resources/en_surface_forms.ttl", "surfaceforms");
 
             /*Indexing DBpedia labels*/
-            esnode.rdfcluster("/home/enigmatus/NetBeansProjects/test/KeywordSearch/resources/dbpedia_labels.ttl", "dbpedialabels");
+            esnode.rdfcluster("resources/dbpedia_labels.ttl", "dbpedialabels");
 
-            esnode.datatypeindex("/home/enigmatus/NetBeansProjects/test/KeywordSearch/resources/datatypes", "datatypes");
+            esnode.datatypeindex("resources/datatypes", "datatypes");
             long endClustertime = System.currentTimeMillis();
         } catch (IOException ex) {
             Logger.getLogger(ServletServer.class.getName()).log(Level.SEVERE, null, ex);
