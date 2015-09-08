@@ -1,10 +1,12 @@
 package org.dbpedia.keywordsearch.ngramgenerator;
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.dbpedia.keywordsearch.datastructures.NGramStruct;
 import org.dbpedia.keywordsearch.ngramgenerator.interfaces.NGramInterface;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 
 public class NGramTest {

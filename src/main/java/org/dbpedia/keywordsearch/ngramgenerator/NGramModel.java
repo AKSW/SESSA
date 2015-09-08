@@ -1,8 +1,9 @@
 package org.dbpedia.keywordsearch.ngramgenerator;
-import org.dbpedia.keywordsearch.datastructures.NGramStruct;
-import org.dbpedia.keywordsearch.datastructures.ListFunctions;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.dbpedia.keywordsearch.datastructures.ListFunctions;
+import org.dbpedia.keywordsearch.datastructures.NGramStruct;
 import org.dbpedia.keywordsearch.ngramgenerator.interfaces.NGramInterface;
 
 /* This is the class for creating Ngram hierarchies out of the given query */

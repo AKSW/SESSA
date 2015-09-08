@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.dbpedia.keywordsearch.datastructures.BlacklistDataStruct;
 import org.dbpedia.keywordsearch.datastructures.ListFunctions;
 import org.dbpedia.keywordsearch.datastructures.ResultDataStruct;

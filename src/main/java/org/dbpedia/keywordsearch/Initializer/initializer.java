@@ -1,11 +1,12 @@
 package org.dbpedia.keywordsearch.Initializer;
-import org.dbpedia.keywordsearch.Initializer.interfaces.InitializerInterface;
-import org.dbpedia.keywordsearch.datastructures.ResultDataStruct;
 import java.util.ArrayList;
-import org.dbpedia.keywordsearch.datastructures.NGramStruct;
 import java.util.List;
 import java.util.Map;
+
+import org.dbpedia.keywordsearch.Initializer.interfaces.InitializerInterface;
 import org.dbpedia.keywordsearch.datastructures.MapperDataStruct;
+import org.dbpedia.keywordsearch.datastructures.NGramStruct;
+import org.dbpedia.keywordsearch.datastructures.ResultDataStruct;
 
 /* This is the class for activating the nodes initiiated from the mappings.  */
 public class initializer implements InitializerInterface{

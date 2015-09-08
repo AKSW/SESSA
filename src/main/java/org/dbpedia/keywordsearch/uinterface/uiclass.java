@@ -1,19 +1,17 @@
 package org.dbpedia.keywordsearch.uinterface;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import org.dbpedia.keywordsearch.Initializer.initializer;
 import org.dbpedia.keywordsearch.datastructures.ListFunctions;
 import org.dbpedia.keywordsearch.datastructures.ResultDataStruct;
 import org.dbpedia.keywordsearch.importer.neo4j;
-import org.dbpedia.keywordsearch.serverproperties.pathvariables;
 import org.dbpedia.keywordsearch.indexer.ESNode;
-import org.dbpedia.keywordsearch.indexer.Interface.IndexerInterface;
 import org.dbpedia.keywordsearch.ngramgenerator.NGramModel;
 import org.dbpedia.keywordsearch.propagator.propagator;
+import org.dbpedia.keywordsearch.serverproperties.pathvariables;
 import org.dbpedia.keywordsearch.urimapper.Mapper;
 import org.elasticsearch.search.SearchHit;
 import org.neo4j.graphdb.GraphDatabaseService;

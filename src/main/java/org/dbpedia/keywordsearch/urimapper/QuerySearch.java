@@ -4,6 +4,7 @@ package org.dbpedia.keywordsearch.urimapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.dbpedia.keywordsearch.Initializer.EnergyFactory;
 import org.dbpedia.keywordsearch.Initializer.interfaces.EnergyFunction;
 import org.dbpedia.keywordsearch.datastructures.NGramStruct;

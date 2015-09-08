@@ -2,6 +2,7 @@
 package org.dbpedia.keywordsearch.importer.interfaces;
 
 import java.io.IOException;
+
 import org.neo4j.graphdb.GraphDatabaseService;
 
 public interface GDBInterface {

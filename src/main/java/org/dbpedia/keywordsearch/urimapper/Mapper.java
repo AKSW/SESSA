@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.dbpedia.keywordsearch.Initializer.interfaces.EnergyFunction;
+
 import org.dbpedia.keywordsearch.datastructures.MapperDataStruct;
 import org.dbpedia.keywordsearch.datastructures.NGramStruct;
-import org.dbpedia.keywordsearch.indexer.ESNode;
 import org.dbpedia.keywordsearch.indexer.Interface.IndexerInterface;
 import org.dbpedia.keywordsearch.urimapper.interfaces.MapperInterface;
-import org.elasticsearch.search.SearchHit;
 
 public class Mapper implements MapperInterface{
     private final Map<Integer,MapperDataStruct> mappings=new HashMap<Integer,MapperDataStruct>();

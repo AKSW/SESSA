@@ -1,5 +1,4 @@
 package org.dbpedia.keywordsearch.datastructures; 
-import org.dbpedia.keywordsearch.ngramgenerator.*;
 
 /* This class defines the datastructure for ngrams. The NGram Generator will return a list of this datastructure*/
 public class NGramStruct {

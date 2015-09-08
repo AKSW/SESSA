@@ -10,9 +10,17 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 
 import org.dbpedia.keywordsearch.indexer.Interface.IndexerInterface;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
+import org.elasticsearch.action.bulk.BulkProcessor;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.unit.ByteSizeUnit;
+import org.elasticsearch.common.unit.ByteSizeValue;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.node.Node;
@@ -28,8 +36,10 @@ public class ESNode implements IndexerInterface {
 	private static Logger log = LoggerFactory.getLogger(ESNode.class);
 	private Node node;
 	private Client client;
+	// this may lead to corruption in multi thread environment
 	private String indexname;
 	private String baseURI;
+	private BulkProcessor bulkProcessor;
 
 	public void startCluster(String clustername) {
 		/* Initialization of cluster */
@@ -37,32 +47,60 @@ public class ESNode implements IndexerInterface {
 				.node();
 		/* Starting the central server */
 		this.client = this.node.client();
+
 		/* Base URI for Parsing */
 		this.baseURI = "http://dbpedia.org/resource";
+
+		/* Prepare Bulk Load */
+		this.bulkProcessor = BulkProcessor.builder(client, new BulkProcessor.Listener() {
+			@Override
+			public void beforeBulk(long executionId, BulkRequest request) {
+				log.debug("Before Bulk");
+			}
+
+			@Override
+			public void afterBulk(long executionId, BulkRequest request, BulkResponse response) {
+				log.debug("After Bulk. Bulk took: " + response.took());
+			}
+
+			@Override
+			public void afterBulk(long executionId, BulkRequest request, Throwable failure) {
+				log.error("After Bulk", failure);
+			}
+		})
+				.setBulkActions(100000)
+				.setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB))
+				.setFlushInterval(TimeValue.timeValueSeconds(60))
+				.setConcurrentRequests(0)
+				.build();
 	}
 
-	public void rdfcluster(String labelspath, String path) throws FileNotFoundException, IOException {
-		/* Index name */
-		this.indexname = path;
+	public void rdfcluster(String labelspath, String indexname) throws FileNotFoundException, IOException {
 
-		/* Parsing turtlefile */
-		log.info("Start parsing: " + labelspath);
-		RDFParser parser = new TurtleParser();
-		OnlineStatementHandler osh = new OnlineStatementHandler();
-		parser.setRDFHandler(osh);
-		parser.parse(new FileReader(labelspath), baseURI);
-		log.info("Finished parsing: " + labelspath);
+		if (!client.admin()
+				.indices()
+				.exists(new IndicesExistsRequest(indexname))
+				.actionGet()
+				.exists()) {
+			/* Index name */
+			this.indexname = indexname;
+
+			/* Parsing turtlefile */
+			log.info("Start parsing: " + labelspath);
+			RDFParser parser = new TurtleParser();
+			OnlineStatementHandler osh = new OnlineStatementHandler();
+			parser.setRDFHandler(osh);
+			parser.parse(new FileReader(labelspath), baseURI);
+			log.info("Finished parsing: " + labelspath);
+		}
 	}
 
 	private void addToIndex(String subject, String objectString) throws IOException {
 		/* Indexing the data in the central server */
-		client.prepareIndex(indexname, "mappings")
-				.setSource(jsonBuilder().startObject()
-						.field("uri", subject)
-						.field("label", objectString)
-						.endObject())
-				.execute()
-				.actionGet();
+		bulkProcessor.add(new IndexRequest(indexname, "mappings").source(jsonBuilder().startObject()
+				.field("uri", subject)
+				.field("label", objectString)
+				.endObject()));
 	}
 
 	private class OnlineStatementHandler extends AbstractRDFHandler {
@@ -154,6 +192,11 @@ public class ESNode implements IndexerInterface {
 		SearchHit[] results = retrieved.getHits()
 				.getHits();
 		return results;
+	}
+
+	@Override
+	public void closeBulkLoader() {
+		bulkProcessor.close();
 	}
 
 }
