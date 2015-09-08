@@ -1,2 +1,7 @@
 target/*
- data/DBpediacluster
+data/DBpediacluster
+/target/
+/bin/
+.classpath
+.project
+.settings/*
