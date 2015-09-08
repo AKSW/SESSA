@@ -38,7 +38,7 @@ public class server {
         Socket client = null;
         System.out.println("Starting ES cluster");
         IndexerInterface esnode = new ESNode();
-        esnode.StartCluster("DBpediacluster");
+        esnode.startCluster("DBpediacluster");
        
 //        long startClusterTime = System.currentTimeMillis();
 //        /*Indexing of classes*/

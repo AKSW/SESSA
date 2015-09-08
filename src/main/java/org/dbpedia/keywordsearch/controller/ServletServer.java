@@ -92,14 +92,14 @@ public class ServletServer extends HttpServlet {
     public void init() throws ServletException {
 
         esnode = new ESNode();
-        esnode.StartCluster("DBpedia cluster");
+        esnode.startCluster("DBpedia cluster");
         long startClusterTime = System.currentTimeMillis();
         /*Indexing of classes*/
         try {
-            esnode.lemoncluster("resources/dbpedia_3Eng_class.ttl", "classes");
+            esnode.rdfcluster("resources/dbpedia_3Eng_class.ttl", "classes");
 
             /*Indexing of Properties*/
-            esnode.lemoncluster("resources/dbpedia_3Eng_property.ttl", "properties");
+            esnode.rdfcluster("resources/dbpedia_3Eng_property.ttl", "properties");
 
             /*Enriching them with surfaceforms*/
             esnode.rdfcluster("resources/en_surface_forms.ttl", "surfaceforms");
