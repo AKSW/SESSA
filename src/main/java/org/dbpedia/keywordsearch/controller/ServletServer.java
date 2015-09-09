@@ -114,15 +114,15 @@ public class ServletServer extends HttpServlet {
 			// TODO generate log message
 		}
 		System.out.println("Creating DataBase");
-		long startGDBTime = System.currentTimeMillis();
+
 		this.Instance = new pathvariables();
 		graphdb = new neo4j(this.Instance.getgraph());
-		// todo only load the data once
+		//TODO only load the data once
 		GraphDatabaseService gdb = graphdb.getgdbservice();
 		graphdb.graphdbform(gdb, "resources/mappingbased_properties_en.ttl");
-		System.out.print("finish");
-		long endGDBTime = System.currentTimeMillis();
-		System.out.println("Time Taken to Create GraphDataBase : " + String.valueOf(endGDBTime - startGDBTime));
+		
+		
+		System.out.print("Creating DataBase finished");
 
 	}
 }
