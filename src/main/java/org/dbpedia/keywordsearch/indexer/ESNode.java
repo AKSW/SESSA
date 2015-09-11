@@ -49,7 +49,7 @@ public class ESNode implements IndexerInterface {
 		this.client = this.node.client();
 
 		/* Base URI for Parsing */
-		this.baseURI = "http://dbpedia.org/resource";
+		this.baseURI = "http://dbpedia.org";
 
 		/* Prepare Bulk Load */
 		this.bulkProcessor = BulkProcessor.builder(client, new BulkProcessor.Listener() {

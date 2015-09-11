@@ -16,28 +16,27 @@
 			<version>6.0</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.jena</groupId>
-			<artifactId>jena-core</artifactId>
-			<version>2.13.0</version>
-		</dependency>
+
+		<!-- Graph database -->
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j</artifactId>
 			<version>2.2.1</version>
 		</dependency>
-
+		<!-- Used for utils like lists -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.2</version>
 			<type>jar</type>
 		</dependency>
+		<!-- used to create and parse JSON -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.3.1</version>
 		</dependency>
+		<!-- Enabled Unit testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -75,8 +74,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>

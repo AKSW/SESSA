@@ -6,6 +6,7 @@ import java.io.IOException;
 /* This class sets the pathvariables for the graph database and rdf data*/
 
 /* The paths are set as defined in the server properties file in conf folder */
+//FIXME remove this class and replace it with proper property handling
 final public class pathvariables {
     
     private String rdffolder;
@@ -21,7 +22,7 @@ final public class pathvariables {
             }
             if(line.contains("graph")){
                 int i = line.indexOf("=");
-                this.graphfolder=line.substring(i+1);
+                this.graphfolder=line.substring(i+1).trim();
             }
             else if(line.contains("rdf")){
                 int i = line.indexOf("=");

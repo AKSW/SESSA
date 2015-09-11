@@ -7,3 +7,4 @@ data/DBpediacluster
 .classpath
 .project
 .settings/*
+*.ttl

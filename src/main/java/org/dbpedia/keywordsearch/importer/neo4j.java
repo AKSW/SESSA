@@ -14,17 +14,19 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.util.FileManager;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.Value;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.Rio;
+import org.openrdf.rio.helpers.StatementCollector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /* This is the class for starting the graph database server and creating the graph in it */
 public class neo4j implements GDBInterface {
-
+	private static Logger log = LoggerFactory.getLogger(neo4j.class);
 	private GraphDatabaseService db;
 
 	public neo4j(String graphpath) {
@@ -76,78 +78,69 @@ public class neo4j implements GDBInterface {
 	}
 
 	@Override
-	// FIXME refactor jena out of here
 	public void graphdbform(GraphDatabaseService graphdb, String rdfpath) {
 
-		/* Initialization of triple nodes */
-		Node subjectnode = null;
-		Node objectnode = null;
-		Node predicatenode = null;
+		log.info("Start parsing: " + rdfpath);
+		RDFParser rdfParser = Rio.createParser(RDFFormat.TURTLE);
 
-		/* Getting the iterator on specified rdf files */
-		/* Jena is used for extracting rdf triple from .ttl files */
-		FileManager.get()
-				.addLocatorClassLoader(neo4j.class.getClassLoader());
-		Model model = FileManager.get()
-				.loadModel(rdfpath, null, "TURTLE");
+		org.openrdf.model.Model model = new org.openrdf.model.impl.LinkedHashModel();
+		rdfParser.setRDFHandler(new StatementCollector(model));
 
 		/* Creates an iterator on the rdf triples from the specified file */
-		StmtIterator iter = model.listStatements();
 		ResourceIterator<Node> nodeindex;
 		/* Begining the transaction of creating nodes. Allocating resources */
 		try (Transaction tx = graphdb.beginTx()) {
-			try {
-				while (iter.hasNext()) {
+			/* Initialization of triple nodes */
+			Node subjectnode = null;
+			Node objectnode = null;
+			Node predicatenode = null;
+			for (Statement statement : model) {
 
-					/* Extracting RDF triple nodes from the specified file */
-					Statement stmt = iter.next();
-					Resource s = stmt.getSubject();
-					Resource p = stmt.getPredicate();
-					RDFNode o = stmt.getObject();
-					/* The formation of graph and label nodes */
-					Label subjectlabel = DynamicLabel.label(s.toString());
+				/* Extracting RDF triple nodes from the specified file */
+				Resource s = statement.getSubject();
+				Resource p = statement.getPredicate();
+				Value o = statement.getObject();
+				/* The formation of graph and label nodes */
+				Label subjectlabel = DynamicLabel.label(s.stringValue());
+				Label predicatelabel = DynamicLabel.label(p.stringValue());
+				Label objectlabel = DynamicLabel.label(o.stringValue());
 
-					/* Checking whether the node exists before or not */
-					nodeindex = graphdb.findNodes(subjectlabel);
-					if (!nodeindex.hasNext()) {
-						subjectnode = graphdb.createNode(subjectlabel);
-						subjectnode.setProperty("URI", s.toString());
-					} /* other wise create a new node */
-					else {
-						subjectnode = nodeindex.next();
-					}
-					Label predicatelabel = DynamicLabel.label(p.toString());
-					nodeindex = graphdb.findNodes(predicatelabel);
-					if (!nodeindex.hasNext()) {
-						predicatenode = graphdb.createNode(predicatelabel);
-						predicatenode.setProperty("URI", p.toString());
-					} else {
-						predicatenode = nodeindex.next();
-					}
-					Label objectlabel = DynamicLabel.label(o.toString());
-					nodeindex = graphdb.findNodes(objectlabel);
-					if (!nodeindex.hasNext()) {
-						objectnode = graphdb.createNode(objectlabel);
-						objectnode.setProperty("URI", o.toString());
-					} else {
-						objectnode = nodeindex.next();
-					}
-
-					/* Creating a fact node for each triple */
-					Node factnode = graphdb.createNode();
-
-					/* Establishing relationships of each triple with its fact node */
-					Relationship relationships = factnode.createRelationshipTo(subjectnode, Reltypes.Subject_of);
-					Relationship relationshipp = factnode.createRelationshipTo(predicatenode, Reltypes.Predicate_of);
-					Relationship relationshipo = factnode.createRelationshipTo(objectnode, Reltypes.Object_of);
-
+				/* Checking whether the node exists before or not */
+				nodeindex = graphdb.findNodes(subjectlabel);
+				if (!nodeindex.hasNext()) {
+					subjectnode = graphdb.createNode(subjectlabel);
+					subjectnode.setProperty("URI", s.toString());
+				} /* other wise create a new node */
+				else {
+					subjectnode = nodeindex.next();
 				}
-			} finally {
-				if (iter != null)
-					iter.close();
+				nodeindex = graphdb.findNodes(predicatelabel);
+				if (!nodeindex.hasNext()) {
+					predicatenode = graphdb.createNode(predicatelabel);
+					predicatenode.setProperty("URI", p.toString());
+				} else {
+					predicatenode = nodeindex.next();
+				}
+				nodeindex = graphdb.findNodes(objectlabel);
+				if (!nodeindex.hasNext()) {
+					objectnode = graphdb.createNode(objectlabel);
+					objectnode.setProperty("URI", o.toString());
+				} else {
+					objectnode = nodeindex.next();
+				}
+
+				/* Creating a fact node for each triple */
+				Node factnode = graphdb.createNode();
+
+				/* Establishing relationships of each triple with its fact node */
+				Relationship relationships = factnode.createRelationshipTo(subjectnode, Reltypes.Subject_of);
+				Relationship relationshipp = factnode.createRelationshipTo(predicatenode, Reltypes.Predicate_of);
+				Relationship relationshipo = factnode.createRelationshipTo(objectnode, Reltypes.Object_of);
+
 			}
 			/* Freeing the resources occupied by transaction */
 			tx.success();
 		}
+		log.info("Finished parsing: " + rdfpath);
 	}
 }
