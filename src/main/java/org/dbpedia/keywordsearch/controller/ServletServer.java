@@ -5,13 +5,10 @@
  */
 package org.dbpedia.keywordsearch.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,7 +29,6 @@ import org.dbpedia.keywordsearch.propagator.interfaces.PropagatorInterface;
 import org.dbpedia.keywordsearch.serverproperties.pathvariables;
 import org.dbpedia.keywordsearch.urimapper.Mapper;
 import org.dbpedia.keywordsearch.urimapper.interfaces.MapperInterface;
-import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.neo4j.graphdb.GraphDatabaseService;
 
 import com.google.gson.Gson;

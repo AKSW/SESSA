@@ -35,7 +35,7 @@ public class neo4j implements GDBInterface {
 			this.db = new GraphDatabaseFactory().newEmbeddedDatabase(graphpath);
 		} catch (Exception e) {
 			File file = new File(graphpath + "/tm_tx_log.1");
-			file.delete();
+			file.delete(); 
 		}
 	}
 
