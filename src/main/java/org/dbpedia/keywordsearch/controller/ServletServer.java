@@ -101,7 +101,7 @@ public class ServletServer extends HttpServlet {
 			esnode.rdfcluster("resources/en_surface_forms.ttl", "surfaceforms");
 
 			/* Indexing DBpedia labels */
-			esnode.rdfcluster("resources/dbpedia_labels.ttl", "dbpedialabels");
+			esnode.rdfcluster("resources/labels_en.ttl", "dbpedialabels");
 
 			esnode.datatypeindex("resources/datatypes", "datatypes");
 			
@@ -115,7 +115,8 @@ public class ServletServer extends HttpServlet {
 		graphdb = new neo4j(this.Instance.getgraph());
 		//TODO only load the data once
 		GraphDatabaseService gdb = graphdb.getgdbservice();
-		graphdb.graphdbform(gdb, "resources/mappingbased_properties_en.ttl");
+		graphdb.graphdbform(gdb, "resources/mappingbased_literals_en.ttl");
+		graphdb.graphdbform(gdb, "resources/mappingbased_objects_en.ttl");
 		
 		
 		System.out.print("Creating DataBase finished");
