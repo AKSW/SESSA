@@ -7,14 +7,24 @@ package org.dbpedia.keywordsearch.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory;
+import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
+import org.aksw.jena_sparql_api.http.QueryExecutionHttpWrapper;
+import org.apache.jena.query.Query;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.WebContent;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.dbpedia.keywordsearch.Initializer.initializer;
 import org.dbpedia.keywordsearch.Initializer.interfaces.InitializerInterface;
 import org.dbpedia.keywordsearch.datastructures.ListFunctions;
@@ -29,8 +39,18 @@ import org.dbpedia.keywordsearch.propagator.interfaces.PropagatorInterface;
 import org.dbpedia.keywordsearch.serverproperties.pathvariables;
 import org.dbpedia.keywordsearch.urimapper.Mapper;
 import org.dbpedia.keywordsearch.urimapper.interfaces.MapperInterface;
+import org.dllearner.algorithms.qtl.QueryTreeUtils;
+import org.dllearner.algorithms.qtl.datastructures.impl.RDFResourceTree;
+import org.dllearner.algorithms.qtl.impl.QueryTreeFactory;
+import org.dllearner.algorithms.qtl.impl.QueryTreeFactoryBase;
+import org.dllearner.algorithms.qtl.operations.lgg.LGGGenerator;
+import org.dllearner.algorithms.qtl.operations.lgg.LGGGeneratorSimple;
+import org.dllearner.kb.sparql.ConciseBoundedDescriptionGenerator;
+import org.dllearner.kb.sparql.ConciseBoundedDescriptionGeneratorImpl;
+import org.dllearner.kb.sparql.SymmetricConciseBoundedDescriptionGeneratorImpl;
 import org.neo4j.graphdb.GraphDatabaseService;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 /**
@@ -56,14 +76,58 @@ public class ServletServer extends HttpServlet {
 		PropagatorInterface getFinalResults = new propagator();
 		getFinalResults.PropagateInit(graphdb.getgdbservice(), init.getResultsList());
 		ListFunctions.sortresults(init.getResultsList());
+		
+		//------------------------------------------------------------------Lgg 
+		Set<String> disambiguatedAnswers = init.totalLabellist();
+		LGGGenerator lggGen = new LGGGeneratorSimple();
+		// DBpedia as SPARQL endpoint
+		QueryExecutionFactory qef = FluentQueryExecutionFactory.http("http://dbpedia.org/sparql", Lists.newArrayList("http://dbpedia.org")).config().withPostProcessor(qe -> ((QueryEngineHTTP) ((QueryExecutionHttpWrapper) qe).getDecoratee()).setModelContentType(WebContent.contentTypeRDFXML)).end().create();
+		// CBD generator
+		ConciseBoundedDescriptionGenerator cbdGen = new ConciseBoundedDescriptionGeneratorImpl(qef);
+		cbdGen = new SymmetricConciseBoundedDescriptionGeneratorImpl(qef);
+		QueryTreeFactory qtf = new QueryTreeFactoryBase();
+		
+		
+		
+		int minNrOfExamples = 2;
+		if (disambiguatedAnswers.size() >= minNrOfExamples) {
+			List<RDFResourceTree> trees = new ArrayList<>(disambiguatedAnswers.size());
+			for (String uri : disambiguatedAnswers) {
+				// generate CBD
+				Model cbd = cbdGen.getConciseBoundedDescription(uri);
+				System.out.println("|cbd(" + uri + ")|=" + cbd.size() + " triples");
+				// generate query tree
+				RDFResourceTree tree = qtf.getQueryTree(uri, cbd);
+				trees.add(tree);
+				// System.out.println(tree.getStringRepresentation(true));
+			}
+
+			// compute LGG
+			RDFResourceTree lgg = lggGen.getLGG(trees);
+
+			// SPARQL query
+			Query query = QueryTreeUtils.toSPARQLQuery(lgg);
+
+			// f-measure/accuracy to answer
+			System.out.println(query);
+		//------------------------------------------------------------------Lgg 	
+		}
+		
+		
+		
 		PrintWriter pw = response.getWriter();// get the stream to write the data
 		Map map = new HashMap();
 		pw.write("[");
 		int i;
-		for (i = init.getResultsList()
-				.size() - 1; i >= 0; i--) {
-			ResultDataStruct rds = init.getResultsList()
-					.get(i);
+		System.out.println(" ");
+		System.out.println(" 11111111111111111111111111111111");
+	   	
+    	//System.out.println(json.toString()); 
+		for (i = init.getResultsList().size() - 1; i >= 0; i--) {
+			
+			//JSONArray json = JSONArray.put(init.getResultsList().get(i));
+			
+			ResultDataStruct rds = init.getResultsList().get(i);
 			System.out.println(rds.getURI() + " : " + rds.getImage() + " : " + rds.getEnergyScore());
 			map.put("URI", rds.getURI());
 			map.put("ExpScore", rds.getExplainationScore());
