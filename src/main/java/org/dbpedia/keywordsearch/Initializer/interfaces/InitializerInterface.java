@@ -12,5 +12,6 @@ import org.dbpedia.keywordsearch.datastructures.ResultDataStruct;
 public interface InitializerInterface {
     public void initiate (Map<Integer,MapperDataStruct> urimaps, List<NGramStruct> ngrams);
     public List<ResultDataStruct> getResultsList();
-    public Set<String> totalLabellist();
+    public Set<String> totalUrilist();
+    public void addLggresult();
 }

@@ -35,8 +35,7 @@
 
 
 	
-	
-	
+		
 
 	<dependencies>
 		<dependency>
@@ -97,17 +96,6 @@
 		
 		
 		
-		
-		
-		
-		<!-- QA datasets provided by github.com/aksw/qa-datasets -->
-		<!--<dependency>
-			<groupId>org.aksw.qa</groupId>
-			<artifactId>datasets</artifactId>
-			<version>${qa-datasets.version}</version>
-			<type>pom.lastUpdated</type>
-		</dependency>-->
-		<!-- Reading JSON files -->
 		<dependency>
 			<groupId>javax.json</groupId>
 			<artifactId>javax.json-api</artifactId>
@@ -120,12 +108,7 @@
     		<version>1.0.4</version>
 		</dependency>
 
-		<!--JSON simple for AGDISTIS, refactor to only one json lib -->
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1</version>
-		</dependency>
+
 		<!-- DL-Learner used for LGG -->
 		<dependency>
 			<groupId>org.dllearner</groupId>
@@ -163,21 +146,6 @@
 			<version>2.2.10</version>
 		</dependency>
 
-		  <!--<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-core</artifactId>
-			<version>4.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-analyzers-common</artifactId>
-			<version>4.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-queryparser</artifactId>
-			<version>4.6.0</version>
-		</dependency>-->
 		
 		
 		<dependency>

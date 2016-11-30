@@ -27,7 +27,13 @@ public class ResultDataStruct {
         this.colors.addAll(colors);
     }
    
-    public Double getExplainationScore() {return this.scores.get(0);}
+    public ResultDataStruct(String URI) {
+		// TODO Auto-generated constructor stub
+        this.scores.add(0.0);
+        this.scores.add(0.0);
+        this.URI=URI;
+	}
+	public Double getExplainationScore() {return this.scores.get(0);}
     public Double getEnergyScore() {return this.scores.get(1);}
     public String getURI() {return this.URI;}
     public String getImage() {return this.URIimage;}

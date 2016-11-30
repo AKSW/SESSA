@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
+import org.apache.jena.rdf.model.RDFNode;
 import org.dbpedia.keywordsearch.Initializer.interfaces.InitializerInterface;
 import org.dbpedia.keywordsearch.datastructures.MapperDataStruct;
 import org.dbpedia.keywordsearch.datastructures.NGramStruct;
@@ -28,6 +28,7 @@ public class initializer implements InitializerInterface{
                 EnergyScoreList = entry.getValue().getEnergyScore();
                 LabelList = entry.getValue().getLabelList();
                 totalUrilist = entry.getValue().getURIList();
+
                 /* For each URI in the list of mappings corresponding to respective ngrams, It 
                     activates the node and inserts in the list */
                 for(int i=0;i<URI.size();i++){
@@ -42,16 +43,29 @@ public class initializer implements InitializerInterface{
                     result.setImage("No image");
                     this.propagator.add(result);
                 }
+
         } 
     }
     
     /* Retrieving the activation list */
-    public List<ResultDataStruct> getResultsList(){
-    	  	
+    public List<ResultDataStruct> getResultsList(){   	  	
     	return this.propagator;}
     
-    /* Retrieving the activation list */
-    public Set<String> totalLabellist(){
+    public void addLggresult(){
+		Sparqlquery query = new Sparqlquery();
+		List<RDFNode> lggUrilist = query.getLggUrilist(totalUrilist());
+        for(int i=0;i<lggUrilist.size();i++){
+            
+            /* Activating the new node */
+            ResultDataStruct resultLgg=new ResultDataStruct(lggUrilist.get(i).toString());
+            /* Adding to activated node to the list */
+            resultLgg.setImage("No image");
+            this.propagator.add(resultLgg);
+        }
+    }
+    
+    /* Set Uri list */
+    public Set<String> totalUrilist(){
     	Set<String> h = new HashSet<>(totalUrilist);  
     	   return h;
     	}
