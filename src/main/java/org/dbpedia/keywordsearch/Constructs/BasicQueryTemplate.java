@@ -5,12 +5,80 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.dllearner.algorithms.qtl.*;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import org.apache.jena.datatypes.RDFDatatype;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.Syntax;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.reasoner.Reasoner;
+import org.apache.jena.reasoner.ReasonerRegistry;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.sparql.expr.*;
+import org.apache.jena.sparql.serializer.SerializationContext;
+import org.apache.jena.sparql.util.FmtUtils;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 import org.dllearner.algorithms.qtl.QueryTreeUtils;
+import org.dllearner.algorithms.qtl.datastructures.NodeInv;
+import org.dllearner.algorithms.qtl.datastructures.QueryTree;
+import org.dllearner.algorithms.qtl.datastructures.impl.GenericTree;
+import org.dllearner.algorithms.qtl.datastructures.impl.QueryTreeImpl.LiteralNodeConversionStrategy;
+import org.dllearner.algorithms.qtl.datastructures.impl.QueryTreeImpl.LiteralNodeSubsumptionStrategy;
+import org.dllearner.algorithms.qtl.datastructures.impl.RDFResourceTree;
+import org.dllearner.algorithms.qtl.datastructures.rendering.Edge;
+import org.dllearner.algorithms.qtl.datastructures.rendering.Vertex;
+import org.dllearner.algorithms.qtl.operations.traversal.LevelOrderTreeTraversal;
+import org.dllearner.algorithms.qtl.operations.traversal.PreOrderTreeTraversal;
+import org.dllearner.algorithms.qtl.util.Entailment;
+import org.dllearner.algorithms.qtl.util.VarGenerator;
+import org.dllearner.core.AbstractReasonerComponent;
+import org.dllearner.reasoning.SPARQLReasoner;
+import org.dllearner.utilities.OwlApiJenaUtils;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.ext.EdgeNameProvider;
+import org.jgrapht.ext.GraphMLExporter;
+import org.jgrapht.ext.VertexNameProvider;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.semanticweb.owlapi.model.*;
+import org.xml.sax.SAXException;
+import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataPropertyImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
+
+import javax.xml.transform.TransformerConfigurationException;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 public class BasicQueryTemplate extends QueryTreeUtils
 {
 
+
+	private static final VarGenerator varGen = new VarGenerator("x");
+	private static final String TRIPLE_PATTERN_TEMPLATE = "%s %s %s .";
+	private static final OWLDataFactory df = new OWLDataFactoryImpl();
+	
+	public static String EMPTY_QUERY_TREE_QUERY = "SELECT ?s WHERE {?s ?p ?o.}";
+	
+	private static Reasoner reasoner = ReasonerRegistry.getRDFSSimpleReasoner();
+	
+	
+	
+	
+	
+	
 	Set<SPARQL_Term> selTerms; // SELECT ?x ?y
 	Set<SPARQL_Prefix> prefixes;
 	Set<Path> conditions;
@@ -43,6 +111,300 @@ public class BasicQueryTemplate extends QueryTreeUtils
 		conditions.add(p);
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	private static void buildModel(Model model, RDFResourceTree tree, Resource subject) {
+		int i = 0;
+		for (Node edge : tree.getEdges()) {
+			Property p = model.getProperty(edge.getURI());
+			for (RDFResourceTree child : tree.getChildren(edge)) {
+				RDFNode object = child.isVarNode() ? model.asRDFNode(NodeFactory.createBlankNode()) : model.asRDFNode(child.getData());
+				model.add(subject, p, object);
+//				if (child.isVarNode()) {
+					buildModel(model, child, object.asResource());
+//				}
+			}
+		}
+	}
+	private static OWLClassExpression buildOWLClassExpression(RDFResourceTree tree, LiteralNodeConversionStrategy literalConversion) {
+		Set<OWLClassExpression> classExpressions = new HashSet<>();
+		for(Node edge : tree.getEdges()) {
+			for (RDFResourceTree child : tree.getChildren(edge)) {
+				if(edge.equals(RDF.type.asNode()) || edge.equals(RDFS.subClassOf.asNode()) || edge.equals(OWL.equivalentClass.asNode())) {
+					if(child.isVarNode()) {
+						classExpressions.add(buildOWLClassExpression(child, literalConversion));
+					} else {
+						classExpressions.add(df.getOWLClass(IRI.create(child.getData().getURI())));
+					}
+				} else {
+					// create r some C
+					if(child.isLiteralNode()) {
+						OWLDataProperty dp = df.getOWLDataProperty(IRI.create(edge.getURI()));
+						if(!child.isLiteralValueNode()) {
+							classExpressions.add(df.getOWLDataSomeValuesFrom(dp, df.getOWLDatatype(IRI.create(child.getDatatype().getURI()))));
+						} else {
+							OWLLiteral value = OwlApiJenaUtils.getOWLLiteral(child.getData().getLiteral());
+							classExpressions.add(df.getOWLDataHasValue(dp, value));
+						}
+						
+					} else {
+						OWLObjectPropertyExpression pe = df.getOWLObjectProperty(IRI.create(edge.getURI()));
+						if(edge instanceof NodeInv) {
+							pe = pe.getInverseProperty();
+						}
+						OWLClassExpression filler = null;
+						if(child.isVarNode()) {
+							filler = buildOWLClassExpression(child, literalConversion);
+							classExpressions.add(df.getOWLObjectSomeValuesFrom(
+									pe,
+									filler));
+						} else if (child.isResourceNode()) {
+							classExpressions.add(df.getOWLObjectHasValue(
+									pe,
+									df.getOWLNamedIndividual(IRI.create(child.getData().getURI()))));
+						}
+					}
+				}
+			}
+		}
+		classExpressions.remove(df.getOWLThing());
+		if(classExpressions.isEmpty()) {
+			return df.getOWLThing();
+		} else if(classExpressions.size() == 1){
+    		return classExpressions.iterator().next();
+    	} else {
+    		return df.getOWLObjectIntersectionOf(classExpressions);
+    	}
+	}
+	private static int buildGraph(Integer parentId, DirectedGraph<Vertex, Edge> graph, RDFResourceTree tree, SerializationContext context){
+    	Vertex parent = new Vertex(parentId, FmtUtils.stringForNode(tree.getData(), context));
+    	graph.addVertex(parent);
+    	
+    	int childId = parentId;
+    	
+    	for (Node edgeNode : tree.getEdges()) {
+    		String edgeLabel = FmtUtils.stringForNode(edgeNode, context);
+	    	for (RDFResourceTree child : tree.getChildren(edgeNode)) {
+	    		childId++;
+	    		String childLabel = FmtUtils.stringForNode(child.getData(), context);
+	    		
+	    		Vertex childVertex = new Vertex(childId, childLabel);
+	    		graph.addVertex(childVertex);
+	    		
+	    		Edge edge = new Edge(Long.valueOf(parentId + "0" + childId), edgeLabel);
+				graph.addEdge(parent, childVertex, edge);
+
+				childId = buildGraph(childId, graph, child, context);
+			}
+    	}
+    	
+    	return childId;
+	}
+	private static void buildSPARQLQueryString(RDFResourceTree tree,
+			String subjectStr, StringBuilder sb, Collection<ExprNode> filters,
+			SerializationContext context) {
+		if (!tree.isLeaf()) {
+			for (Node edge : tree.getEdges()) {
+				// process predicate
+				String predicateStr = FmtUtils.stringForNode(edge, context);
+				for (RDFResourceTree child : tree.getChildren(edge)) {
+					// pre-process object
+					Node object = child.getData();
+					
+					if(child.isVarNode()) {
+						// set a fresh var in the SPARQL query
+						object = varGen.newVar();
+					} else if(child.isLiteralNode() && !child.isLiteralValueNode()) { 
+						// set a fresh var in the SPARQL query
+						object = varGen.newVar();
+						
+						// literal node describing a set of literals is rendered depending on the conversion strategy
+						if(child.getDatatype() != null) {
+							ExprNode filter = new E_Equals(
+									new E_Datatype(new ExprVar(object)), 
+									NodeValue.makeNode(NodeFactory.createURI(child.getDatatype().getURI())));
+//							filters.add(filter);
+						}
+						
+					} 
+					
+					// process object
+					String objectStr = FmtUtils.stringForNode(object, context);
+
+					// append triple pattern
+					String tpStr;
+					if(edge instanceof NodeInv) {
+						tpStr = String.format(TRIPLE_PATTERN_TEMPLATE, objectStr, predicateStr, subjectStr);
+					} else {
+						tpStr = String.format(TRIPLE_PATTERN_TEMPLATE, subjectStr, predicateStr, objectStr);
+					}
+					sb.append(tpStr).append("\n");
+					
+					/*
+					 * only if child is var node recursively process children if
+					 * exist because for URIs it doesn't make sense to add the
+					 * triple pattern and for literals there can't exist a child
+					 * in the tree
+					 */
+					if (child.isVarNode()) {
+						buildSPARQLQueryString(child, objectStr, sb, filters, context);
+					}
+				}
+			}
+		}
+	}
+	private static Multimap<Node, Node> getRelatedEdges(RDFResourceTree tree1, RDFResourceTree tree2, AbstractReasonerComponent reasoner) {
+		Multimap<Node, Node> relatedEdges = HashMultimap.create();
+
+		for(Node edge1 : tree1.getEdges()) {
+			// trivial
+			if(tree2.getEdges().contains(edge1)) {
+				relatedEdges.put(edge1, edge1);
+			}
+			// check if it's not a built-in properties
+			if (!edge1.getNameSpace().equals(RDF.getURI())
+					&& !edge1.getNameSpace().equals(RDFS.getURI())
+					&& !edge1.getNameSpace().equals(OWL.getURI())) {
+
+				// get related edges by subsumption
+				OWLProperty prop;
+				if(tree1.isObjectPropertyEdge(edge1)) {
+					prop = new OWLObjectPropertyImpl(IRI.create(edge1.getURI()));
+				} else {
+					prop = new OWLDataPropertyImpl(IRI.create(edge1.getURI()));
+				}
+
+				for (OWLProperty p : reasoner.getSuperProperties(prop)) {
+					Node edge = NodeFactory.createURI(p.toStringID());
+					if(tree2.getEdges().contains(edge)) {
+						relatedEdges.put(edge1, edge);
+					}
+				}
+				for (OWLProperty p : reasoner.getSubProperties(prop)) {
+					Node edge = NodeFactory.createURI(p.toStringID());
+					if(tree2.getEdges().contains(edge)) {
+						relatedEdges.put(edge1, edge);
+					}
+				}
+			}
+		}
+		return relatedEdges;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static Query toSQuery(RDFResourceTree tree) {
+		return QueryFactory.create(toSQueryString(tree));
+	}
+	
+	public static String toSQueryString(RDFResourceTree tree) {
+    	return toSQueryString(tree, PrefixMapping.Standard);
+    }
+	
+	public static String toSQueryString(RDFResourceTree tree, PrefixMapping pm) {
+    	return toSQueryString(tree, null, pm, LiteralNodeConversionStrategy.DATATYPE);
+    }
+	
+	public static String toSQueryString(RDFResourceTree tree, String baseIRI, PrefixMapping pm) {
+    	return toSQueryString(tree, baseIRI, pm, LiteralNodeConversionStrategy.DATATYPE);
+    }
+	
+	
+	
+	public static String toSQueryString(RDFResourceTree tree, String baseIRI, PrefixMapping pm, LiteralNodeConversionStrategy literalConversion) {
+		if(!tree.hasChildren()){
+    		return EMPTY_QUERY_TREE_QUERY;
+    	}
+    	
+    	varGen.reset();
+    	
+    	SerializationContext context = new SerializationContext(pm);
+    	context.setBaseIRI(baseIRI);
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	// Add BASE declaration
+        if (baseIRI != null) {
+            sb.append("BASE ");
+            sb.append(FmtUtils.stringForURI(baseIRI, null, null));
+            sb.append('\n');
+        }
+
+        // Then pre-pend prefixes
+        for (String prefix : pm.getNsPrefixMap().keySet()) {
+            sb.append("PREFIX ");
+            sb.append(prefix);
+            sb.append(": ");
+            sb.append(FmtUtils.stringForURI(pm.getNsPrefixURI(prefix), null, null));
+            sb.append('\n');
+        }
+        
+        List<ExprNode> filters = new ArrayList<>();
+        
+        // target var
+        String targetVar = "?s";
+        
+        // header
+    	sb.append(String.format("SELECT DISTINCT %s WHERE {\n", targetVar));
+    	
+    	// triple patterns
+    	BasicQueryTemplate.buildSPARQLQueryString(tree, targetVar, sb, filters, context);
+        
+    	// filters
+    	if(!filters.isEmpty()) {
+    		Iterator<ExprNode> it = filters.iterator();
+    		ExprNode filter = it.next();
+    		while(it.hasNext()) {
+    			filter = new E_LogicalAnd(filter, it.next());
+    		}
+    		sb.append("FILTER(").append(filter.toString()).append(")\n");
+    	}
+    	
+        sb.append("}");
+    	
+    	Query query = QueryFactory.create(sb.toString(), Syntax.syntaxSPARQL_11);
+    	query.setPrefixMapping(pm);
+    	
+    	return query.toString();
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public String toString()
 	{
