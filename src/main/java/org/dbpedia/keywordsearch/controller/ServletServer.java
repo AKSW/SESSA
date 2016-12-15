@@ -13,6 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 import org.dbpedia.keywordsearch.Initializer.initializer;
 import org.dbpedia.keywordsearch.Initializer.interfaces.InitializerInterface;
@@ -31,6 +34,24 @@ import org.dbpedia.keywordsearch.urimapper.interfaces.MapperInterface;
 import org.neo4j.graphdb.GraphDatabaseService;
 
 import com.google.gson.Gson;
+import com.google.common.collect.Lists;
+import org.aksw.qa.commons.datastructure.Entity;
+import org.apache.jena.rdf.model.Resource;
+//import org.aksw.hawk.controller.AbstractPipeline;
+//import org.aksw.hawk.controller.PipelineStanford;
+//import org.aksw.hawk.datastructures.Answer;
+//import org.aksw.hawk.datastructures.HAWKQuestion;
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  *
@@ -41,6 +62,8 @@ public class ServletServer extends HttpServlet {
 	IndexerInterface esnode;
 	private pathvariables Instance;
 	neo4j graphdb;
+	//private Fox recognizer;
+	
 
 
 	@Override
@@ -49,6 +72,38 @@ public class ServletServer extends HttpServlet {
 		ngram.CreateNGramModel(request.getParameter("Query")
 				.replace("whose", "")
 				.replace("is", ""));
+		
+		
+		System.out.println("111111111111111111111111111111 ");
+		System.out.println(request.getParameter("Query"));
+		System.out.println(" 11111111111111111111111111111"); 
+		String question = request.getParameter("Query");
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//HAWKQuestion q = new HAWKQuestion();
+		// q.getLanguageToQuestion().put("en",
+		// "Which buildings in art deco style did Shreve, Lamb and Harmon design?");
+		// q.getLanguageToQuestion().put("en",
+		// "Which anti-apartheid activist was born in Mvezo?");
+		//q.getLanguageToQuestion().put("en", " Who was vice president under the president who approved the use of atomic weapons against Japan during World War II?");
+		//q.getLanguageToQuestion().put("en", question);
+		//AbstractPipeline pipeline = new PipelineStanford_1();
+		//List<Answer> answers = pipeline.getAnswersToQuestion(q);
+
+		
+		
+		
+		
+		
+		
+		
 		MapperInterface mappings = new Mapper();
 		mappings.BuildMappings(this.esnode, ngram.getNGramMod());
 		InitializerInterface init = new initializer();
@@ -63,7 +118,9 @@ public class ServletServer extends HttpServlet {
 				
 		PrintWriter pw = response.getWriter();// get the stream to write the data
 		Map map = new HashMap();
-		pw.write("[");
+		pw.write("[");System.out.println(" ");
+		System.out.println("---------------------{>_<}------------------------");
+		System.out.println(" ");
 		int i;
 		System.out.println(" ");
 		System.out.println("---------------------{>_<}------------------------");
@@ -88,6 +145,21 @@ public class ServletServer extends HttpServlet {
 		System.out.print("Done");
 
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	private String graphpath() {
 
