@@ -101,8 +101,8 @@ public class QALD6_Test_SESSATest {
 //			    	System.out.println(q.getId());
 //					System.out.println(q.getLanguageToQuestion().get("en"));
 					Set<String> goldenStrings = q.getGoldenAnswers();
-					System.out.println("goldenStrings--------------------------------");
-					System.out.println(goldenStrings);
+//					System.out.println("goldenStrings--------------------------------");
+//					System.out.println(goldenStrings);
 					Answer a = getSessaResults(q);
 //					System.out.println(a.answerStr);
 						resultsList.add(a);
