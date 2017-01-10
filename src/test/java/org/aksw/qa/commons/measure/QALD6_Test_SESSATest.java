@@ -25,8 +25,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class QALD6_Train_SESSATest {
-	static Logger log = LoggerFactory.getLogger(QALD6_Train_SESSA.class);	
+public class QALD6_Test_SESSATest {
+	static Logger log = LoggerFactory.getLogger(QALD6_Test_SESSA.class);	
 	private static Qald_SESSA_Init sessainit = new Qald_SESSA_Init();
 	
 	
@@ -87,7 +87,7 @@ public class QALD6_Train_SESSATest {
 		double average = 0;
 		double count = 0;
 		double countNULLAnswer = 0;
-		Dataset data = Dataset.QALD6_Train_Multilingual;
+		Dataset data = Dataset.QALD6_Test_Multilingual;
 		List<Answer> resultsList = new ArrayList<Answer>();
 		
 		List<IQuestion> questions = LoaderController.load(data);
@@ -124,36 +124,7 @@ public class QALD6_Train_SESSATest {
 			    		continue; // will just skip this iteration and jump to the next
 			    	}	
 			    }
-//				for (IQuestion q : questions) {
-//						// ##############~~RANKING~~##############
-//						log.info("Run ranking");
-//						int maximumPositionToMeasure = 10;
-////						OptimalRanker optimal_ranker = new OptimalRanker();
-////						FeatureBasedRanker feature_ranker = new FeatureBasedRanker();
-//
-//						// optimal ranking
-//						log.info("Optimal ranking");
-//						//List<Answer> rankedAnswer = optimal_ranker.rank(answers, q);
-//						List<EvalObj> eval = Measures.measure(resultsList, q, maximumPositionToMeasure);
-//						log.debug(Joiner.on("\n\t").join(eval));
-//
-//						Set<SPARQLQuery> queries = Sets.newHashSet();
-//						double fmax = 0;
-//						for (EvalObj e : eval) {
-//							if (e.getFmax() == fmax) {
-//								queries.add(e.getAnswer().query);
-//							} else if (e.getFmax() > fmax) {
-//								queries.clear();
-//								queries.add(e.getAnswer().query);
-//								fmax = e.getFmax();
-//							}
-//						}
-//						log.info("Max F-measure: " + fmax);
-//						average += fmax;
-//						log.info("Feature-based ranking begins training.");
-//						//feature_ranker.learn(q, queries);
-//				}
+
 			}
 		}
-	}
-
+}
