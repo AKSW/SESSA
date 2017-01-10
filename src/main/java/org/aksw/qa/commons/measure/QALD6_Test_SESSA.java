@@ -1,24 +1,13 @@
 package org.aksw.qa.commons.measure;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.aksw.hawk.controller.AbstractPipeline;
 import org.aksw.hawk.controller.EvalObj;
-import org.aksw.hawk.controller.PipelineStanford_1;
 import org.aksw.hawk.datastructures.Answer;
-import org.aksw.hawk.datastructures.HAWKQuestion;
-import org.aksw.hawk.datastructures.HAWKQuestionFactory;
 import org.aksw.hawk.querybuilding.SPARQLQuery;
-import org.aksw.hawk.ranking.FeatureBasedRanker;
-import org.aksw.hawk.ranking.OptimalRanker;
 import org.aksw.qa.commons.datastructure.IQuestion;
 import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
@@ -35,11 +24,9 @@ import org.dbpedia.keywordsearch.urimapper.interfaces.MapperInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
-import com.google.gson.Gson;
 
-public class QALD6_Train_SESSA {
+public class QALD6_Test_SESSA {
 	static Logger log = LoggerFactory.getLogger(QALD6_Train_SESSA.class);
 	private static Qald_SESSA_Init sessainit = new Qald_SESSA_Init();
 	
@@ -98,10 +85,11 @@ public class QALD6_Train_SESSA {
 		double average = 0;
 		double count = 0;
 		double countNULLAnswer = 0;
-		Dataset data = Dataset.QALD6_Train_Multilingual;
+		Dataset data = Dataset.QALD6_Test_Multilingual;
 		List<Answer> resultsList = new ArrayList<Answer>();
 		List<EvalObj> evallist = new ArrayList<EvalObj>();
 
+		
 		List<IQuestion> questions = LoaderController.load(data);
 			if (questions == null) {
 				System.out.println("Dataset null" + data.toString());
