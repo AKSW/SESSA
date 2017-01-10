@@ -80,7 +80,7 @@ public class uiclass {
            }
         }   
         propagator finalresults = new propagator();
-        finalresults.PropagateInit(gdb,init.getResultsList());
+        finalresults.PropagateInit(gdb,init.getResultsList());       
         List<ResultDataStruct> actual= init.getResultsList();
         
         /* Sorting the final nodes according to explanation score and energy score  */
@@ -88,6 +88,7 @@ public class uiclass {
         System.out.println(" Retrieving results in decreasing order of relevancy.... ");
         System.out.println();
         for(int i=actual.size()-1;i>=0;i--){
+        	
             System.out.println(" URI : "+actual.get(i).getURI()+", Colors : "+actual.get(i).getImage()+"}");
         }
     }

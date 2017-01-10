@@ -8,14 +8,15 @@ package org.dbpedia.keywordsearch.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
+
+
 
 import org.dbpedia.keywordsearch.Initializer.initializer;
 import org.dbpedia.keywordsearch.Initializer.interfaces.InitializerInterface;
@@ -34,24 +35,21 @@ import org.dbpedia.keywordsearch.urimapper.interfaces.MapperInterface;
 import org.neo4j.graphdb.GraphDatabaseService;
 
 import com.google.gson.Gson;
-import com.google.common.collect.Lists;
-import org.aksw.qa.commons.datastructure.Entity;
-import org.apache.jena.rdf.model.Resource;
-//import org.aksw.hawk.controller.AbstractPipeline;
-//import org.aksw.hawk.controller.PipelineStanford;
-//import org.aksw.hawk.datastructures.Answer;
-//import org.aksw.hawk.datastructures.HAWKQuestion;
-
-
-
-
-
-
-
-
-
-
-
+import org.apache.jena.sparql.expr.aggregate.Aggregator;
+import org.apache.jena.sparql.syntax.Element;
+import org.apache.jena.sparql.syntax.ElementGroup;
+import org.apache.jena.sparql.syntax.ElementPathBlock;
+import org.aksw.hawk.controller.AbstractPipeline;
+import org.aksw.hawk.controller.PipelineStanford_1;
+import org.aksw.hawk.datastructures.HAWKQuestion;
+import org.aksw.hawk.querybuilding.SPARQLQuery;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.query.Query;
+import org.apache.jena.sparql.core.PathBlock;
+import org.apache.jena.sparql.core.TriplePath;
+import org.apache.jena.sparql.expr.E_LogicalAnd;
+import org.apache.jena.sparql.expr.ExprAggregator;
+import org.apache.jena.sparql.expr.ExprNode;
 
 /**
  *
@@ -68,42 +66,22 @@ public class ServletServer extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		
 		NGramInterface ngram = new NGramModel();
 		ngram.CreateNGramModel(request.getParameter("Query")
 				.replace("whose", "")
 				.replace("is", ""));
 		
-		
-		System.out.println("111111111111111111111111111111 ");
-		System.out.println(request.getParameter("Query"));
-		System.out.println(" 11111111111111111111111111111"); 
+		System.out.println("");
+		System.out.println("-------------------------------");
+		System.out.println(request.getParameter("Question: "));
+		System.out.println("-------------------------------"); 
 		String question = request.getParameter("Query");
+				
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		//HAWKQuestion q = new HAWKQuestion();
-		// q.getLanguageToQuestion().put("en",
-		// "Which buildings in art deco style did Shreve, Lamb and Harmon design?");
-		// q.getLanguageToQuestion().put("en",
-		// "Which anti-apartheid activist was born in Mvezo?");
-		//q.getLanguageToQuestion().put("en", " Who was vice president under the president who approved the use of atomic weapons against Japan during World War II?");
-		//q.getLanguageToQuestion().put("en", question);
-		//AbstractPipeline pipeline = new PipelineStanford_1();
-		//List<Answer> answers = pipeline.getAnswersToQuestion(q);
-
-		
-		
-		
-		
-		
-		
-		
+		//1. SESSA
 		MapperInterface mappings = new Mapper();
 		mappings.BuildMappings(this.esnode, ngram.getNGramMod());
 		InitializerInterface init = new initializer();
@@ -111,16 +89,35 @@ public class ServletServer extends HttpServlet {
 		PropagatorInterface getFinalResults = new propagator();
 		getFinalResults.PropagateInit(graphdb.getgdbservice(), init.getResultsList());
 		
+		
+		//2. Lgg Query
+		init.setLggQuery();
 		//Lgg Results
-		init.addLggresult();
+		//init.addLggresult();
+		
+		
+		//3. HAWK Prozess
+		HAWKQuestion q = new HAWKQuestion();
+//		// q.getLanguageToQuestion().put("en",
+//		// "Which anti-apartheid activist was born in Mvezo?");feature
+	
+		
+		q.getLanguageToQuestion().put("en", question);
+		AbstractPipeline pipeline = new PipelineStanford_1();
+	
+		//System.out.println(init.getLggQuery().getQueryPattern());	
+	
+		//Add Prefix and QueryPattern from Lgg
+		pipeline.setInitialQuery(init.getLggQuery());
+		
+		pipeline.getAnswersToQuestion(q);
+		
 		
 		ListFunctions.sortresults(init.getResultsList());
 				
 		PrintWriter pw = response.getWriter();// get the stream to write the data
 		Map map = new HashMap();
-		pw.write("[");System.out.println(" ");
-		System.out.println("---------------------{>_<}------------------------");
-		System.out.println(" ");
+		pw.write("[");
 		int i;
 		System.out.println(" ");
 		System.out.println("---------------------{>_<}------------------------");
@@ -146,23 +143,10 @@ public class ServletServer extends HttpServlet {
 
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 
 	private String graphpath() {
-
+		System.out.println(this.Instance.getgraph());
 		return this.Instance.getgraph();
 	}
 
@@ -194,6 +178,7 @@ public class ServletServer extends HttpServlet {
 
 		this.Instance = new pathvariables();
 		graphdb = new neo4j(this.Instance.getgraph());
+	
 		//TODO only load the data once
 		GraphDatabaseService gdb = graphdb.getgdbservice();
 		graphdb.graphdbform(gdb, "resources/mappingbased_literals_en.ttl");

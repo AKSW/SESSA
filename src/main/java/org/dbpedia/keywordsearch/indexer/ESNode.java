@@ -60,7 +60,7 @@ public class ESNode implements IndexerInterface {
 
 			@Override
 			public void afterBulk(long executionId, BulkRequest request, BulkResponse response) {
-				log.debug("After Bulk. Bulk took: " + response.took());
+				log.debug("After Bulk. Bulk took: " + response.getTook());
 			}
 
 			@Override
@@ -81,7 +81,7 @@ public class ESNode implements IndexerInterface {
 				.indices()
 				.exists(new IndicesExistsRequest(indexname))
 				.actionGet()
-				.exists()) {
+				.isExists()) {
 			/* Index name */
 			this.indexname = indexname;
 

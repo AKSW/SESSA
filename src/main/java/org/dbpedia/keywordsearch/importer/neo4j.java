@@ -82,13 +82,15 @@ public class neo4j implements GDBInterface {
 
 		log.info("Start parsing: " + rdfpath);
 		RDFParser rdfParser = Rio.createParser(RDFFormat.TURTLE);
-
+		
 		org.openrdf.model.Model model = new org.openrdf.model.impl.LinkedHashModel();
 		rdfParser.setRDFHandler(new StatementCollector(model));
-
+	
 		/* Creates an iterator on the rdf triples from the specified file */
 		ResourceIterator<Node> nodeindex;
 		/* Begining the transaction of creating nodes. Allocating resources */
+		System.out.println("graph-----------------------------");
+		System.out.println(graphdb);
 		try (Transaction tx = graphdb.beginTx()) {
 			/* Initialization of triple nodes */
 			Node subjectnode = null;

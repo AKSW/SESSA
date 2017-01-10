@@ -44,7 +44,9 @@ public class Sparqlquery {
 	private Query query = null;
 	
 	
-	public void query(Set<String> uriset){
+
+
+	public void setQuery(Set<String> uriset){
 
 				Set<String> disambiguatedAnswers = uriset;
 				LGGGenerator lggGen = new LGGGeneratorSimple();
@@ -59,10 +61,7 @@ public class Sparqlquery {
 				cbdGen = new SymmetricConciseBoundedDescriptionGeneratorImpl(qef);
 				
 				
-				
-				
-				
-				
+			
 				
 				// filters
 				
@@ -95,41 +94,45 @@ public class Sparqlquery {
 						cbd = cbdGen.getConciseBoundedDescription(uri);
 						
 						System.out.println("|cbd(" + uri + ")|=" + cbd.size() + " triples");
-						cbdGen = new SymmetricConciseBoundedDescriptionGeneratorImpl(qef);
+						
 						// generate query tree
 						RDFResourceTree tree = qtf.getQueryTree(uri, cbd);
 						trees.add(tree);
-						//System.out.println(tree.getStringRepresentation(true));
-						//query = QueryTreeUtils.toSPARQLQuery(tree);
+						
 					}
-					//System.out.println(trees);
+					
 					// compute LGG
 					RDFResourceTree lgg = lggGen.getLGG(trees,true);
 					//System.out.println(lgg.getStringRepresentation(true).equals(lggempty.getStringRepresentation(true)));
 					//if (lgg.getStringRepresentation(true).equals(lggempty.getStringRepresentation(true)) != true){
 						System.out.println(lgg.getStringRepresentation(true));
-						System.out.println(lggempty.getStringRepresentation(true));
+						//System.out.println(lggempty.getStringRepresentation(true));
 						// SPARQL query
-						BasicQueryTemplate qe = new BasicQueryTemplate();
-						query = qe.toSPARQLQuery(lgg);
+						//BasicQueryTemplate qe = new BasicQueryTemplate();
+						
+						//query = qe.toSPARQLQuery(lgg);
+						this.query = QueryTreeUtils.toSPARQLQuery(lgg);
 						//query = QueryTreeUtils.toSPARQLQuery(lgg);
 						//}
-					
-
-					System.out.println(" ");
-					System.out.println("---------------------{>_<}------------------------");
-					System.out.println("This is Sparqlquery: ");
-					System.out.println(" ");
-					
-					// f-measure/accuracy to answer
-					System.out.println(query);
+						System.out.println(" ");
+						System.out.println("---------------------{>_<}------------------------");
+						System.out.println("This is Sparqlquery: ");
+						System.out.println(" ");
+						
+						// f-measure/accuracy to answer
+						System.out.println(query);
+						
+				
 				}
 			
 	}
 	
-	public List<RDFNode> getLggUrilist(Set<String> uriset){
-	  	String sparqlEndpoint = "http://dbpedia.org/sparql";		  
-	  	query(uriset);
+	
+
+	
+	public List<RDFNode> getLggUrilist(){
+	  	String sparqlEndpoint = "http://dbpedia.org/sparql";	
+	  	
 	  	if (query != null){
 	    QueryEngineHTTP httpQuery = new QueryEngineHTTP(sparqlEndpoint,query);
 	    	    
@@ -153,7 +156,9 @@ public class Sparqlquery {
 	  	}
 		return lggUrilist;
 	}
-	
+	public Query getQuery() {
+		return query;
+	}
 }
 
 

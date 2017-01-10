@@ -10,12 +10,14 @@ import org.dbpedia.keywordsearch.Initializer.interfaces.InitializerInterface;
 import org.dbpedia.keywordsearch.datastructures.MapperDataStruct;
 import org.dbpedia.keywordsearch.datastructures.NGramStruct;
 import org.dbpedia.keywordsearch.datastructures.ResultDataStruct;
+import org.apache.jena.query.Query;
 
 /* This is the class for activating the nodes initiiated from the mappings.  */
 public class initializer implements InitializerInterface{
     /* Initiating the list of activated nodes. */
     private List<ResultDataStruct> propagator=new ArrayList<ResultDataStruct>();
     private List<String> totalUrilist = new ArrayList<String>();
+	private Sparqlquery query = new Sparqlquery();
     
     
     public void initiate(Map<Integer,MapperDataStruct> urimaps, List<NGramStruct> ngrams){
@@ -52,8 +54,8 @@ public class initializer implements InitializerInterface{
     	return this.propagator;}
     
     public void addLggresult(){
-		Sparqlquery query = new Sparqlquery();
-		List<RDFNode> lggUrilist = query.getLggUrilist(totalUrilist());
+		
+		List<RDFNode> lggUrilist = query.getLggUrilist();
         for(int i=0;i<lggUrilist.size();i++){
             
             /* Activating the new node */
@@ -63,6 +65,16 @@ public class initializer implements InitializerInterface{
             this.propagator.add(resultLgg);
         }
     }
+    
+    public void setLggQuery(){
+    	query.setQuery(totalUrilist());
+    }
+    
+    public Query getLggQuery(){
+		return query.getQuery();
+    }
+    
+    
     
     /* Set Uri list */
     public Set<String> totalUrilist(){
