@@ -42,7 +42,7 @@ public class Sparqlquery {
 
 	private List<RDFNode> lggUrilist = new ArrayList<RDFNode>();
 	private Query query = null;
-	
+	private RDFResourceTree lggempty = null;
 	
 
 
@@ -55,12 +55,8 @@ public class Sparqlquery {
 				// CBD generator
 
 				QueryTreeFactory qtf = new QueryTreeFactoryBase();
-				ConciseBoundedDescriptionGenerator cbdGen;
-				
-				
+				ConciseBoundedDescriptionGenerator cbdGen;		
 				cbdGen = new SymmetricConciseBoundedDescriptionGeneratorImpl(qef);
-				
-				
 			
 				
 				// filters
@@ -71,11 +67,6 @@ public class Sparqlquery {
 				        new NamespaceDropStatementFilter(Sets.newHashSet("http://dbpedia.org/property/", "http://purl.org/dc/terms/", "http://dbpedia.org/class/yago/", FOAF.getURI())),
 				        new PredicateDropStatementFilter(Sets.newHashSet("http://www.w3.org/2002/07/owl#equivalentClass", "http://www.w3.org/2002/07/owl#disjointWith")));
 				qtf.addDropFilters(treeFilters.toArray(new Filter[treeFilters.size()]));
-				
-				
-				
-				
-				
 				
 				
 				int minNrOfExamples = 2;
@@ -104,24 +95,26 @@ public class Sparqlquery {
 					// compute LGG
 					RDFResourceTree lgg = lggGen.getLGG(trees,true);
 					//System.out.println(lgg.getStringRepresentation(true).equals(lggempty.getStringRepresentation(true)));
-					//if (lgg.getStringRepresentation(true).equals(lggempty.getStringRepresentation(true)) != true){
-						System.out.println(lgg.getStringRepresentation(true));
-						//System.out.println(lggempty.getStringRepresentation(true));
-						// SPARQL query
-						//BasicQueryTemplate qe = new BasicQueryTemplate();
+					System.out.println(lgg.getStringRepresentation(true));
+					
+						if(lgg.getStringRepresentation(true).equals(lggempty.getStringRepresentation(true))){
+							System.out.println("RDFResourceTree is leer.");						
+						}
+						else{
+							// SPARQL query
+							//BasicQueryTemplate qe = new BasicQueryTemplate();
+							//query = qe.toSPARQLQuery(lgg);
+							this.query = QueryTreeUtils.toSPARQLQuery(lgg);
+							//query = QueryTreeUtils.toSPARQLQuery(lgg);
+							//}
+							System.out.println(" ");
+							System.out.println("---------------------{>_<}------------------------");
+							System.out.println("This is Sparqlquery: ");
+							System.out.println(" ");
 						
-						//query = qe.toSPARQLQuery(lgg);
-						this.query = QueryTreeUtils.toSPARQLQuery(lgg);
-						//query = QueryTreeUtils.toSPARQLQuery(lgg);
-						//}
-						System.out.println(" ");
-						System.out.println("---------------------{>_<}------------------------");
-						System.out.println("This is Sparqlquery: ");
-						System.out.println(" ");
-						
-						// f-measure/accuracy to answer
-						System.out.println(query);
-						
+							// f-measure/accuracy to answer
+							System.out.println(query);
+						}
 				
 				}
 			

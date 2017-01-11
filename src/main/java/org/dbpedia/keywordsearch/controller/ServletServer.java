@@ -74,8 +74,8 @@ public class ServletServer extends HttpServlet {
 				.replace("is", ""));
 		
 		System.out.println("");
-		System.out.println("-------------------------------");
-		System.out.println(request.getParameter("Question: "));
+		System.out.println("Question-------------------------");
+		System.out.println(request.getParameter("Query"));
 		System.out.println("-------------------------------"); 
 		String question = request.getParameter("Query");
 				
@@ -93,7 +93,7 @@ public class ServletServer extends HttpServlet {
 		//2. Lgg Query
 		init.setLggQuery();
 		//Lgg Results
-		//init.addLggresult();
+		init.addLggresult();
 		
 		
 		//3. HAWK Prozess
