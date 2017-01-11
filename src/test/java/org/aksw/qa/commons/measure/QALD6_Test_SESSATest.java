@@ -119,6 +119,7 @@ public class QALD6_Test_SESSATest {
 			    		++countNULLAnswer;
 			    		System.out.println("keywords--------------------------------");
 			    		System.out.println(q.getLanguageToKeywords().get("en"));	
+			    		e.printStackTrace();
 			    		log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")" + "Exception thrown  :" + e);
 			    		continue; // will just skip this iteration and jump to the next
 			    	}	
