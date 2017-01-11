@@ -116,7 +116,7 @@ public class QALD6_Train_SESSA {
 						Answer a = getSessaResults(q);	
 						System.out.println(a.answerStr);
 						resultsList.add(a);
-							if (a.answerStr == null) {
+							if (a.answerStr.isEmpty()) {
 								log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")");
 								++countNULLAnswer;
 								continue;
@@ -143,6 +143,10 @@ public class QALD6_Train_SESSA {
 					
 			        //do something with 'source'
 			    	} catch (Exception e) { // catch any exception
+			    		++countNULLAnswer;
+			    		System.out.println("keywords--------------------------------");
+			    		System.out.println(q.getLanguageToKeywords().get("en"));	
+			    		log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")" + "because of Exception");
 			    		//System.out.println("Exception thrown  :" + e);
 			    		continue; // will just skip this iteration and jump to the next
 			    	}	
