@@ -159,7 +159,8 @@ public class DBOIndex {
 	public static void main(final String[] args) {
 		
 		DBOIndex dboIndex = new DBOIndex();
-		
+		IndexDBO_classes indexDBO_classes = new IndexDBO_classes();
+		IndexDBO_properties indexDBO_properties = new IndexDBO_properties();
 		
 
 	}
