@@ -110,20 +110,22 @@ public class LoaderController {
 //			return loadingAnchor.getResource("/QALD-master/2/data/participants-challenge-answers.xml");
 
 		case QALD3_Test_dbpedia:
-			return loadingAnchor.getResource("/QALD-master/3/data/dbpedia-test-answers.xml");
-		case QALD3_Test_esdbpedia:
-			return loadingAnchor.getResource("/QALD-master/3/data/esdbpedia-test-answers.xml");
+			//return loadingAnchor.getResource("/QALD-master/3/data/dbpedia-test-answers.xml");
+			return loadingAnchor.getResource("/QALD-master/3/dbpedia-test-answers.xml");
+//		case QALD3_Test_esdbpedia:
+//			return loadingAnchor.getResource("/QALD-master/3/data/esdbpedia-test-answers.xml");
 		// case QALD3_Test_esdbpedia_sparql:
 		// return
 		// loadingAnchor.getResource("/QALD-master/3/data/esdbpedia-test.xml");
-		case QALD3_Test_musicbrainz:
-			return loadingAnchor.getResource("/QALD-master/3/data/musicbrainz-test-answers.xml");
+//		case QALD3_Test_musicbrainz:
+//			return loadingAnchor.getResource("/QALD-master/3/data/musicbrainz-test-answers.xml");
 		case QALD3_Train_dbpedia:
-			return loadingAnchor.getResource("/QALD-master/3/data/dbpedia-train-answers.xml");
-		case QALD3_Train_esdbpedia:
-			return loadingAnchor.getResource("/QALD-master/3/data/esdbpedia-train-answers.xml");
-		case QALD3_Train_musicbrainz:
-			return loadingAnchor.getResource("/QALD-master/3/data/musicbrainz-train-answers.xml");
+			//return loadingAnchor.getResource("/QALD-master/3/data/dbpedia-train-answers.xml");
+			return loadingAnchor.getResource("/QALD-master/3/dbpedia-train-answers.xml");
+//		case QALD3_Train_esdbpedia:
+//			return loadingAnchor.getResource("/QALD-master/3/data/esdbpedia-train-answers.xml");
+//		case QALD3_Train_musicbrainz:
+//			return loadingAnchor.getResource("/QALD-master/3/data/musicbrainz-train-answers.xml");
 
 //		case QALD4_Test_Hybrid:
 //			return loadingAnchor.getResource("/QALD-master/4/data/qald-4_hybrid_test_withanswers.xml");
@@ -148,14 +150,14 @@ public class LoaderController {
 //		case QALD6_Train_Hybrid:
 //			return loadingAnchor.getResource("/QALD-master/6/data/qald-6-train-hybrid.json");
 		case QALD6_Train_Multilingual:
-			
+			//return loadingAnchor.getResource("/QALD-master/6/data/qald-6-train-multilingual.json");
 			return loadingAnchor.getResource("/QALD-master/6/qald-6-train-multilingual.json");
 
 //		case QALD6_Test_Hybrid:
 //			return loadingAnchor.getResource("/QALD-master/6/data/qald-6-test-hybrid.json");
 		case QALD6_Test_Multilingual:
+			//return loadingAnchor.getResource("/QALD-master/6/data/qald-6-test-multilingual.json");
 			return loadingAnchor.getResource("/QALD-master/6/qald-6-test-multilingual.json");
-
 //		case Stanford_dev:
 //			return loadingAnchor.getResource("/stanfordqa-dev.json");
 //		case Stanford_train:
@@ -208,10 +210,10 @@ public class LoaderController {
 //				case QALD2_Train_musicbrainz:
 //				case QALD2_Participants_Challenge:
 				case QALD3_Test_dbpedia:
-				case QALD3_Test_musicbrainz:
+//				case QALD3_Test_musicbrainz:
 				case QALD3_Train_dbpedia:
-				case QALD3_Train_esdbpedia:
-				case QALD3_Train_musicbrainz:
+//				case QALD3_Train_esdbpedia:
+//				case QALD3_Train_musicbrainz:
 //				case QALD4_Test_Hybrid:
 //				case QALD4_Test_Multilingual:
 //				case QALD4_Test_biomedical:
@@ -222,10 +224,10 @@ public class LoaderController {
 					break;
 				// this is necessary because sparql and answers are spread over
 				// two files.
-				case QALD3_Test_esdbpedia:
-					is.close();
-					out = qald3_test_esdbpedia_loader();
-					break;
+//				case QALD3_Test_esdbpedia:
+//					is.close();
+//					out = qald3_test_esdbpedia_loader();
+//					break;
 
 //				case QALD5_Test_Hybrid:
 //				case QALD5_Train_Hybrid:
@@ -250,9 +252,9 @@ public class LoaderController {
 //					}
 //					out = hybrid;
 //					break;
-				case QALD6_Test_Hybrid:
+//				case QALD6_Test_Hybrid:
 				case QALD6_Test_Multilingual:
-				case QALD6_Train_Hybrid:
+//				case QALD6_Train_Hybrid:
 				case QALD6_Train_Multilingual:
 
 					QaldJson json = (QaldJson) ExtendedQALDJSONLoader.readJson(getInputStream(data), QaldJson.class);

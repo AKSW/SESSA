@@ -26,12 +26,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
 
-public class QALD6_Train_SESSA_Lgg {
-	static Logger log = LoggerFactory.getLogger(QALD6_Train_SESSA_Lgg.class);
+public class QALD3_Train_SESSA {
+	static Logger log = LoggerFactory.getLogger(QALD3_Train_SESSA.class);
 	private static Qald_SESSA_Init sessainit = new Qald_SESSA_Init();
 	
 	
-	public static Answer getSessaResultsWithLgg(IQuestion q){
+	public static Answer getSessaResults(IQuestion q){
 		
 		Answer answer = new Answer();
 		answer.answerStr = new HashSet<String>();
@@ -42,8 +42,13 @@ public class QALD6_Train_SESSA_Lgg {
 		
 		NGramInterface ngram = new NGramModel();
 		ngram.CreateNGramModel(keywords);
-
-		//SESSA results		
+				
+//		System.out.println("keywords--------------------------------");
+//		System.out.println(keywords);	
+		
+		
+		//SESSA results
+		
 		MapperInterface mappings = new Mapper();
 		
 		mappings.BuildMappings(sessainit.esnode, ngram.getNGramMod());
@@ -54,10 +59,6 @@ public class QALD6_Train_SESSA_Lgg {
 		getFinalResults.PropagateInit(sessainit.graphdb.getgdbservice(), init.getResultsList());
 		
 		ListFunctions.sortresults(init.getResultsList());
-		
-		//Lgg Results
-		init.setLggQuery();		
-		init.addLggresult();
 		
 		
 		int i;
@@ -78,7 +79,7 @@ public class QALD6_Train_SESSA_Lgg {
 		return answer;
 	}
 	
-	public static void QALD6_Pipeline() throws Exception{
+	public static void QALD3_Pipeline() throws Exception{
 	
 		sessainit.init();
 		double averagef = 0;
@@ -88,11 +89,10 @@ public class QALD6_Train_SESSA_Lgg {
 		double count = 0;
 		double countNULLAnswer = 0;
 		double countNOTRT = 0;
-		Dataset data = Dataset.QALD6_Train_Multilingual;
+		Dataset data = Dataset.QALD3_Train_dbpedia;
 		List<Answer> resultsList = new ArrayList<Answer>();
 		List<EvalObj> evallist = new ArrayList<EvalObj>();
 
-		
 		List<IQuestion> questions = LoaderController.load(data);
 			if (questions == null) {
 				System.out.println("Dataset null" + data.toString());
@@ -104,7 +104,7 @@ public class QALD6_Train_SESSA_Lgg {
 			    	System.out.println(q.getId());
 					System.out.println(q.getLanguageToQuestion().get("en"));
 						
-						Answer a = getSessaResultsWithLgg(q);	
+						Answer a = getSessaResults(q);	
 						
 						resultsList.add(a);
 							if (a.answerStr.isEmpty()) {
@@ -145,12 +145,12 @@ public class QALD6_Train_SESSA_Lgg {
 		log.info("Average Precision: " + (averagep / sum));
 		log.info("Average Recall: " + (averager / sum));
 		log.info("Average F-measure: " + (averagef / sum));		
-		}
+	}
 
 }
 	
 	public static void main(final String[] args) throws Exception{
-		QALD6_Pipeline();
+		QALD3_Pipeline();
 
 	}
 }

@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
 
-public class QALD6_Train_SESSA_Lgg {
-	static Logger log = LoggerFactory.getLogger(QALD6_Train_SESSA_Lgg.class);
+public class QALD3_Test_SESSA_Lgg {
+	static Logger log = LoggerFactory.getLogger(QALD3_Train_SESSA_Lgg.class);
 	private static Qald_SESSA_Init sessainit = new Qald_SESSA_Init();
 	
 	
@@ -42,7 +42,11 @@ public class QALD6_Train_SESSA_Lgg {
 		
 		NGramInterface ngram = new NGramModel();
 		ngram.CreateNGramModel(keywords);
-
+				
+//		System.out.println("keywords--------------------------------");
+//		System.out.println(keywords);	
+		
+		
 		//SESSA results		
 		MapperInterface mappings = new Mapper();
 		
@@ -58,7 +62,6 @@ public class QALD6_Train_SESSA_Lgg {
 		//Lgg Results
 		init.setLggQuery();		
 		init.addLggresult();
-		
 		
 		int i;
 		for (i = init.getResultsList().size() - 1; i >= 0; i--) {
@@ -78,7 +81,7 @@ public class QALD6_Train_SESSA_Lgg {
 		return answer;
 	}
 	
-	public static void QALD6_Pipeline() throws Exception{
+	public static void QALD3_Pipeline() throws Exception{
 	
 		sessainit.init();
 		double averagef = 0;
@@ -88,7 +91,8 @@ public class QALD6_Train_SESSA_Lgg {
 		double count = 0;
 		double countNULLAnswer = 0;
 		double countNOTRT = 0;
-		Dataset data = Dataset.QALD6_Train_Multilingual;
+
+		Dataset data = Dataset.QALD3_Test_dbpedia;
 		List<Answer> resultsList = new ArrayList<Answer>();
 		List<EvalObj> evallist = new ArrayList<EvalObj>();
 
@@ -150,7 +154,7 @@ public class QALD6_Train_SESSA_Lgg {
 }
 	
 	public static void main(final String[] args) throws Exception{
-		QALD6_Pipeline();
+		QALD3_Pipeline();
 
 	}
 }

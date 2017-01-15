@@ -46,7 +46,6 @@ public class Qald_SESSA_Init {
 			esnode.closeBulkLoader();
 		} catch (IOException e) {
 			// TODO generate log message
-			
 		}
 		System.out.println("Creating DataBase");
 

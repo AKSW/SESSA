@@ -36,7 +36,7 @@ public class QALD6_Train_SESSATest {
 		answer.answerStr = new HashSet<String>();
 		String keywords = "";
 		for (String str : q.getLanguageToKeywords().get("en")) {
-			keywords =  keywords + "" + str;
+			keywords =  keywords + " " + str;
 		}
 		
 		NGramInterface ngram = new NGramModel();
@@ -84,7 +84,7 @@ public class QALD6_Train_SESSATest {
 	@Test
 	public void test() throws Exception {
 		sessainit.init();
-		double average = 0;
+//		double average = 0;
 		double count = 0;
 		double countNULLAnswer = 0;
 		Dataset data = Dataset.QALD6_Train_Multilingual;
@@ -98,15 +98,9 @@ public class QALD6_Train_SESSATest {
 			} else {
 			for (IQuestion q : questions) {	
 			    try {
-//			    	System.out.println(q.getId());
-//					System.out.println(q.getLanguageToQuestion().get("en"));
-					Set<String> goldenStrings = q.getGoldenAnswers();
-//					System.out.println("goldenStrings--------------------------------");
-//					System.out.println(goldenStrings);
 					Answer a = getSessaResults(q);
-//					System.out.println(a.answerStr);
 						resultsList.add(a);
-							if (a.answerStr == null) {
+							if (a.answerStr.isEmpty()) {
 								log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")");
 								++countNULLAnswer;
 								continue;
@@ -116,44 +110,17 @@ public class QALD6_Train_SESSATest {
 					
 			        //do something with 'source'
 			    	} catch (Exception e) { // catch any exception
-				    	System.out.println(q.getId());
-						System.out.println(q.getLanguageToQuestion().get("en"));
+			    		++countNULLAnswer;
 			    		System.out.println("keywords--------------------------------");
-			    		System.out.println(q.getLanguageToKeywords().get("en"));	
-			    		System.out.println("Exception thrown  :" + e);
+			    		System.out.println(q.getLanguageToKeywords().get("en"));
+			    		e.printStackTrace();
+			    		log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")" + "Exception thrown  :" + e);
 			    		continue; // will just skip this iteration and jump to the next
 			    	}	
-			    }
-//				for (IQuestion q : questions) {
-//						// ##############~~RANKING~~##############
-//						log.info("Run ranking");
-//						int maximumPositionToMeasure = 10;
-////						OptimalRanker optimal_ranker = new OptimalRanker();
-////						FeatureBasedRanker feature_ranker = new FeatureBasedRanker();
-//
-//						// optimal ranking
-//						log.info("Optimal ranking");
-//						//List<Answer> rankedAnswer = optimal_ranker.rank(answers, q);
-//						List<EvalObj> eval = Measures.measure(resultsList, q, maximumPositionToMeasure);
-//						log.debug(Joiner.on("\n\t").join(eval));
-//
-//						Set<SPARQLQuery> queries = Sets.newHashSet();
-//						double fmax = 0;
-//						for (EvalObj e : eval) {
-//							if (e.getFmax() == fmax) {
-//								queries.add(e.getAnswer().query);
-//							} else if (e.getFmax() > fmax) {
-//								queries.clear();
-//								queries.add(e.getAnswer().query);
-//								fmax = e.getFmax();
-//							}
-//						}
-//						log.info("Max F-measure: " + fmax);
-//						average += fmax;
-//						log.info("Feature-based ranking begins training.");
-//						//feature_ranker.learn(q, queries);
-//				}
 			}
+			}
+			log.info("Number of totally questionsTotally: " + questions.size());
+			log.info("Number of questions with answer: " + count + ", number of questions without answer: " + countNULLAnswer);	
 		}
 	}
 

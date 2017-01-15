@@ -36,7 +36,7 @@ public class QALD6_Test_SESSATest {
 		answer.answerStr = new HashSet<String>();
 		String keywords = "";
 		for (String str : q.getLanguageToKeywords().get("en")) {
-			keywords =  keywords + "" + str;
+			keywords =  keywords + " " + str;
 		}
 		
 		NGramInterface ngram = new NGramModel();
@@ -98,13 +98,8 @@ public class QALD6_Test_SESSATest {
 			} else {
 			for (IQuestion q : questions) {	
 			    try {
-//			    	System.out.println(q.getId());
-//					System.out.println(q.getLanguageToQuestion().get("en"));
-					Set<String> goldenStrings = q.getGoldenAnswers();
-//					System.out.println("goldenStrings--------------------------------");
-//					System.out.println(goldenStrings);
+
 					Answer a = getSessaResults(q);
-//					System.out.println(a.answerStr);
 						resultsList.add(a);
 							if (a.answerStr.isEmpty()) {
 								log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")");
@@ -122,12 +117,11 @@ public class QALD6_Test_SESSATest {
 			    		e.printStackTrace();
 			    		log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")" + "Exception thrown  :" + e);
 			    		continue; // will just skip this iteration and jump to the next
-			    	}	
-				
+			    	}					
 			    }
 
 			}
+		log.info("Number of totally questionsTotally: " + questions.size());	
 		log.info("Number of questions with answer: " + count + ", number of questions without answer: " + countNULLAnswer);
-//		log.info("Average F-measure: " + (average / count));	
 		}
 }

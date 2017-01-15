@@ -37,14 +37,11 @@ public class QALD6_Test_SESSA {
 		answer.answerStr = new HashSet<String>();
 		String keywords = "";
 		for (String str : q.getLanguageToKeywords().get("en")) {
-			keywords =  keywords + "" + str;
+			keywords =  keywords + " " + str;
 		}
 		
 		NGramInterface ngram = new NGramModel();
 		ngram.CreateNGramModel(keywords);
-				
-//		System.out.println("keywords--------------------------------");
-//		System.out.println(keywords);	
 		
 		
 		//SESSA results
@@ -82,9 +79,14 @@ public class QALD6_Test_SESSA {
 	public static void QALD6_Pipeline() throws Exception{
 	
 		sessainit.init();
-		double average = 0;
+		double averagef = 0;
+		double averagep = 0;
+		double averager = 0;
+		
 		double count = 0;
 		double countNULLAnswer = 0;
+		double countNOTRT = 0;
+		
 		Dataset data = Dataset.QALD6_Test_Multilingual;
 		List<Answer> resultsList = new ArrayList<Answer>();
 		List<EvalObj> evallist = new ArrayList<EvalObj>();
@@ -102,7 +104,7 @@ public class QALD6_Test_SESSA {
 					System.out.println(q.getLanguageToQuestion().get("en"));
 						
 						Answer a = getSessaResults(q);	
-						System.out.println(a.answerStr);
+						
 						resultsList.add(a);
 							if (a.answerStr.isEmpty()) {
 								log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")");
@@ -112,56 +114,37 @@ public class QALD6_Test_SESSA {
 							
 						++count;
 						
-						
-						
-						
-						// ##############~~RANKING~~##############
-						log.info("Run ranking");
-						int maximumPositionToMeasure = 10;
-//						OptimalRanker optimal_ranker = new OptimalRanker();
-//						FeatureBasedRanker feature_ranker = new FeatureBasedRanker();
-						
-						// optimal ranking
-						log.info("Optimal ranking");
-						//List<Answer> rankedAnswer = optimal_ranker.rank(answers, q);
-						EvalObj eval = Measures.measureIQuestion(a, q, maximumPositionToMeasure);
-						evallist.add(eval);
-						
-
-					
+						log.info("Measure");
+						if(q.getAnswerType().equals("resource")){
+							EvalObj eval = Measures.measureIQuestion(a, q);
+							evallist.add(eval);
+						}else{
+							log.info("Not Resource based");
+							++countNOTRT;
+						}		
 			        //do something with 'source'
 			    	} catch (Exception e) { // catch any exception
 			    		++countNULLAnswer;
 			    		System.out.println("keywords--------------------------------");
 			    		System.out.println(q.getLanguageToKeywords().get("en"));	
 			    		log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")" + "because of Exception");
-			    		//System.out.println("Exception thrown  :" + e);
 			    		continue; // will just skip this iteration and jump to the next
 			    	}	
 			    }
 			
-			Set<SPARQLQuery> queries = Sets.newHashSet();
-			double fmax = 0;
 			for (EvalObj e : evallist) {
-				if (e.getFmax() == fmax) {
-					queries.add(e.getAnswer().query);
-				} else if (e.getFmax() > fmax) {
-					queries.clear();
-					queries.add(e.getAnswer().query);
-					fmax = e.getFmax();
-				}
+				averagep += e.getPmax();
+				averager += e.getRmax();
+				averagef += e.getFmax();
 			}
-			log.info("Max F-measure: " + fmax);
-			average += fmax;
-			log.info("Feature-based ranking begins training.");
-			//feature_ranker.learn(q, queries);
-				
-			}
-		
-		//getSessaResults("Lincoln president wife called Mary");
 
-	log.info("Number of questions with answer: " + count + ", number of questions without answer: " + countNULLAnswer);
-	log.info("Average F-measure: " + (average / count));
+		log.info("Number of questions with answer: " + count + ", number of questions without answer: " + countNULLAnswer);
+		log.info("Number of questions with answer but not Resourcetype: " + countNOTRT);
+		double sum = questions.size()-countNOTRT;
+		log.info("Average Precision: " + (averagep / sum));
+		log.info("Average Recall: " + (averager / sum));
+		log.info("Average F-measure: " + (averagef / sum));		
+		}
 
 }
 	

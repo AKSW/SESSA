@@ -1,13 +1,13 @@
 package org.aksw.qa.commons.measure;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.aksw.hawk.controller.EvalObj;
 import org.aksw.hawk.datastructures.Answer;
-import org.aksw.hawk.querybuilding.SPARQLQuery;
 import org.aksw.qa.commons.datastructure.IQuestion;
 import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
@@ -21,17 +21,17 @@ import org.dbpedia.keywordsearch.propagator.propagator;
 import org.dbpedia.keywordsearch.propagator.interfaces.PropagatorInterface;
 import org.dbpedia.keywordsearch.urimapper.Mapper;
 import org.dbpedia.keywordsearch.urimapper.interfaces.MapperInterface;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Sets;
+public class QALD3_Train_SESSATest {
 
-public class QALD6_Train_SESSA_Lgg {
-	static Logger log = LoggerFactory.getLogger(QALD6_Train_SESSA_Lgg.class);
+	static Logger log = LoggerFactory.getLogger(QALD3_Train_SESSA.class);	
 	private static Qald_SESSA_Init sessainit = new Qald_SESSA_Init();
 	
 	
-	public static Answer getSessaResultsWithLgg(IQuestion q){
+	public static Answer getSessaResults(IQuestion q){
 		
 		Answer answer = new Answer();
 		answer.answerStr = new HashSet<String>();
@@ -41,9 +41,17 @@ public class QALD6_Train_SESSA_Lgg {
 		}
 		
 		NGramInterface ngram = new NGramModel();
+		
+		
 		ngram.CreateNGramModel(keywords);
-
-		//SESSA results		
+		
+		
+//		System.out.println("keywords--------------------------------");
+//		System.out.println(keywords);	
+		
+		
+		//SESSA results
+		
 		MapperInterface mappings = new Mapper();
 		
 		mappings.BuildMappings(sessainit.esnode, ngram.getNGramMod());
@@ -55,10 +63,6 @@ public class QALD6_Train_SESSA_Lgg {
 		
 		ListFunctions.sortresults(init.getResultsList());
 		
-		//Lgg Results
-		init.setLggQuery();		
-		init.addLggresult();
-		
 		
 		int i;
 		for (i = init.getResultsList().size() - 1; i >= 0; i--) {
@@ -68,7 +72,6 @@ public class QALD6_Train_SESSA_Lgg {
 			
 			
 			if(answer.answerStr.contains(rds.getURI()) != true){	
-				//System.out.println(rds.getURI());
 				answer.answerStr.add(rds.getURI());
 			}
 				
@@ -78,20 +81,15 @@ public class QALD6_Train_SESSA_Lgg {
 		return answer;
 	}
 	
-	public static void QALD6_Pipeline() throws Exception{
 	
+	@Test
+	public void test() throws Exception {
 		sessainit.init();
-		double averagef = 0;
-		double averagep = 0;
-		double averager = 0;
-		
+//		double average = 0;
 		double count = 0;
 		double countNULLAnswer = 0;
-		double countNOTRT = 0;
-		Dataset data = Dataset.QALD6_Train_Multilingual;
+		Dataset data = Dataset.QALD3_Train_dbpedia;
 		List<Answer> resultsList = new ArrayList<Answer>();
-		List<EvalObj> evallist = new ArrayList<EvalObj>();
-
 		
 		List<IQuestion> questions = LoaderController.load(data);
 			if (questions == null) {
@@ -99,58 +97,32 @@ public class QALD6_Train_SESSA_Lgg {
 			} else if (questions.size() == 0) {
 				System.out.println("Dataset Empty" + data.toString());
 			} else {
-			for (IQuestion q : questions) {	
-			    try {
-			    	System.out.println(q.getId());
-					System.out.println(q.getLanguageToQuestion().get("en"));
+				for (IQuestion q : questions) {	
+				    try {
+
+						Answer a = getSessaResults(q);
+							resultsList.add(a);
+								if (a.answerStr.isEmpty()) {
+									log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")");
+									++countNULLAnswer;
+									continue;
+								}
+								
+								++count;
 						
-						Answer a = getSessaResultsWithLgg(q);	
-						
-						resultsList.add(a);
-							if (a.answerStr.isEmpty()) {
-								log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")");
-								++countNULLAnswer;
-								continue;
-							}
-							
-						++count;
-						
-						log.info("Measure");
-						if(q.getAnswerType().equals("resource")){
-							EvalObj eval = Measures.measureIQuestion(a, q);
-							evallist.add(eval);
-						}else{
-							log.info("Not Resource based");
-							++countNOTRT;
-						}		
-			        //do something with 'source'
-			    	} catch (Exception e) { // catch any exception
-			    		++countNULLAnswer;
-			    		System.out.println("keywords--------------------------------");
-			    		System.out.println(q.getLanguageToKeywords().get("en"));	
-			    		log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")" + "because of Exception");
-			    		continue; // will just skip this iteration and jump to the next
-			    	}	
-			    }
-			
-			for (EvalObj e : evallist) {
-				averagep += e.getPmax();
-				averager += e.getRmax();
-				averagef += e.getFmax();
+				        //do something with 'source'
+				    	} catch (Exception e) { // catch any exception
+				    		++countNULLAnswer;
+				    		System.out.println("keywords--------------------------------");
+				    		System.out.println(q.getLanguageToKeywords().get("en"));	
+				    		e.printStackTrace();
+				    		log.warn("Question#" + q.getId() + " returned no answers! (Q: " + q.getLanguageToQuestion().get("en") + ")" + "Exception thrown  :" + e);
+				    		continue; // will just skip this iteration and jump to the next
+				    	}					
+				    }
+
+				}
+			log.info("Number of totally questionsTotally: " + questions.size());
+			log.info("Number of questions with answer: " + count + ", number of questions without answer: " + countNULLAnswer);		
 			}
-
-		log.info("Number of questions with answer: " + count + ", number of questions without answer: " + countNULLAnswer);
-		log.info("Number of questions with answer but not Resourcetype: " + countNOTRT);
-		double sum = questions.size()-countNOTRT;
-		log.info("Average Precision: " + (averagep / sum));
-		log.info("Average Recall: " + (averager / sum));
-		log.info("Average F-measure: " + (averagef / sum));		
-		}
-
-}
-	
-	public static void main(final String[] args) throws Exception{
-		QALD6_Pipeline();
-
-	}
 }
