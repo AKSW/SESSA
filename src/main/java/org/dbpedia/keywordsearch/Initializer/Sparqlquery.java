@@ -40,11 +40,10 @@ import com.google.common.collect.Sets;
 
 public class Sparqlquery {
 
-	private List<RDFNode> lggUrilist = new ArrayList<RDFNode>();
+	private List<RDFNode> sparqlUrilist = new ArrayList<RDFNode>();
 	private Query query = null;
 	private RDFResourceTree lggempty = null;
 	
-
 
 	public void setQuery(Set<String> uriset){
 
@@ -123,7 +122,7 @@ public class Sparqlquery {
 	
 
 	
-	public List<RDFNode> getLggUrilist(){
+	public List<RDFNode> getSparqlUrilist(){
 	  	String sparqlEndpoint = "http://dbpedia.org/sparql";	
 	  	
 	  	if (query != null){
@@ -137,17 +136,17 @@ public class Sparqlquery {
 	      // get the value of the variables in the select clause
 	      RDFNode ontUri = solution.get("s");
 	      
-	      lggUrilist.add(ontUri);
+	      sparqlUrilist.add(ontUri);
 	      //System.out.println(ontUri);
 	    }
 		System.out.println(" ");
 		System.out.println("---------------------{>_<}------------------------");
-		System.out.println("lggUrilist.size(): " + lggUrilist.size());
+		System.out.println("sparqlUrilist.size(): " + sparqlUrilist.size());
 		System.out.println(" ");
 	    
 	    httpQuery.close();
 	  	}
-		return lggUrilist;
+		return sparqlUrilist;
 	}
 	public Query getQuery() {
 		return query;

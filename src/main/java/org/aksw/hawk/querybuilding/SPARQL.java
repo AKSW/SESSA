@@ -2,7 +2,7 @@ package org.aksw.hawk.querybuilding;
 
 import java.util.Set;
 
-import org.aksw.qa.commons.measure.SPARQLBasedEvaluation;
+import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
 import org.aksw.jena_sparql_api.cache.extra.CacheFrontend;
 import org.aksw.jena_sparql_api.cache.h2.CacheUtilsH2;
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory;
@@ -78,7 +78,7 @@ public class SPARQL {
 		try {
 			QueryExecution qe = qef.createQueryExecution(query);
 			if (qe != null && query.toString() != null) {
-				if (SPARQLBasedEvaluation.isAskType(query)) {
+				if (AnswerBasedEvaluation.isAskType(query)) {
 					set.add(new ResourceImpl(String.valueOf(qe.execAsk())));
 				} else {
 					ResultSet results = qe.execSelect();

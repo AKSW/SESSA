@@ -3,11 +3,9 @@ package org.aksw.qa.commons.measure;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.aksw.hawk.controller.EvalObj;
 import org.aksw.hawk.datastructures.Answer;
-import org.aksw.hawk.querybuilding.SPARQLQuery;
 import org.aksw.qa.commons.datastructure.IQuestion;
 import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
@@ -24,7 +22,6 @@ import org.dbpedia.keywordsearch.urimapper.interfaces.MapperInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Sets;
 
 public class QALD6_Train_SESSA_Lgg {
 	static Logger log = LoggerFactory.getLogger(QALD6_Train_SESSA_Lgg.class);

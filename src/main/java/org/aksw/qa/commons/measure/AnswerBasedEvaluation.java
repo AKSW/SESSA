@@ -169,7 +169,7 @@ public class AnswerBasedEvaluation {
 		return tmp;
 	}
 	
-	private static boolean isAskType(String sparqlQuery) {
+	public static boolean isAskType(String sparqlQuery) {
 		return sparqlQuery.contains("\nASK\n") || sparqlQuery.contains("ASK ");
 	}
 

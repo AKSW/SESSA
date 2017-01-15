@@ -2,16 +2,11 @@ package org.aksw.qa.commons.measure;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-
-import org.aksw.qa.commons.load.LoaderController;
 import org.dbpedia.keywordsearch.importer.neo4j;
 import org.dbpedia.keywordsearch.indexer.ESNode;
 import org.dbpedia.keywordsearch.indexer.Interface.IndexerInterface;
 import org.dbpedia.keywordsearch.serverproperties.pathvariables;
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Qald_SESSA_Init {
 
@@ -23,7 +18,6 @@ public class Qald_SESSA_Init {
 		
 	}
 
-	
 	public void init() throws Exception {
 
 		esnode = new ESNode();

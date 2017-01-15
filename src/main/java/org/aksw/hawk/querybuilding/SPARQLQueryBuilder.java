@@ -70,15 +70,15 @@ public class SPARQLQueryBuilder {
 					System.out.println(queryString);
 					log.debug(i++ + "/" + queryStrings.size() * query.generateQueries().size() + "= " + queryString);
 
-//					Answer a = new Answer();
-//					a.answerSet = sparql.sparql(queryString);
-//					a.query = query;
-//					a.queryString = queryString;
-//					//a.question_id = q.getId();
-//					a.question = q.getLanguageToQuestion().get("en").toString();
-//					if (!a.answerSet.isEmpty()) {
-//						answer.add(a);
-//					}
+					Answer a = new Answer();
+					a.answerSet = sparql.sparql(queryString);
+					a.query = query;
+					a.queryString = queryString;
+					a.question_id = Integer.parseInt(q.getId());
+					a.question = q.getLanguageToQuestion().get("en").toString();
+					if (!a.answerSet.isEmpty()) {
+						answer.add(a);
+					}
 					numberOfOverallQueriesExecuted++;
 				}
 			}

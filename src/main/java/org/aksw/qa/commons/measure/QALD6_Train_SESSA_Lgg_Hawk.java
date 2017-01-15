@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.aksw.hawk.controller.AbstractPipeline;
 import org.aksw.hawk.controller.EvalObj;
+import org.aksw.hawk.controller.PipelineStanford_1;
 import org.aksw.hawk.datastructures.Answer;
+import org.aksw.hawk.datastructures.HAWKQuestion;
+import org.aksw.hawk.datastructures.HAWKQuestionFactory;
 import org.aksw.qa.commons.datastructure.IQuestion;
 import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
@@ -22,13 +26,12 @@ import org.dbpedia.keywordsearch.urimapper.interfaces.MapperInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-public class QALD6_Test_SESSA_Lgg {
-	static Logger log = LoggerFactory.getLogger(QALD6_Test_SESSA_Lgg.class);
+public class QALD6_Train_SESSA_Lgg_Hawk {
+	static Logger log = LoggerFactory.getLogger(QALD6_Train_SESSA_Lgg_Hawk.class);
 	private static Qald_SESSA_Init sessainit = new Qald_SESSA_Init();
 	
 	
-	public static Answer getSessaResultsWithLgg(IQuestion q){
+	public static Answer getSessaResultsWithLggHawk(IQuestion q){
 		
 		Answer answer = new Answer();
 		answer.answerStr = new HashSet<String>();
@@ -39,16 +42,10 @@ public class QALD6_Test_SESSA_Lgg {
 		
 		NGramInterface ngram = new NGramModel();
 		ngram.CreateNGramModel(keywords);
-				
-//		System.out.println("keywords--------------------------------");
-//		System.out.println(keywords);	
-		
-		
+
 		//SESSA results		
-		MapperInterface mappings = new Mapper();
-		
-		mappings.BuildMappings(sessainit.esnode, ngram.getNGramMod());
-		
+		MapperInterface mappings = new Mapper();		
+		mappings.BuildMappings(sessainit.esnode, ngram.getNGramMod());		
 		InitializerInterface init = new initializer();
 		init.initiate(mappings.getMappings(), ngram.getNGramMod());
 		PropagatorInterface getFinalResults = new propagator();
@@ -58,7 +55,15 @@ public class QALD6_Test_SESSA_Lgg {
 		
 		//Lgg Results
 		init.setLggQuery();		
-		init.addLggresult();
+		
+		//HAWK Results
+		HAWKQuestion hq = HAWKQuestionFactory.createInstance(q);
+		AbstractPipeline pipeline = new PipelineStanford_1();
+		
+		//Add Prefix and QueryPattern from Lgg
+		pipeline.setInitialQuery(init.getLggQuery());		
+		List<Answer> answerlist = pipeline.getAnswersToQuestion(hq);
+		init.addLggHawkresult(answerlist);
 		
 		int i;
 		for (i = init.getResultsList().size() - 1; i >= 0; i--) {
@@ -88,8 +93,7 @@ public class QALD6_Test_SESSA_Lgg {
 		double count = 0;
 		double countNULLAnswer = 0;
 		double countNOTRT = 0;
-
-		Dataset data = Dataset.QALD6_Test_Multilingual;
+		Dataset data = Dataset.QALD6_Train_Multilingual;
 		List<Answer> resultsList = new ArrayList<Answer>();
 		List<EvalObj> evallist = new ArrayList<EvalObj>();
 
@@ -105,7 +109,7 @@ public class QALD6_Test_SESSA_Lgg {
 			    	System.out.println(q.getId());
 					System.out.println(q.getLanguageToQuestion().get("en"));
 						
-						Answer a = getSessaResultsWithLgg(q);	
+						Answer a = getSessaResultsWithLggHawk(q);	
 						
 						resultsList.add(a);
 							if (a.answerStr.isEmpty()) {

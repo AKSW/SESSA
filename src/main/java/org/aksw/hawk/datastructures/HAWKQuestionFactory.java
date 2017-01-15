@@ -3,7 +3,7 @@ package org.aksw.hawk.datastructures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aksw.qa.commons.measure.SPARQLBasedEvaluation;
+import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
 import org.aksw.qa.commons.datastructure.IQuestion;
 
 public class HAWKQuestionFactory {
@@ -20,8 +20,8 @@ public class HAWKQuestionFactory {
 		hq.setOutOfScope(Boolean.TRUE.equals(q.getOutOfScope()));
 		hq.setHybrid(Boolean.TRUE.equals(q.getHybrid()));
 
-		boolean b = SPARQLBasedEvaluation.isAskType(q.getSparqlQuery());
-		b |= SPARQLBasedEvaluation.isAskType(q.getPseudoSparqlQuery());
+		boolean b = AnswerBasedEvaluation.isAskType(q.getSparqlQuery());
+		b |= AnswerBasedEvaluation.isAskType(q.getPseudoSparqlQuery());
 		hq.setLoadedAsASKQuery(b);
 
 		hq.setLanguageToQuestion(q.getLanguageToQuestion());

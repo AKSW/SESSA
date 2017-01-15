@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.aksw.hawk.datastructures.Answer;
 import org.apache.jena.query.Query;
 import org.dbpedia.keywordsearch.datastructures.MapperDataStruct;
 import org.dbpedia.keywordsearch.datastructures.NGramStruct;
@@ -17,4 +18,5 @@ public interface InitializerInterface {
     public void addLggresult();
     public void setLggQuery();
     public Query getLggQuery();
+	public void addLggHawkresult(List<Answer> answerlist);
 }

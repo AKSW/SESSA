@@ -10,6 +10,7 @@ import org.dbpedia.keywordsearch.Initializer.interfaces.InitializerInterface;
 import org.dbpedia.keywordsearch.datastructures.MapperDataStruct;
 import org.dbpedia.keywordsearch.datastructures.NGramStruct;
 import org.dbpedia.keywordsearch.datastructures.ResultDataStruct;
+import org.aksw.hawk.datastructures.Answer;
 import org.apache.jena.query.Query;
 
 /* This is the class for activating the nodes initiiated from the mappings.  */
@@ -53,9 +54,8 @@ public class initializer implements InitializerInterface{
     public List<ResultDataStruct> getResultsList(){   	  	
     	return this.propagator;}
     
-    public void addLggresult(){
-		
-		List<RDFNode> lggUrilist = query.getLggUrilist();
+    public void addLggresult(){		
+		List<RDFNode> lggUrilist = query.getSparqlUrilist();
         for(int i=0;i<lggUrilist.size();i++){
             
             /* Activating the new node */
@@ -64,6 +64,24 @@ public class initializer implements InitializerInterface{
             resultLgg.setImage("No image");
             this.propagator.add(resultLgg);
         }
+    }
+    
+	@SuppressWarnings("null")
+	public void addLggHawkresult(List<Answer> answerlist){
+    	Set<RDFNode> answerS = null;
+    	for (Answer answer : answerlist) {
+    		answerS.addAll(answer.answerSet);
+    	}
+    	if(answerS.isEmpty() != true){
+    		List<RDFNode> lggHawkUrilist = new ArrayList<RDFNode>(answerS);
+    		for(int i=0;i<lggHawkUrilist.size();i++){           
+    			/* Activating the new node */
+    			ResultDataStruct resultLgg=new ResultDataStruct(lggHawkUrilist.get(i).toString());
+    			/* Adding to activated node to the list */
+    			resultLgg.setImage("No image");
+    			this.propagator.add(resultLgg);
+    		} 
+    	}
     }
     
     public void setLggQuery(){

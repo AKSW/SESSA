@@ -41,6 +41,7 @@ import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 import org.aksw.hawk.controller.AbstractPipeline;
 import org.aksw.hawk.controller.PipelineStanford_1;
+import org.aksw.hawk.datastructures.Answer;
 import org.aksw.hawk.datastructures.HAWKQuestion;
 import org.aksw.hawk.querybuilding.SPARQLQuery;
 import org.apache.jena.graph.Triple;
@@ -93,7 +94,7 @@ public class ServletServer extends HttpServlet {
 		//2. Lgg Query
 		init.setLggQuery();
 		//Lgg Results
-		init.addLggresult();
+//		init.addLggresult();
 		
 		
 		//3. HAWK Prozess
@@ -108,10 +109,9 @@ public class ServletServer extends HttpServlet {
 		//System.out.println(init.getLggQuery().getQueryPattern());	
 	
 		//Add Prefix and QueryPattern from Lgg
-		pipeline.setInitialQuery(init.getLggQuery());
-		
-		pipeline.getAnswersToQuestion(q);
-		
+		pipeline.setInitialQuery(init.getLggQuery());		
+		List<Answer> answerlist = pipeline.getAnswersToQuestion(q);
+		init.addLggHawkresult(answerlist);
 		
 		ListFunctions.sortresults(init.getResultsList());
 				
