@@ -10,16 +10,14 @@ import org.slf4j.LoggerFactory;
 
 public class AnswerBasedEvaluation {
 	static Logger log = LoggerFactory.getLogger(AnswerBasedEvaluation.class);
+	private static String sparqlEndpoint = "http://dbpedia.org/sparql";
 
 	public static double precision(Set<String> systemAnswer, IQuestion question) {
 		if (systemAnswer.isEmpty()) {
 			return 0;
 		}
 		double precision = 0;
-//		String sparqlEndpoint = "http://dbpedia.org/sparql";
-		String sparqlEndpoint = "http://lod.openlinksw.com/sparql";
 
-		
 
 		Set<String> goldenStrings = null;
 		
@@ -94,9 +92,6 @@ public class AnswerBasedEvaluation {
 			return 0;
 		}
 		double recall = 0;
-//		String sparqlEndpoint = "http://dbpedia.org/sparql";	
-		String sparqlEndpoint = "http://lod.openlinksw.com/sparql";
-
 		
 		Set<String> goldenStrings = null;
 		
