@@ -1,5 +1,6 @@
 package org.aksw.qa.commons.measure;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,9 @@ import org.aksw.hawk.datastructures.Answer;
 import org.aksw.qa.commons.datastructure.IQuestion;
 import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
+import org.apache.log4j.Appender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.SimpleLayout;
 import org.dbpedia.keywordsearch.Initializer.initializer;
 import org.dbpedia.keywordsearch.Initializer.interfaces.InitializerInterface;
 import org.dbpedia.keywordsearch.datastructures.ListFunctions;
@@ -74,7 +78,18 @@ public class QALD7_Train_SESSA {
 	}
 	
 	public static void QALD7_Pipeline() throws Exception{
-	
+        Appender fh = null;
+//        try {
+//            fh = new FileAppender(new SimpleLayout(), "MyLogFile.log");
+//            log.addAppender(fh);
+//            fh.setLayout(new SimpleLayout());
+//            
+//        } catch (SecurityException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
 		sessainit.init();
 		double averagef = 0;
 		double averagep = 0;
@@ -83,7 +98,9 @@ public class QALD7_Train_SESSA {
 		double count = 0;
 		double countNULLAnswer = 0;
 		double countNOTRT = 0;
-		Dataset data = Dataset.QALD7_Train_Multilingual;
+//		Dataset data = Dataset.QALD7_Train_Multilingual;
+		Dataset data = Dataset.QALD7_Train_Kurz;
+
 		List<Answer> resultsList = new ArrayList<Answer>();
 		List<EvalObj> evallist = new ArrayList<EvalObj>();
 
@@ -98,6 +115,7 @@ public class QALD7_Train_SESSA {
 			    	System.out.println(q.getId());
 					System.out.println(q.getLanguageToQuestion().get("en"));
 						
+					if(q.getAnswerType().equals("resource")){
 						Answer a = getSessaResults(q);	
 						
 						resultsList.add(a);
@@ -109,15 +127,13 @@ public class QALD7_Train_SESSA {
 							
 						++count;
 						
-						log.info("Measure");
-						if(q.getAnswerType().equals("resource")){
-							EvalObj eval = Measures.measureIQuestion(a, q);
-							evallist.add(eval);
-						}else{
-							log.info("Not Resource based");
-							++countNOTRT;
-						}		
-			        //do something with 'source'
+						log.info("Measure");					
+						EvalObj eval = Measures.measureIQuestion(a, q);
+						evallist.add(eval);
+					}else{
+						log.info("Not Resource based");
+						++countNOTRT;
+					}			
 			    	} catch (Exception e) { // catch any exception
 			    		++countNULLAnswer;
 			    		System.out.println("keywords--------------------------------");

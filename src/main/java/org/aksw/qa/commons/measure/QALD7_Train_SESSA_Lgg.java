@@ -85,7 +85,8 @@ public class QALD7_Train_SESSA_Lgg {
 		double count = 0;
 		double countNULLAnswer = 0;
 		double countNOTRT = 0;
-		Dataset data = Dataset.QALD7_Train_Multilingual;
+//		Dataset data = Dataset.QALD7_Train_Multilingual;
+		Dataset data = Dataset.QALD7_Train_Kurz;
 		List<Answer> resultsList = new ArrayList<Answer>();
 		List<EvalObj> evallist = new ArrayList<EvalObj>();
 
@@ -101,6 +102,7 @@ public class QALD7_Train_SESSA_Lgg {
 			    	System.out.println(q.getId());
 					System.out.println(q.getLanguageToQuestion().get("en"));
 						
+					if(q.getAnswerType().equals("resource")){
 						Answer a = getSessaResultsWithLgg(q);	
 						
 						resultsList.add(a);
@@ -112,15 +114,13 @@ public class QALD7_Train_SESSA_Lgg {
 							
 						++count;
 						
-						log.info("Measure");
-						if(q.getAnswerType().equals("resource")){
-							EvalObj eval = Measures.measureIQuestion(a, q);
-							evallist.add(eval);
-						}else{
-							log.info("Not Resource based");
-							++countNOTRT;
-						}		
-			        //do something with 'source'
+						log.info("Measure");					
+						EvalObj eval = Measures.measureIQuestion(a, q);
+						evallist.add(eval);
+					}else{
+						log.info("Not Resource based");
+						++countNOTRT;
+					}			
 			    	} catch (Exception e) { // catch any exception
 			    		++countNULLAnswer;
 			    		System.out.println("keywords--------------------------------");
