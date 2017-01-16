@@ -18,8 +18,7 @@ public class AnswerBasedEvaluation {
 		double precision = 0;
 //		String sparqlEndpoint = "http://dbpedia.org/sparql";
 		String sparqlEndpoint = "http://lod.openlinksw.com/sparql";
-//		String sparqlEndpoint = "http://139.18.2.164:3030/ds/sparql";
-//		String sparqlEndpoint = "http://titan.informatik.uni-leipzig.de:3030/ds/sparql";
+
 		
 
 		Set<String> goldenStrings = null;
@@ -97,8 +96,7 @@ public class AnswerBasedEvaluation {
 		double recall = 0;
 //		String sparqlEndpoint = "http://dbpedia.org/sparql";	
 		String sparqlEndpoint = "http://lod.openlinksw.com/sparql";
-//		String sparqlEndpoint = "http://139.18.2.164:3030/ds/sparql";
-//		String sparqlEndpoint = "http://titan.informatik.uni-leipzig.de:3030/ds/sparql";
+
 		
 		Set<String> goldenStrings = null;
 		

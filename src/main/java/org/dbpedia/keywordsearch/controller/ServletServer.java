@@ -109,9 +109,11 @@ public class ServletServer extends HttpServlet {
 		//System.out.println(init.getLggQuery().getQueryPattern());	
 	
 		//Add Prefix and QueryPattern from Lgg
-		pipeline.setInitialQuery(init.getLggQuery());		
-		List<Answer> answerlist = pipeline.getAnswersToQuestion(q);
-		init.addLggHawkresult(answerlist);
+		if(init.getLggQuery() != null){
+			pipeline.setInitialQuery(init.getLggQuery());		
+			List<Answer> answerlist = pipeline.getAnswersToQuestion(q);
+			init.addLggHawkresult(answerlist);
+		}
 		
 		ListFunctions.sortresults(init.getResultsList());
 				

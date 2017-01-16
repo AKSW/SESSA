@@ -109,9 +109,9 @@ public class LoaderController {
 //		case QALD2_Participants_Challenge:
 //			return loadingAnchor.getResource("/QALD-master/2/data/participants-challenge-answers.xml");
 
-		case QALD3_Test_dbpedia:
-			//return loadingAnchor.getResource("/QALD-master/3/data/dbpedia-test-answers.xml");
-			return loadingAnchor.getResource("/QALD-master/3/dbpedia-test-answers.xml");
+//		case QALD3_Test_dbpedia:
+//			//return loadingAnchor.getResource("/QALD-master/3/data/dbpedia-test-answers.xml");
+//			return loadingAnchor.getResource("/QALD-master/3/dbpedia-test-answers.xml");
 //		case QALD3_Test_esdbpedia:
 //			return loadingAnchor.getResource("/QALD-master/3/data/esdbpedia-test-answers.xml");
 		// case QALD3_Test_esdbpedia_sparql:
@@ -119,9 +119,9 @@ public class LoaderController {
 		// loadingAnchor.getResource("/QALD-master/3/data/esdbpedia-test.xml");
 //		case QALD3_Test_musicbrainz:
 //			return loadingAnchor.getResource("/QALD-master/3/data/musicbrainz-test-answers.xml");
-		case QALD3_Train_dbpedia:
-			//return loadingAnchor.getResource("/QALD-master/3/data/dbpedia-train-answers.xml");
-			return loadingAnchor.getResource("/QALD-master/3/dbpedia-train-answers.xml");
+//		case QALD3_Train_dbpedia:
+//			//return loadingAnchor.getResource("/QALD-master/3/data/dbpedia-train-answers.xml");
+//			return loadingAnchor.getResource("/QALD-master/3/dbpedia-train-answers.xml");
 //		case QALD3_Train_esdbpedia:
 //			return loadingAnchor.getResource("/QALD-master/3/data/esdbpedia-train-answers.xml");
 //		case QALD3_Train_musicbrainz:
@@ -149,15 +149,18 @@ public class LoaderController {
 
 //		case QALD6_Train_Hybrid:
 //			return loadingAnchor.getResource("/QALD-master/6/data/qald-6-train-hybrid.json");
-		case QALD6_Train_Multilingual:
+//		case QALD6_Train_Multilingual:
+//			//return loadingAnchor.getResource("/QALD-master/6/data/qald-6-train-multilingual.json");
+//			return loadingAnchor.getResource("/QALD-master/6/qald-6-train-multilingual.json");
+		case QALD7_Train_Multilingual:
 			//return loadingAnchor.getResource("/QALD-master/6/data/qald-6-train-multilingual.json");
-			return loadingAnchor.getResource("/QALD-master/6/qald-6-train-multilingual.json");
-
+			return loadingAnchor.getResource("/QALD-master/7/qald-7-train-multilingual.json");	
+			
 //		case QALD6_Test_Hybrid:
 //			return loadingAnchor.getResource("/QALD-master/6/data/qald-6-test-hybrid.json");
-		case QALD6_Test_Multilingual:
-			//return loadingAnchor.getResource("/QALD-master/6/data/qald-6-test-multilingual.json");
-			return loadingAnchor.getResource("/QALD-master/6/qald-6-test-multilingual.json");
+//		case QALD6_Test_Multilingual:
+//			//return loadingAnchor.getResource("/QALD-master/6/data/qald-6-test-multilingual.json");
+//			return loadingAnchor.getResource("/QALD-master/6/qald-6-test-multilingual.json");
 //		case Stanford_dev:
 //			return loadingAnchor.getResource("/stanfordqa-dev.json");
 //		case Stanford_train:
@@ -253,9 +256,10 @@ public class LoaderController {
 //					out = hybrid;
 //					break;
 //				case QALD6_Test_Hybrid:
-				case QALD6_Test_Multilingual:
+//				case QALD6_Test_Multilingual:
 //				case QALD6_Train_Hybrid:
-				case QALD6_Train_Multilingual:
+//				case QALD6_Train_Multilingual:
+				case QALD7_Train_Multilingual:
 
 					QaldJson json = (QaldJson) ExtendedQALDJSONLoader.readJson(getInputStream(data), QaldJson.class);
 					

@@ -154,15 +154,20 @@ public final class EJQuestionFactory {
 
 			}
 
+		
 			
 		
 			
 			for (QaldQuestion qQuestion : it.getQuestion()) {
 				question.getLanguageToQuestion().put(qQuestion.getLanguage(), qQuestion.getString());
 				question.setLanguageToQuestion(question.getLanguageToQuestion());
-				
-				question.getLanguageToKeywords().put(qQuestion.getLanguage(), Arrays.asList(qQuestion.getKeywords().split(SPLIT_KEYWORDS_ON)));
-				question.setLanguageToKeywords(question.getLanguageToKeywords());
+
+				//Not all language needed and by some language is leer.
+				if(qQuestion.getLanguage().equals("en")){
+					question.getLanguageToKeywords().put(qQuestion.getLanguage(), Arrays.asList(qQuestion.getKeywords().split(SPLIT_KEYWORDS_ON)));
+					question.setLanguageToKeywords(question.getLanguageToKeywords());
+				}
+
 			}
 			
 			
