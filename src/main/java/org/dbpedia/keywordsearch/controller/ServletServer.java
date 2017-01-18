@@ -13,10 +13,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 
 
@@ -37,6 +39,7 @@ import org.dbpedia.keywordsearch.urimapper.interfaces.MapperInterface;
 import org.neo4j.graphdb.GraphDatabaseService;
 
 import com.google.gson.Gson;
+
 import org.apache.jena.sparql.expr.aggregate.Aggregator;
 import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.ElementGroup;
@@ -176,7 +179,7 @@ public class ServletServer extends HttpServlet {
 			esnode.rdfcluster("resources/dbpedia_3Eng_property.ttl", "properties");
 
 			/* Enriching them with surfaceforms */
-			esnode.rdfcluster("resources/en_surface_forms.ttl", "surfaceforms");
+//			esnode.rdfcluster("resources/en_surface_forms.ttl", "surfaceforms");
 
 			/* Indexing DBpedia labels */
 			esnode.rdfcluster("resources/labels_en.ttl", "dbpedialabels");
@@ -190,11 +193,13 @@ public class ServletServer extends HttpServlet {
 		System.out.println("Creating DataBase");
 
 		this.Instance = new pathvariables();
-		graphdb = new neo4j(this.Instance.getgraph());
+		String getgraph = this.Instance.getgraph();
+		graphdb = new neo4j(getgraph);
 	
+		
 		//TODO only load the data once
 		GraphDatabaseService gdb = graphdb.getgdbservice();
-		graphdb.graphdbform(gdb, "resources/mappingbased_literals_en.ttl");
+//		graphdb.graphdbform(gdb, "resources/mappingbased_literals_en.ttl");
 		graphdb.graphdbform(gdb, "resources/mappingbased_objects_en.ttl");
 		
 		

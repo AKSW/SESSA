@@ -1,7 +1,12 @@
 package org.dbpedia.keywordsearch.importer;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.apache.commons.io.FileDeleteStrategy;
 import org.dbpedia.keywordsearch.importer.interfaces.GDBInterface;
@@ -18,8 +23,10 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
+import org.openrdf.rio.UnsupportedRDFormatException;
 import org.openrdf.rio.helpers.StatementCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +45,7 @@ public class neo4j implements GDBInterface {
 			file.delete(); 
 		}
 	}
-
+//TODO fix that
 	private static void registerShutdownHook(final GraphDatabaseService graphDb) {
 		/* Graphdatabase service closed */
 		Runtime.getRuntime()
@@ -81,11 +88,17 @@ public class neo4j implements GDBInterface {
 	public void graphdbform(GraphDatabaseService graphdb, String rdfpath) {
 
 		log.info("Start parsing: " + rdfpath);
-		RDFParser rdfParser = Rio.createParser(RDFFormat.TURTLE);
-		
-		org.openrdf.model.Model model = new org.openrdf.model.impl.LinkedHashModel();
-		rdfParser.setRDFHandler(new StatementCollector(model));
+
+		InputStream in;
+		org.openrdf.model.Model model = null;
+		try {
+			in = new FileInputStream(new File(rdfpath));
+			model = Rio.parse(in,"http://dbpedia.org", RDFFormat.TURTLE);
+		} catch (RDFParseException | UnsupportedRDFormatException | IOException e) {
+			e.printStackTrace();
+		}
 	
+
 		/* Creates an iterator on the rdf triples from the specified file */
 		ResourceIterator<Node> nodeindex;
 		/* Begining the transaction of creating nodes. Allocating resources */

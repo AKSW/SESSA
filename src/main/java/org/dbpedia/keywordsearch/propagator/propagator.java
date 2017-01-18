@@ -108,7 +108,7 @@ public final class propagator implements PropagatorInterface{
                     {
                          /* finding the third node connected to two nodes through fact node */
                          activatednewnode=thirdnode(node,activatednode1,activatednode2);
-
+                         System.out.println("activatednewnode typenode "+  activatednewnode);
                          flag = true;
 
                          /* Finding the union of the color set of the two nodes */
@@ -159,20 +159,20 @@ public final class propagator implements PropagatorInterface{
             Result result = db.execute( "match (a:`"+URI1.getURI()+"`)--c--(b:`"+URI2.getURI()+"`) return c" ) )
             {
     	  Result r = db.execute( "match (a:`"+URI1.getURI()+"`)--(b:`"+URI2.getURI()+"`)--c return c" );
-    	  System.out.println("combination2");
-    	  System.out.println(r.toString());
+//    	  System.out.println("combination2");
+//    	  System.out.println(r.toString());
                 Label activatedlabel1 = DynamicLabel.label(URI1.getURI());
                 Label activatedlabel2 = DynamicLabel.label(URI2.getURI());
                 
                 nodeindex1 = db.findNodes(activatedlabel1);
-                System.out.println(activatedlabel1);
+//                System.out.println(activatedlabel1);
 //                if(nodeindex1.hasNext()){
 //                    activatednode1=nodeindex1.next();}
 //                else
 //                    {run = false;}
                 
                 nodeindex2 = db.findNodes(activatedlabel2);
-                System.out.println(activatedlabel2);
+//                System.out.println(activatedlabel2);
 //                if(nodeindex2.hasNext()){
 //                    activatednode2=nodeindex2.next();}
 //                else{
@@ -180,7 +180,7 @@ public final class propagator implements PropagatorInterface{
                 
                 /* Iterating over all the nodes in the results from the cypher query */
                 if(run==true){
-                	System.out.println("combination3");
+//                	System.out.println("combination3");
                     Iterator<Node> n_column = result.columnAs( "c" );
                     for ( Node node : IteratorUtil.asIterable( n_column ) )
                     {
@@ -202,8 +202,10 @@ public final class propagator implements PropagatorInterface{
 
                          /* finding the third node connected to two nodes through fact node */
                          activatednewnode=thirdnode(node,activatednode1,activatednode2);
-                         System.out.println("combination4");
-                         System.out.println(activatednewnode.toString());
+                         System.out.println("activatednewnode typenode "+  activatednewnode);
+
+//                         System.out.println("combination4");
+//                         System.out.println(activatednewnode.toString());
                          /* This is to prevent recursion of activating the same triple again and again.
                             This checks if the new activated node is part of previously activated tiple */
                          if(ListFunctions.isinBlackList(this.blacklist, activatednewnode.getProperty("URI").toString(), activatednode1.getProperty("URI").toString())
@@ -223,7 +225,7 @@ public final class propagator implements PropagatorInterface{
                             or else a new node is created and added to the list */
                          if(!((temp=ListFunctions.ContainsResultDataStruct(activatednewnode.getProperty("URI").toString(),results))==null))
                          {
-                        	 System.out.println("combination4");
+//                        	 System.out.println("combination4");
                                 union=ResultDataStruct.union(union, temp.getColors());
                                 temp.setExplainationScore(Double.valueOf(union.size()));
                                 temp.setColors(union);
@@ -237,7 +239,7 @@ public final class propagator implements PropagatorInterface{
                                 ImageLink(db, newnode);
                                 newnode.setActivation("Factual");
                                 this.results.add(newnode);
-                                System.out.println(newnode.getURI());
+//                                System.out.println(newnode.getURI());
                          }
                     }/* Commiting the transaction */
                 }    
@@ -285,7 +287,7 @@ public final class propagator implements PropagatorInterface{
                          activatednewnode=thirdnode(node,activatednode1,activatednode2);
 
                          flag = true;
-                         System.out.print("skdajkl");
+//                         System.out.print("skdajkl");
                          URI1.setImage(activatednewnode.getProperty("URI").toString());
                          
                          

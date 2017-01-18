@@ -12,8 +12,9 @@ you might need to run the script.sh
 you might need to run the DBOIndex
 
 ```
-mvn clean package tomcat:run
+mvn clean package jetty:run
 ```
+we recommend using Jetty 9.X 
 
     
   
