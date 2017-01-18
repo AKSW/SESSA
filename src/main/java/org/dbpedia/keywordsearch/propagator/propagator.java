@@ -26,9 +26,11 @@ public final class propagator implements PropagatorInterface{
     /* Blacklist is used to keep track of the combination of nodes that already has been propagated */
     private List<BlacklistDataStruct> blacklist = new ArrayList<BlacklistDataStruct>();
     private List<String> blacklistnode = new ArrayList<String>();
+    private List<ResultDataStruct> results;
     public void PropagateInit(GraphDatabaseService db, List<ResultDataStruct> results){
         boolean mainflag;
         boolean flag=false;
+        this.results = results;
         while(true){
             mainflag=false;
             flag=false;
@@ -37,7 +39,7 @@ public final class propagator implements PropagatorInterface{
             for(int i=0; i<results.size();i++){
                 if(!this.blacklistnode.contains(results.get(i).getURI())){
                     flag=ActivateTypeNode(db,results.get(i),results);
-                    this.blacklistnode.add(results.get(i).getURI());
+                    
                 }
                   
                 for(int j=0; j<results.size();j++){
@@ -47,6 +49,7 @@ public final class propagator implements PropagatorInterface{
                   
                   if(!ListFunctions.isinBlackList(this.blacklist, results.get(i).getURI(), results.get(j).getURI()))
                   {
+                	  
                       /* If the combination is not in blacklist, it activates the third node through fact node
                           and puts it in the list*/
                       flag=Activatefactnode(db,results.get(i),results.get(j),results);
@@ -61,6 +64,7 @@ public final class propagator implements PropagatorInterface{
                     mainflag=true;
                   }
                 }
+                //this.blacklistnode.add(this.results.get(i).getURI());
                 
             }
             /* If all the combinations are in the blacklist and no new node is inserted, then break the loop */
@@ -127,7 +131,10 @@ public final class propagator implements PropagatorInterface{
                                                                 URI1.getEnergyScore(),
                                                                 union); 
                                 newnode.setActivation("Type");
-                                results.add(newnode);
+                                this.results.add(newnode);
+                               // System.out.println(URI1.getURI()+ activatednode2.getURI());
+                                
+                                //System.out.println(newnode.getURI());
                          }
                     }/* Commiting the transaction */
                 }
@@ -147,25 +154,33 @@ public final class propagator implements PropagatorInterface{
       
       /* Beginning the transaction for finding third node */
       try ( Transaction ignored = db.beginTx();
+    		  
               /* Executing the cypher query to find node attached to given two nodes */
             Result result = db.execute( "match (a:`"+URI1.getURI()+"`)--c--(b:`"+URI2.getURI()+"`) return c" ) )
             {
+    	  Result r = db.execute( "match (a:`"+URI1.getURI()+"`)--(b:`"+URI2.getURI()+"`)--c return c" );
+    	  System.out.println("combination2");
+    	  System.out.println(r.toString());
                 Label activatedlabel1 = DynamicLabel.label(URI1.getURI());
                 Label activatedlabel2 = DynamicLabel.label(URI2.getURI());
                 
                 nodeindex1 = db.findNodes(activatedlabel1);
-                if(nodeindex1.hasNext())
-                    activatednode1=nodeindex1.next();
-                else
-                    run = false;
+                System.out.println(activatedlabel1);
+//                if(nodeindex1.hasNext()){
+//                    activatednode1=nodeindex1.next();}
+//                else
+//                    {run = false;}
+                
                 nodeindex2 = db.findNodes(activatedlabel2);
-                if(nodeindex2.hasNext())
-                    activatednode2=nodeindex2.next();
-                else
-                    run = false;
+                System.out.println(activatedlabel2);
+//                if(nodeindex2.hasNext()){
+//                    activatednode2=nodeindex2.next();}
+//                else{
+//                    run = false;}
                 
                 /* Iterating over all the nodes in the results from the cypher query */
                 if(run==true){
+                	System.out.println("combination3");
                     Iterator<Node> n_column = result.columnAs( "c" );
                     for ( Node node : IteratorUtil.asIterable( n_column ) )
                     {
@@ -182,12 +197,13 @@ public final class propagator implements PropagatorInterface{
                                  URI2.setEnergyScore(URI1.getEnergyScore()+URI2.getEnergyScore());
                                  URI2.setEnergyScore((double)union.size());
                              }
-                             break;
+                             //break;
                          }
 
                          /* finding the third node connected to two nodes through fact node */
                          activatednewnode=thirdnode(node,activatednode1,activatednode2);
-
+                         System.out.println("combination4");
+                         System.out.println(activatednewnode.toString());
                          /* This is to prevent recursion of activating the same triple again and again.
                             This checks if the new activated node is part of previously activated tiple */
                          if(ListFunctions.isinBlackList(this.blacklist, activatednewnode.getProperty("URI").toString(), activatednode1.getProperty("URI").toString())
@@ -207,6 +223,7 @@ public final class propagator implements PropagatorInterface{
                             or else a new node is created and added to the list */
                          if(!((temp=ListFunctions.ContainsResultDataStruct(activatednewnode.getProperty("URI").toString(),results))==null))
                          {
+                        	 System.out.println("combination4");
                                 union=ResultDataStruct.union(union, temp.getColors());
                                 temp.setExplainationScore(Double.valueOf(union.size()));
                                 temp.setColors(union);
@@ -219,7 +236,8 @@ public final class propagator implements PropagatorInterface{
                                                                 union);
                                 ImageLink(db, newnode);
                                 newnode.setActivation("Factual");
-                                results.add(newnode);
+                                this.results.add(newnode);
+                                System.out.println(newnode.getURI());
                          }
                     }/* Commiting the transaction */
                 }    
@@ -280,24 +298,28 @@ public final class propagator implements PropagatorInterface{
             }
     }
     
+    public List<ResultDataStruct> getFinalResults(){
+    	return results;
+    }
+    
     private enum Reltypes implements RelationshipType{
 	Predicate_of,Subject_of,Object_of;
     }
     
     /* This method finds the third node that is connected with the two given nodes through fact node */
     private static Node thirdnode(Node fact, Node node1, Node node2) {
-    for(Relationship r :fact.getRelationships(Reltypes.Object_of)) {
-       if (!(r.getOtherNode(fact).equals(node1) || r.getOtherNode(fact).equals(node2)))
-       return r.getOtherNode(fact);
-    }
-    for(Relationship r :fact.getRelationships(Reltypes.Subject_of)) {
-       if (!(r.getOtherNode(fact).equals(node1) || r.getOtherNode(fact).equals(node2)))
-       return r.getOtherNode(fact);
-    }
-    for(Relationship r :fact.getRelationships(Reltypes.Predicate_of)) {
-       if (!(r.getOtherNode(fact).equals(node1) || r.getOtherNode(fact).equals(node2)))
-       return r.getOtherNode(fact);
-    }
+    	for(Relationship r :fact.getRelationships(Reltypes.Object_of)) {
+    		if (!(r.getOtherNode(fact).equals(node1) || r.getOtherNode(fact).equals(node2)))
+    			return r.getOtherNode(fact);
+    	}
+    	for(Relationship r :fact.getRelationships(Reltypes.Subject_of)) {
+    		if (!(r.getOtherNode(fact).equals(node1) || r.getOtherNode(fact).equals(node2)))
+    			return r.getOtherNode(fact);
+    	}
+    	for(Relationship r :fact.getRelationships(Reltypes.Predicate_of)) {
+    		if (!(r.getOtherNode(fact).equals(node1) || r.getOtherNode(fact).equals(node2)))
+    			return r.getOtherNode(fact);
+    	}
     return null;
     }
     

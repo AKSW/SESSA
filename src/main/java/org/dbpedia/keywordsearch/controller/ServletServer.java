@@ -5,6 +5,8 @@
  */
 package org.dbpedia.keywordsearch.controller;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -86,36 +88,45 @@ public class ServletServer extends HttpServlet {
 		MapperInterface mappings = new Mapper();
 		mappings.BuildMappings(this.esnode, ngram.getNGramMod());
 		InitializerInterface init = new initializer();
+        for(int i=0;i<ngram.getNGramMod().size();i++){
+        	System.out.println(ngram.getNGramMod().get(i).getBegin());
+        	System.out.println(ngram.getNGramMod().get(i).getEnd());
+        	System.out.println(ngram.getNGramMod().get(i).getIndex());
+        	System.out.println(ngram.getNGramMod().get(i).getLabel());
+          
+            System.out.println("Index: " + ngram.getNGramMod().get(i).getIndex()+" NGram: "+ ngram.getNGramMod().get(i).getLabel());
+        }
 		init.initiate(mappings.getMappings(), ngram.getNGramMod());
-		PropagatorInterface getFinalResults = new propagator();
-		getFinalResults.PropagateInit(graphdb.getgdbservice(), init.getResultsList());
+		PropagatorInterface propagator = new propagator();
+		propagator.PropagateInit(graphdb.getgdbservice(), init.getResultsList());
 		
+		propagator.getFinalResults();
+		ListFunctions.sortresults(propagator.getFinalResults());
+//		//2. Lgg Query
+//		init.setLggQuery();
+//		//Lgg Results
+////		init.addLggresult();
+//		
+//		
+//		//3. HAWK Prozess
+//		HAWKQuestion q = new HAWKQuestion();
+////		// q.getLanguageToQuestion().put("en",
+////		// "Which anti-apartheid activist was born in Mvezo?");feature
+//	
+//		
+//		q.getLanguageToQuestion().put("en", question);
+//		AbstractPipeline pipeline = new PipelineStanford_1();
+//	
+//		//System.out.println(init.getLggQuery().getQueryPattern());	
+//	
+//		//Add Prefix and QueryPattern from Lgg
+//		if(init.getLggQuery() != null){
+//			pipeline.setInitialQuery(init.getLggQuery());		
+//			List<Answer> answerlist = pipeline.getAnswersToQuestion(q);
+//			init.addLggHawkresult(answerlist);
+//		}
 		
-		//2. Lgg Query
-		init.setLggQuery();
-		//Lgg Results
-//		init.addLggresult();
-		
-		
-		//3. HAWK Prozess
-		HAWKQuestion q = new HAWKQuestion();
-//		// q.getLanguageToQuestion().put("en",
-//		// "Which anti-apartheid activist was born in Mvezo?");feature
-	
-		
-		q.getLanguageToQuestion().put("en", question);
-		AbstractPipeline pipeline = new PipelineStanford_1();
-	
-		//System.out.println(init.getLggQuery().getQueryPattern());	
-	
-		//Add Prefix and QueryPattern from Lgg
-		if(init.getLggQuery() != null){
-			pipeline.setInitialQuery(init.getLggQuery());		
-			List<Answer> answerlist = pipeline.getAnswersToQuestion(q);
-			init.addLggHawkresult(answerlist);
-		}
-		
-		ListFunctions.sortresults(init.getResultsList());
+		//ListFunctions.sortresults(init.getResultsList());
 				
 		PrintWriter pw = response.getWriter();// get the stream to write the data
 		Map map = new HashMap();
@@ -124,10 +135,10 @@ public class ServletServer extends HttpServlet {
 		System.out.println(" ");
 		System.out.println("---------------------{>_<}------------------------");
 		System.out.println(" ");
-		for (i = init.getResultsList().size() - 1; i >= 0; i--) {
+		for (i = propagator.getFinalResults().size() - 1; i >= 0; i--) {
 			
 			//JSONArray json = JSONArray.put(init.getResultsList().get(i));			
-			ResultDataStruct rds = init.getResultsList().get(i);
+			ResultDataStruct rds = propagator.getFinalResults().get(i);
 			//System.out.println(rds.getURI() + " : " + rds.getImage() + " : " + rds.getEnergyScore());
 			map.put("URI", rds.getURI());
 			map.put("ExpScore", rds.getExplainationScore());

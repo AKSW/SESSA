@@ -25,6 +25,9 @@ public class Mapper implements MapperInterface{
             QuerySearch buildquery=new QuerySearch(node, ngram);
             MapperDataStruct mapping = new MapperDataStruct(buildquery.getURIList(),buildquery.getLabelList(),buildquery.getEnergyScoreList());
             mappings.put(ngram.getIndex(), mapping);
+            System.out.println(ngram.getIndex() + ngram.getLabel());
+            System.out.println(buildquery.getURIList());
+            
         }
     }
     

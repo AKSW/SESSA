@@ -7,4 +7,6 @@ import org.neo4j.graphdb.GraphDatabaseService;
 
 public interface PropagatorInterface {
 public void PropagateInit(GraphDatabaseService db, List<ResultDataStruct> results);
+
+public List<ResultDataStruct> getFinalResults();
 }
