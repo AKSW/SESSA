@@ -1,22 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
-	
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>org.dbpedia</groupId>
 	<artifactId>KeywordSearch</artifactId>
 	<version>1.0.0</version>
 	<packaging>war</packaging>
-
 	<name>KeywordSearch</name>
-	
-	
-
-
-
-
-
 	<build>
 		<plugins>
 			<!--Surefire - for JUnits -->
@@ -25,8 +14,6 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.17</version>
 			</plugin>
-								
-			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -36,19 +23,16 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-				<plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.6</version>
 			</plugin>
-			
 			<plugin>
-  <groupId>org.eclipse.jetty</groupId>
-  <artifactId>jetty-maven-plugin</artifactId>
-  <version>9.4.0.v20161208</version>
-</plugin>
-			
-				
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.4.0.v20161208</version>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -59,59 +43,33 @@
 					<mainClass>org.aksw.hawk.webservice.WebApplication</mainClass>
 				</configuration>
 			</plugin>
-		
-			
-			
 		</plugins>
 	</build>
-
-
-	 <repositories>
-             <repository>
-             	<id>mvnrepository</id>
-				<name>mvnrepository</name>
-				<url>http://www.mvnrepository.com/</url>
-				<releases>
-				<enabled>true</enabled>
-				</releases>
-				<snapshots>
-				<enabled>true</enabled>
-				</snapshots>
-			</repository>
-			<repository>
+	<repositories>
+		<repository>
+			<id>mvnrepository</id>
+			<name>mvnrepository</name>
+			<url>http://www.mvnrepository.com/</url>
+		</repository>
+		<repository>
 			<id>maven.aksw.snapshots</id>
 			<name>AKSW Snapshot Repository</name>
 			<url>http://maven.aksw.org/archiva/repository/snapshots</url>
-			</repository>		
-			<repository>
+		</repository>
+		<repository>
 			<id>maven.aksw.internal</id>
 			<name>University Leipzig, AKSW Maven2 Repository</name>
 			<url>http://maven.aksw.org/archiva/repository/internal</url>
-			</repository>
-
-			
+		</repository>
 	</repositories>
-
-
-	
-		
-
 	<dependencies>
-	<!-- https://mvnrepository.com/artifact/org.ow2.asm/asm -->
-<dependency>
-    <groupId>org.ow2.asm</groupId>
-    <artifactId>asm</artifactId>
-    <version>5.0.3</version>
-</dependency>
-
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-web-api</artifactId>
 			<version>6.0</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- Graph database 2.2.1-->
+		<!-- Graph database 2.2.1 -->
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j</artifactId>
@@ -153,23 +111,16 @@
 			<artifactId>sesame-rio-turtle</artifactId>
 			<version>4.0.0-M1</version>
 		</dependency>
-		
-		
-		<!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch 0.90.0.Beta1-->
-<dependency>
-    <groupId>org.elasticsearch</groupId>
-    <artifactId>elasticsearch</artifactId>
-    
-    <version>0.20.6</version>
-</dependency>
-		
+		<!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch 
+			0.90.0.Beta1 -->
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>0.20.6</version>
+		</dependency>
 		<!-- Elastic Search -->
-	
 		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-codecs -->
-<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-memory -->
-		
-		
-		
+		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-memory -->
 		<dependency>
 			<groupId>javax.json</groupId>
 			<artifactId>javax.json-api</artifactId>
@@ -177,20 +128,10 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
 		<dependency>
-    		<groupId>org.glassfish</groupId>
-    		<artifactId>javax.json</artifactId>
-    		<version>1.0.3</version>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.json</artifactId>
+			<version>1.0.3</version>
 		</dependency>
-		
-		
-  
-		
-		
-		
-		
-		
-
-
 		<!-- DL-Learner used for LGG -->
 		<dependency>
 			<groupId>org.dllearner</groupId>
@@ -203,13 +144,18 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- New version for less warnings with Jetty 9 https://mvnrepository.com/artifact/org.ow2.asm/asm -->
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>5.0.3</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.jamonapi/jamon -->
 		<dependency>
 			<groupId>com.jamonapi</groupId>
 			<artifactId>jamon</artifactId>
 			<version>2.81</version>
 		</dependency>
-
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -220,9 +166,6 @@
 			<artifactId>logback-core</artifactId>
 			<version>1.1.7</version>
 		</dependency>
-
-
-
 		<dependency>
 			<groupId>org.neo4j</groupId>
 			<artifactId>neo4j-graph-matching</artifactId>
@@ -233,47 +176,29 @@
 			<artifactId>neo4j-io</artifactId>
 			<version>2.2.10</version>
 		</dependency>
-
-		
-		
 		<dependency>
-        	<groupId>net.sf.json-lib</groupId>
-        	<artifactId>json-lib</artifactId>
-        	<version>2.4</version>
-        	<classifier>jdk15</classifier>
-    	</dependency>
-    	
-    	
-    	
-    	
-    	
-    	<!-- https://mvnrepository.com/artifact/com.hp.hpl.jena/jena -->
-		<dependency>
-    		<groupId>com.hp.hpl.jena</groupId>
-    		<artifactId>jena</artifactId>
-    		<version>2.5.5</version>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
 		</dependency>
-    	<dependency>
+		<!-- https://mvnrepository.com/artifact/com.hp.hpl.jena/jena -->
+		<dependency>
+			<groupId>com.hp.hpl.jena</groupId>
+			<artifactId>jena</artifactId>
+			<version>2.5.5</version>
+		</dependency>
+		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
 			<version>1.1</version>
-  		</dependency>
-
-
-
-
-
-
-    	
-    	<!-- https://mvnrepository.com/artifact/de.julielab/aliasi-lingpipe -->
-		<dependency>
-    		<groupId>de.julielab</groupId>
-    		<artifactId>aliasi-lingpipe</artifactId>
-    		<version>4.1.0</version>
 		</dependency>
-		
-		
-		
+		<!-- https://mvnrepository.com/artifact/de.julielab/aliasi-lingpipe -->
+		<dependency>
+			<groupId>de.julielab</groupId>
+			<artifactId>aliasi-lingpipe</artifactId>
+			<version>4.1.0</version>
+		</dependency>
 		<dependency>
 			<groupId>edu.mit</groupId>
 			<artifactId>jwi</artifactId>
@@ -284,31 +209,17 @@
 			<artifactId>jwnl</artifactId>
 			<version>1.4.1.RC2</version>
 		</dependency>
-		
-	
-
-
-
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-corenlp</artifactId>
 			<version>3.6.0</version>
 		</dependency>
-
-
-
-
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-corenlp</artifactId>
 			<version>3.6.0</version>
 			<classifier>models</classifier>
 		</dependency>
-		
-
-		  
-  
-
 		<dependency>
 			<groupId>com.clearnlp</groupId>
 			<artifactId>clearnlp</artifactId>
@@ -319,8 +230,5 @@
 			<artifactId>json-jena</artifactId>
 			<version>1.0</version>
 		</dependency>
-
 	</dependencies>
-
-
 </project>
