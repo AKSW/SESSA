@@ -40,12 +40,12 @@ public class neo4j implements GDBInterface {
 		/* Starting a grahdatabase service at apecified path */
 		try {
 			this.db = new GraphDatabaseFactory().newEmbeddedDatabase(graphpath);
+			registerShutdownHook(this.db);
 		} catch (Exception e) {
 			File file = new File(graphpath + "/tm_tx_log.1");
 			file.delete(); 
 		}
 	}
-//TODO fix that
 	private static void registerShutdownHook(final GraphDatabaseService graphDb) {
 		/* Graphdatabase service closed */
 		Runtime.getRuntime()
@@ -59,8 +59,7 @@ public class neo4j implements GDBInterface {
 
 	@Override
 	public void shutDown() {
-		System.out.println();
-		System.out.println("Shutting down database ...");
+		log.info("Shutting down database ...");
 		db.shutdown();
 	}
 
@@ -101,9 +100,7 @@ public class neo4j implements GDBInterface {
 
 		/* Creates an iterator on the rdf triples from the specified file */
 		ResourceIterator<Node> nodeindex;
-		/* Begining the transaction of creating nodes. Allocating resources */
-		System.out.println("graph-----------------------------");
-		System.out.println(graphdb);
+		/* Beginning the transaction of creating nodes. Allocating resources */
 		try (Transaction tx = graphdb.beginTx()) {
 			/* Initialization of triple nodes */
 			Node subjectnode = null;
