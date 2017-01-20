@@ -30,7 +30,7 @@ public class Qald_SESSA_Init {
 			esnode.rdfcluster("resources/dbpedia_3Eng_property.ttl", "properties");
 
 			/* Enriching them with surfaceforms */
-			esnode.rdfcluster("resources/en_surface_forms.ttl", "surfaceforms");
+//			esnode.rdfcluster("resources/en_surface_forms.ttl", "surfaceforms");
 
 			/* Indexing DBpedia labels */
 			esnode.rdfcluster("resources/labels_en.ttl", "dbpedialabels");
@@ -48,7 +48,7 @@ public class Qald_SESSA_Init {
 	
 		//TODO only load the data once
 		GraphDatabaseService gdb = graphdb.getgdbservice();
-		graphdb.graphdbform(gdb, "resources/mappingbased_literals_en.ttl");
+//		graphdb.graphdbform(gdb, "resources/mappingbased_literals_en.ttl");
 		graphdb.graphdbform(gdb, "resources/mappingbased_objects_en.ttl");
 		
 		
