@@ -82,6 +82,7 @@ public class neo4j implements GDBInterface {
 
 				// this cache builds a new node for the batchinserter
 				this.batchInserter = BatchInserters.inserter(graphpath);
+
 				this.cache = CacheBuilder.newBuilder().maximumSize(100000).build(new CacheLoader<Label, Long>() {
 					public Long load(Label key) {
 						Map<String, Object> properties = new HashMap<String, Object>();
