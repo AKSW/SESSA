@@ -76,7 +76,7 @@ public class uiclass {
         System.out.println("asfasf");
         for (File file : listoffiles) { 
           if (file.isFile()) /*extracting all the files in the specified folder*/ {
-               graphdb.graphdbform(gdb, pathsetter.Instance.getrdf()+'/'+file.getName());
+               graphdb.graphdbform( pathsetter.Instance.getrdf()+'/'+file.getName());
            }
         }   
         propagator finalresults = new propagator();

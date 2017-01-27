@@ -68,7 +68,7 @@ public class server {
         GraphDatabaseService gdb=graphdb.getgdbservice();
         for (File file : rdffileiterator()) { 
           if (file.isFile()) /*extracting all the files in the specified folder*/ {
-               graphdb.graphdbform(gdb, this.Instance.getrdf()+'/'+file.getName());
+               graphdb.graphdbform( this.Instance.getrdf()+'/'+file.getName());
            }
         }
         long endGDBTime = System.currentTimeMillis();

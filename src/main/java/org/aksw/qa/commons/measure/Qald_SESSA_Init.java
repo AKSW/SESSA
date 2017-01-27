@@ -46,10 +46,7 @@ public class Qald_SESSA_Init {
 		this.Instance = new pathvariables();
 		graphdb = new neo4j(this.Instance.getgraph());
 	
-		//TODO only load the data once
-		GraphDatabaseService gdb = graphdb.getgdbservice();
-//		graphdb.graphdbform(gdb, "resources/mappingbased_literals_en.ttl");
-		graphdb.graphdbform(gdb, "resources/mappingbased_objects_en.ttl");
+		graphdb.graphdbform("resources/mappingbased_objects_en.ttl");
 		
 		
 		System.out.println("Creating DataBase finished");

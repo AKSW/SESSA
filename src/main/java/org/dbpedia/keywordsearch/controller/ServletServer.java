@@ -195,13 +195,9 @@ public class ServletServer extends HttpServlet {
 		this.Instance = new pathvariables();
 		String getgraph = this.Instance.getgraph();
 		graphdb = new neo4j(getgraph);
-	
 		
-		//TODO only load the data once
-		GraphDatabaseService gdb = graphdb.getgdbservice();
 //		graphdb.graphdbform(gdb, "resources/mappingbased_literals_en.ttl");
-		graphdb.graphdbform(gdb, "resources/mappingbased_objects_en.ttl");
-		
+		graphdb.graphdbform( "resources/mappingbased_objects_en.ttl");
 		
 		System.out.print("Creating DataBase finished");
 
