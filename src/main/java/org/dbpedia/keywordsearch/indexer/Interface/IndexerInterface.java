@@ -20,4 +20,6 @@ public interface IndexerInterface {
 
 	public void closeBulkLoader();
 
+	public void closeClient();
+
 }

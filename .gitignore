@@ -1,6 +1,7 @@
 resources/indexOntology/
 resources/ontologyClasses/
 resources/ontologyProperties/
+logs/
 data/
 log.out
 target/*

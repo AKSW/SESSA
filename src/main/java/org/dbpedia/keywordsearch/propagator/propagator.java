@@ -104,7 +104,7 @@ public final class propagator implements PropagatorInterface{
                 /* Iterating over all the nodes in the results from the cypher query */
                 if(run==true){
                     Iterator<Node> n_column = result.columnAs( "c" );
-                    for ( Node node : IteratorUtil.asIterable( n_column ) )
+                    for ( Node node : IteratorUtil.asList(n_column ) )
                     {
                          /* finding the third node connected to two nodes through fact node */
                          activatednewnode=thirdnode(node,activatednode1,activatednode2);
@@ -165,24 +165,24 @@ public final class propagator implements PropagatorInterface{
                 Label activatedlabel2 = DynamicLabel.label(URI2.getURI());
                 
                 nodeindex1 = db.findNodes(activatedlabel1);
-//                System.out.println(activatedlabel1);
-//                if(nodeindex1.hasNext()){
-//                    activatednode1=nodeindex1.next();}
-//                else
-//                    {run = false;}
+                System.out.println(activatedlabel1);
+                if(nodeindex1.hasNext()){
+                    activatednode1=nodeindex1.next();}
+                else
+                    {run = false;}
                 
                 nodeindex2 = db.findNodes(activatedlabel2);
-//                System.out.println(activatedlabel2);
-//                if(nodeindex2.hasNext()){
-//                    activatednode2=nodeindex2.next();}
-//                else{
-//                    run = false;}
+                System.out.println(activatedlabel2);
+                if(nodeindex2.hasNext()){
+                    activatednode2=nodeindex2.next();}
+                else{
+                    run = false;}
                 
                 /* Iterating over all the nodes in the results from the cypher query */
                 if(run==true){
 //                	System.out.println("combination3");
                     Iterator<Node> n_column = result.columnAs( "c" );
-                    for ( Node node : IteratorUtil.asIterable( n_column ) )
+                    for ( Node node : IteratorUtil.asList( n_column ) )
                     {
                          if(URI1.isSubClassActivated()||URI2.isSubClassActivated()){
                              if(URI1.isSubClassActivated()){
@@ -208,8 +208,13 @@ public final class propagator implements PropagatorInterface{
 //                         System.out.println(activatednewnode.toString());
                          /* This is to prevent recursion of activating the same triple again and again.
                             This checks if the new activated node is part of previously activated tiple */
-                         if(ListFunctions.isinBlackList(this.blacklist, activatednewnode.getProperty("URI").toString(), activatednode1.getProperty("URI").toString())
-                           || ListFunctions.isinBlackList(this.blacklist, activatednewnode.getProperty("URI").toString(), activatednode2.getProperty("URI").toString())){
+                         String string = activatednewnode.getProperty("URI").toString();
+						String string2 = activatednode1.getProperty("URI").toString();
+						boolean isinBlackList = ListFunctions.isinBlackList(this.blacklist, string, string2);
+						String string3 = activatednode2.getProperty("URI").toString();
+						boolean isinBlackList2 = ListFunctions.isinBlackList(this.blacklist, string, string3);
+						if(isinBlackList
+                           || isinBlackList2){
                              continue;
                          }
 
@@ -223,7 +228,7 @@ public final class propagator implements PropagatorInterface{
 
                          /* Checking if the new node is already activated before, if yes then the scores are incremented 
                             or else a new node is created and added to the list */
-                         if(!((temp=ListFunctions.ContainsResultDataStruct(activatednewnode.getProperty("URI").toString(),results))==null))
+                         if(!((temp=ListFunctions.ContainsResultDataStruct(string,results))==null))
                          {
 //                        	 System.out.println("combination4");
                                 union=ResultDataStruct.union(union, temp.getColors());
@@ -232,7 +237,7 @@ public final class propagator implements PropagatorInterface{
                                 temp.setEnergyScore(temp.getEnergyScore()+URI1.getEnergyScore()+URI2.getEnergyScore());
                          }
                          else{
-                                newnode = new ResultDataStruct( activatednewnode.getProperty("URI").toString(),
+                                newnode = new ResultDataStruct( string,
                                                                 (double) union.size(),
                                                                 URI1.getEnergyScore()+URI2.getEnergyScore(),
                                                                 union);
@@ -281,7 +286,7 @@ public final class propagator implements PropagatorInterface{
                 /* Iterating over all the nodes in the results from the cypher query */
                 if(run==true){
                     Iterator<Node> n_column = result.columnAs( "c" );
-                    for ( Node node : IteratorUtil.asIterable( n_column ) )
+                    for ( Node node : IteratorUtil.asList( n_column ) )
                     {
                          /* finding the third node connected to two nodes through fact node */
                          activatednewnode=thirdnode(node,activatednode1,activatednode2);

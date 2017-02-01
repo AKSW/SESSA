@@ -7,10 +7,12 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.dbpedia.keywordsearch.indexer.Interface.IndexerInterface;
-import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -18,6 +20,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.TimeValue;
@@ -42,46 +45,57 @@ public class ESNode implements IndexerInterface {
 	private BulkProcessor bulkProcessor;
 
 	public void startCluster(String clustername) {
-		/* Initialization of cluster */
-		this.node = nodeBuilder().clusterName(clustername)
-				.node();
+//		/* Initialization of cluster */
+//		  Settings settings = Settings.builder()
+//		            .put("path.home",clustername)
+//		            .put("transport.type", "local")
+//		            .put("http.enabled", false)
+//		            .build();
+//
+//		   try {
+//	        this.node = new Node(settings).start();
+//        } catch (NodeValidationException e) {
+//	        // TODO Auto-generated catch block
+//	        e.printStackTrace();
+//        }
+		
+		 this.node = nodeBuilder().clusterName(clustername)
+				    .node();
+
 		/* Starting the central server */
 		this.client = this.node.client();
 
 		/* Base URI for Parsing */
 		this.baseURI = "http://dbpedia.org";
 
-		/* Prepare Bulk Load */
-		this.bulkProcessor = BulkProcessor.builder(client, new BulkProcessor.Listener() {
-			@Override
-			public void beforeBulk(long executionId, BulkRequest request) {
-				log.debug("Before Bulk");
-			}
+		//ONLY WORKS in LOCAL indizes
+//		if (!(new File(clustername).exists())) {
+		//TODO proper checking if local index exists
 
-			@Override
-			public void afterBulk(long executionId, BulkRequest request, BulkResponse response) {
-				log.debug("After Bulk. Bulk took: " + response.took());
-			}
+			/* Prepare Bulk Load */
+			this.bulkProcessor = BulkProcessor.builder(client, new BulkProcessor.Listener() {
+				@Override
+				public void beforeBulk(long executionId, BulkRequest request) {
+					log.debug("Before Bulk");
+				}
 
-			@Override
-			public void afterBulk(long executionId, BulkRequest request, Throwable failure) {
-				log.error("After Bulk", failure);
-			}
-		})
-				.setBulkActions(100000)
-				.setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB))
-				.setFlushInterval(TimeValue.timeValueSeconds(60))
-				.setConcurrentRequests(0)
-				.build();
+				@Override
+				public void afterBulk(long executionId, BulkRequest request, BulkResponse response) {
+					log.debug("After Bulk. Bulk took: " + response.getTookInMillis());
+				}
+
+				@Override
+				public void afterBulk(long executionId, BulkRequest request, Throwable failure) {
+					log.error("After Bulk", failure);
+				}
+			}).setBulkActions(100000).setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB)).setFlushInterval(TimeValue.timeValueSeconds(60)).setConcurrentRequests(0).build();
+//		}
 	}
 
 	public void rdfcluster(String labelspath, String indexname) throws FileNotFoundException, IOException {
+		//TODO proper checking if local index exists
 
-		if (!client.admin()
-				.indices()
-				.exists(new IndicesExistsRequest(indexname))
-				.actionGet()
-				.exists()) {
+//		if (bulkProcessor!=null) {
 			/* Index name */
 			this.indexname = indexname;
 
@@ -92,26 +106,20 @@ public class ESNode implements IndexerInterface {
 			parser.setRDFHandler(osh);
 			parser.parse(new FileReader(labelspath), baseURI);
 			log.info("Finished parsing: " + labelspath);
-		}
+//		}
 	}
 
 	private void addToIndex(String subject, String objectString) throws IOException {
 		/* Indexing the data in the central server */
-		bulkProcessor.add(new IndexRequest(indexname, "mappings").source(jsonBuilder().startObject()
-				.field("uri", subject)
-				.field("label", objectString)
-				.endObject()));
+		bulkProcessor.add(new IndexRequest(indexname, "mappings").source(jsonBuilder().startObject().field("uri", subject).field("label", objectString).endObject()));
 	}
 
 	private class OnlineStatementHandler extends AbstractRDFHandler {
 		@SuppressWarnings("unused")
 		public void handleStatement(Statement st) {
-			String subject = st.getSubject()
-					.stringValue();
-			String predicate = st.getPredicate()
-					.stringValue();
-			String object = st.getObject()
-					.stringValue();
+			String subject = st.getSubject().stringValue();
+			String predicate = st.getPredicate().stringValue();
+			String object = st.getObject().stringValue();
 			try {
 				addToIndex(subject, object);
 			} catch (IOException e) {
@@ -154,14 +162,9 @@ public class ESNode implements IndexerInterface {
 						for (String label : labelarr) {
 							i = i + 1;
 							client.prepareIndex(indexname, "mappings", String.valueOf(i))
-									.setSource(jsonBuilder().startObject()
-											.field("standardunit", standardunitdatatype)
-											.field("factorunit", factorunitdatatype)
-											.field("label", label)
-											.field("value", value)
-											.endObject())
-									.execute()
-									.actionGet();
+							        .setSource(
+							                jsonBuilder().startObject().field("standardunit", standardunitdatatype).field("factorunit", factorunitdatatype).field("label", label).field("value", value)
+							                        .endObject()).execute().actionGet();
 						}
 					}
 				} else {
@@ -182,21 +185,37 @@ public class ESNode implements IndexerInterface {
 
 		/* Building the Query */
 		MatchQueryBuilder qb = QueryBuilders.matchQuery("label", query);
-		SearchRequestBuilder srb = clientremote.prepareSearch(path)
-				.setTypes("mappings");
-		SearchResponse retrieved = srb.setQuery(qb)
-				.execute()
-				.actionGet();
+		SearchRequestBuilder srb = clientremote.prepareSearch(path).setTypes("mappings");
+		SearchResponse retrieved = srb.setQuery(qb).execute().actionGet();
 
 		/* Retrieving the results from the query */
-		SearchHit[] results = retrieved.getHits()
-				.getHits();
+		SearchHit[] results = retrieved.getHits().getHits();
 		return results;
 	}
 
 	@Override
 	public void closeBulkLoader() {
+		if(bulkProcessor!=null)
 		bulkProcessor.close();
 	}
 
+	@Override
+	public void closeClient() {
+		client.close();
+	}
+
+	public List<Map<String, Object>> getAllDocs() {
+		int scrollSize = 1000;
+		List<Map<String, Object>> esData = new ArrayList<Map<String, Object>>();
+		SearchResponse response = null;
+		int i = 0;
+		while (response == null || response.getHits().hits().length != 0) {
+			response = client.prepareSearch("dbpedialabels").setTypes("mappings").setQuery(QueryBuilders.matchAllQuery()).setSize(scrollSize).setFrom(i * scrollSize).execute().actionGet();
+			for (SearchHit hit : response.getHits()) {
+				esData.add(hit.getSource());
+			}
+			i++;
+		}
+		return esData;
+	}
 }
