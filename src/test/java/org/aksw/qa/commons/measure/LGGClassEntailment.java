@@ -1,6 +1,9 @@
 package org.aksw.qa.commons.measure;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.aksw.jena_sparql_api.model.QueryExecutionFactoryModel;
 import org.apache.jena.query.QueryExecution;
@@ -33,32 +36,12 @@ public class LGGClassEntailment {
 	private static LGGGenerator lggGenSimple;
 
 	@BeforeClass
-	public static void init() throws ComponentInitException {
-		String kb = "@prefix : <http://test.org/> . " +
-	"@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> ." +
-				":x1 a :KFZ . " 
-				+ ":x2 a :PKW . :x2 :tueren \"4\" ."
-				+ ":x3 a :LKW .  " //anhängerkupplung und rdfs:label zu instanzen
-		        + ":LKW rdfs:subClassOf :KFZ ."
-		        + ":PKW rdfs:subClassOf :KFZ ."
-		        + ":PKW rdfs:label \"Personenkraftwagen\" ."
-		        + ":LKW rdfs:label \"Lastkraftwagen\" ."
-		        + ":KFZ rdfs:label \"Kraftfahrzeug\" .";
-		
-		
-//		<http://test.org/x2> <http://test.org/tueren> "4" .
-//		<http://test.org/PKW> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://test.org/KFZ> .
-//		<http://test.org/KFZ> <http://www.w3.org/2000/01/rdf-schema#label> "Kraftfahrzeug" .
-//			<http://test.org/PKW> <http://www.w3.org/2000/01/rdf-schema#label> "Personenkraftwagen" .
-//			<http://test.org/x2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://test.org/PKW> .
-//			<http://test.org/x3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://test.org/LKW> .
-//			<http://test.org/LKW> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://test.org/KFZ> .
-//			<http://test.org/LKW> <http://www.w3.org/2000/01/rdf-schema#label> "Lastkraftwagen" .
-//			<http://test.org/x1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://test.org/KFZ> .
+	public static void init() throws ComponentInitException, IOException {
+		String kb = new String(Files.readAllBytes(Paths.get("resources/test.ttl")));
 
 		//create model with RDFS inference
 		model = ModelFactory.createDefaultModel();
-		model.read(new ByteArrayInputStream(kb.getBytes()), null, "TURTLE");
+		model.read(new ByteArrayInputStream(kb.getBytes()), null, "N3");
 		// creates triples: :x2 a :KFZ. :x3 a :KFZ
 		org.apache.jena.reasoner.Reasoner jenareas = ReasonerRegistry.getRDFSReasoner();
 		jenareas.setParameter(ReasonerVocabulary.PROPsetRDFSLevel, ReasonerVocabulary.RDFS_SIMPLE);

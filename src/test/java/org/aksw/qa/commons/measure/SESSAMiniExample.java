@@ -30,6 +30,8 @@ public class SESSAMiniExample {
 	@Test
 	// TODO write unit test that checks that partial matches are found, e.g.
 	// wagen in Personenkraftwagen
+	
+	//TODO there are still several times the same node activated
 	public void getSessaResults() throws FileNotFoundException, IOException {
 
 		IndexerInterface esnode = new ESNode();
@@ -64,7 +66,7 @@ public class SESSAMiniExample {
 
 		Answer answer = new Answer();
 		answer.answerStr = new HashSet<String>();
-		String keywords = "Personenkraftwagen";
+		String keywords = "car doors";
 
 		NGramInterface ngram = new NGramModel();
 

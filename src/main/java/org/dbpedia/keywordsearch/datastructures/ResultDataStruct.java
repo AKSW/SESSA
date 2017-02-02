@@ -11,7 +11,7 @@ public class ResultDataStruct {
     private String URI; 
     private Set<Integer> colors=new HashSet<Integer>();
     private String URIimage;
-    private String Activation;
+    private String Activation="no activation for nodes";
     public ResultDataStruct(String URI,Double explaination_score, Double energy_score, int begin, int end){
         this.scores.add(explaination_score);
         this.scores.add(energy_score);

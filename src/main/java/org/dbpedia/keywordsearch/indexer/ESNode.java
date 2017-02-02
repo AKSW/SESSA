@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.dbpedia.keywordsearch.indexer.Interface.IndexerInterface;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -20,6 +21,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
@@ -28,6 +30,7 @@ import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.search.SearchHit;
+import org.h2.engine.SettingsBase;
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.helpers.AbstractRDFHandler;
@@ -59,11 +62,17 @@ public class ESNode implements IndexerInterface {
 //	        e.printStackTrace();
 //        }
 		
-		 this.node = nodeBuilder().clusterName(clustername)
+		 this.node = nodeBuilder().clusterName(clustername).settings(ImmutableSettings.settingsBuilder().put("index.analysis.analyzer.my_ngram_analyzer.type", "custom")
+		                .put("index.analysis.analyzer.my_ngram_analyzer.tokenizer", "my_ngram_tokenizer")
+		                .put("index.analysis.tokenizer.my_ngram_tokenizer.type", "nGram")
+		                .put("index.analysis.tokenizer.my_ngram_tokenizer.min_gram", "1")
+		                .put("index.analysis.tokenizer.my_ngram_tokenizer.max_gram", "10")
+		                .putArray("index.analysis.tokenizer.my_ngram_tokenizer.token_chars", new String[0]))
 				    .node();
 
 		/* Starting the central server */
 		this.client = this.node.client();
+
 
 		/* Base URI for Parsing */
 		this.baseURI = "http://dbpedia.org";
@@ -90,6 +99,7 @@ public class ESNode implements IndexerInterface {
 				}
 			}).setBulkActions(100000).setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB)).setFlushInterval(TimeValue.timeValueSeconds(60)).setConcurrentRequests(0).build();
 //		}
+			
 	}
 
 	public void rdfcluster(String labelspath, String indexname) throws FileNotFoundException, IOException {
@@ -177,14 +187,14 @@ public class ESNode implements IndexerInterface {
 		in.close();
 		System.out.println("Data Entry complete");
 	}
-
+//TODO allow partial hits
 	@Override
 	public SearchHit[] transportclient(String query, String path) {
 		/* Connecting the remote client with the central cluster */
 		Client clientremote = this.node.client();
 
 		/* Building the Query */
-		MatchQueryBuilder qb = QueryBuilders.matchQuery("label", query);
+		MatchQueryBuilder qb = QueryBuilders.matchQuery("label", query).analyzer("my_ngram_analyzer");
 		SearchRequestBuilder srb = clientremote.prepareSearch(path).setTypes("mappings");
 		SearchResponse retrieved = srb.setQuery(qb).execute().actionGet();
 
