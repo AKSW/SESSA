@@ -11,7 +11,7 @@ public class ResultDataStruct {
     private String URI; 
     private Set<Integer> colors=new HashSet<Integer>();
     private String URIimage;
-    private String Activation="no activation for nodes";
+    private String Activation;
     public ResultDataStruct(String URI,Double explaination_score, Double energy_score, int begin, int end){
         this.scores.add(explaination_score);
         this.scores.add(energy_score);
@@ -20,7 +20,11 @@ public class ResultDataStruct {
             this.colors.add(i);
         }
     }
-    public ResultDataStruct(String URI,Double explaination_score, Double energy_score, Set<Integer> colors){
+    @Override
+    public String toString() {
+	    return "ResultDataStruct [scores=" + scores + ", URI=" + URI + ", colors=" + colors + ", Activation=" + Activation + "]";
+    }
+	public ResultDataStruct(String URI,Double explaination_score, Double energy_score, Set<Integer> colors){
         this.scores.add(explaination_score);
         this.scores.add(energy_score);
         this.URI=URI;

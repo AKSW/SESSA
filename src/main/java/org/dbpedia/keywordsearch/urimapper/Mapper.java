@@ -23,10 +23,13 @@ public class Mapper implements MapperInterface{
             tempURIs=new ArrayList<String>();
             tempLabels=new ArrayList<String>();
             QuerySearch buildquery=new QuerySearch(node, ngram);
-            MapperDataStruct mapping = new MapperDataStruct(buildquery.getURIList(),buildquery.getLabelList(),buildquery.getEnergyScoreList());
+            List<String> uriList = buildquery.getURIList();
+			List<String> labelList = buildquery.getLabelList();
+			List<Double> energyScoreList = buildquery.getEnergyScoreList();
+			MapperDataStruct mapping = new MapperDataStruct(uriList,labelList,energyScoreList);
             mappings.put(ngram.getIndex(), mapping);
-            System.out.println(ngram.getIndex() + ngram.getLabel());
-            System.out.println(buildquery.getURIList());
+//            System.out.println(ngram.getIndex() + ngram.getLabel());
+//            System.out.println(uriList);
             
         }
     }

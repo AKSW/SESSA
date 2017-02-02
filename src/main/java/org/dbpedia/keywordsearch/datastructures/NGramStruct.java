@@ -2,7 +2,11 @@ package org.dbpedia.keywordsearch.datastructures;
 
 /* This class defines the datastructure for ngrams. The NGram Generator will return a list of this datastructure*/
 public class NGramStruct {
-    private int index;
+    @Override
+    public String toString() {
+	    return "NGramStruct [index=" + index + ", begin=" + begin + ", end=" + end + ", label=" + label + "]";
+    }
+	private int index;
     private int begin;
     private int end;
     private String label;

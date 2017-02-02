@@ -20,6 +20,7 @@ import org.dbpedia.keywordsearch.propagator.interfaces.PropagatorInterface;
 import org.dbpedia.keywordsearch.serverproperties.pathvariables;
 import org.dbpedia.keywordsearch.urimapper.Mapper;
 import org.dbpedia.keywordsearch.urimapper.interfaces.MapperInterface;
+import org.elasticsearch.common.base.Joiner;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,21 +33,29 @@ public class SESSAMiniExample {
 	// wagen in Personenkraftwagen
 	
 	//TODO there are still several times the same node activated
+	
+	//TODO if run twice the result changes 
+	
+	//TODO bug if you insert the following triples the literals are identified as the same node
+	// <http://test.org/x1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://test.org/Vehicle> .
+//	<http://test.org/x1> <http://test.org/doors> "4" .
+//		<http://test.org/x2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://test.org/Sportscar> .
+//		<http://test.org/x2> <http://test.org/doors> "4" .
 	public void getSessaResults() throws FileNotFoundException, IOException {
 
 		IndexerInterface esnode = new ESNode();
 		esnode.startCluster("data/testcluster");
 		/* Indexing of classes */
-		esnode.rdfcluster("resources/test.ttl", "classes");
+		esnode.rdfcluster("resources/test_classes.ttl", "classes");
 
 		/* Indexing of Properties */
-		esnode.rdfcluster("resources/test.ttl", "properties");
+		esnode.rdfcluster("resources/test_properties.ttl", "properties");
 
 		/* Indexing DBpedia labels */
-		esnode.rdfcluster("resources/test.ttl", "dbpedialabels");
+		esnode.rdfcluster("resources/test_labels.ttl", "dbpedialabels");
 
 		/* Enriching them with surfaceforms */
-		esnode.rdfcluster("resources/test.ttl", "surfaceforms");
+		esnode.rdfcluster("resources/test_surfaceforms.ttl", "surfaceforms");
 
 		esnode.closeBulkLoader();
 
@@ -60,7 +69,7 @@ public class SESSAMiniExample {
 		pathvariables Instance = new pathvariables();
 		neo4j graphdb = new neo4j(Instance.getgraph());
 
-		graphdb.graphdbform("resources/test.ttl");
+		graphdb.graphdbform("resources/test_mappings.ttl");
 
 		System.out.println("Creating DataBase finished");
 
@@ -75,15 +84,18 @@ public class SESSAMiniExample {
 		System.out.println("keywords: " + keywords);
 
 		// SESSA results
-		MapperInterface mappings = new Mapper();
+		MapperInterface mapper = new Mapper();
 
-		mappings.BuildMappings(esnode, ngram.getNGramMod());
+		mapper.BuildMappings(esnode, ngram.getNGramMod());
 
+		//TODO here is the pruning step missing!!!
 		InitializerInterface init = new initializer();
-		init.initiate(mappings.getMappings(), ngram.getNGramMod());
+		init.initiate(mapper.getMappings(), ngram.getNGramMod());
+		System.out.println("Before propagating: "+ Joiner.on("\n\t").join(init.getResultsList()));
+
 		PropagatorInterface getFinalResults = new propagator();
 		getFinalResults.PropagateInit(graphdb.getgdbservice(), init.getResultsList());
-
+		System.out.println("After propagating: "+ Joiner.on("\n\t").join(init.getResultsList()));
 		ListFunctions.sortresults(init.getResultsList());
 
 		for (ResultDataStruct rds : init.getResultsList()) {

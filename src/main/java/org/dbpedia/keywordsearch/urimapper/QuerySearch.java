@@ -22,12 +22,13 @@ public class QuerySearch {
 	}
 
 	private void buildquery(IndexerInterface node, NGramStruct ngram) {
-		SearchInLemonCluster(node, ngram.getLabel(), "classes");
-		SearchInLemonCluster(node, ngram.getLabel(), "properties");
-		SearchInRDFCluster(node, ngram.getLabel(), "surfaceforms");
-		SearchInRDFCluster(node, ngram.getLabel(), "dbpedialabels");
-		if (!extractNumber(ngram.getLabel()).equals("")) {
-			DatatypeNormalize(node, ngram.getLabel());
+		String label = ngram.getLabel();
+		SearchInLemonCluster(node, label, "classes");
+		SearchInLemonCluster(node, label, "properties");
+		SearchInRDFCluster(node, label, "surfaceforms");
+		SearchInRDFCluster(node, label, "dbpedialabels");
+		if (!extractNumber(label).equals("")) {
+			DatatypeNormalize(node, label);
 		}
 	}
 

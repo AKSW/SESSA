@@ -16,7 +16,12 @@ public class MapperDataStruct {
 
     public void setURIList(List<String> URIs){this.URIList.clear(); this.URIList.addAll(URIs);}
     public void setLabelList(List<String> Labels){this.LabelList.clear(); this.LabelList.addAll(Labels);}
-    public void setEnergyScore(List<Double> EnergyScore) {this.EnergyScore.clear(); this.EnergyScore.addAll(EnergyScore);}
+    @Override
+    public String toString() {
+	    return "MapperDataStruct [URIList=" + URIList + ", LabelList=" + LabelList + ", EnergyScore=" + EnergyScore + "]";
+    }
+
+	public void setEnergyScore(List<Double> EnergyScore) {this.EnergyScore.clear(); this.EnergyScore.addAll(EnergyScore);}
     
     public List<String> getURIList(){return this.URIList;}
     public List<String> getLabelList(){return this.LabelList;}

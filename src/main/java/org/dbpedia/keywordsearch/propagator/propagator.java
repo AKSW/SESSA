@@ -64,6 +64,7 @@ public final class propagator implements PropagatorInterface{
                     mainflag=true;
                   }
                 }
+                //TODO this comment looks wrong, RU
                 //this.blacklistnode.add(this.results.get(i).getURI());
                 
             }
@@ -131,6 +132,8 @@ public final class propagator implements PropagatorInterface{
                                                                 URI1.getEnergyScore(),
                                                                 union); 
                                 newnode.setActivation("Type");
+                                System.out.println("NEW NODE TYPE: "+ activatednewnode.getProperty("URI").toString());
+
                                 this.results.add(newnode);
                                // System.out.println(URI1.getURI()+ activatednode2.getURI());
                                 
@@ -209,6 +212,9 @@ public final class propagator implements PropagatorInterface{
                          /* This is to prevent recursion of activating the same triple again and again.
                             This checks if the new activated node is part of previously activated tiple */
                          String string = activatednewnode.getProperty("URI").toString();
+                         if(string.equals("http://test.org/x1")){
+                        	 System.out.println("WTF?");
+                         }
 						String string2 = activatednode1.getProperty("URI").toString();
 						boolean isinBlackList = ListFunctions.isinBlackList(this.blacklist, string, string2);
 						String string3 = activatednode2.getProperty("URI").toString();
@@ -237,14 +243,20 @@ public final class propagator implements PropagatorInterface{
                                 temp.setEnergyScore(temp.getEnergyScore()+URI1.getEnergyScore()+URI2.getEnergyScore());
                          }
                          else{
+                        	 if (string.equals("http://www.w3.org/2000/01/rdf-schema#subClassOf"))
+                             {//TODO ugly hack to ignore schema traversal
+                            	 System.out.println("ignored node to activate: " + string);
+                            	 }else{
                                 newnode = new ResultDataStruct( string,
                                                                 (double) union.size(),
                                                                 URI1.getEnergyScore()+URI2.getEnergyScore(),
                                                                 union);
                                 ImageLink(db, newnode);
                                 newnode.setActivation("Factual");
+                                System.out.println("NEW NODE FACTUAL: "+ string);
                                 this.results.add(newnode);
 //                                System.out.println(newnode.getURI());
+                                }
                          }
                     }/* Commiting the transaction */
                 }    

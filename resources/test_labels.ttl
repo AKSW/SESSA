@@ -1,0 +1,3 @@
+<http://test.org/x1> <http://www.w3.org/2000/01/rdf-schema#label> "x1".
+<http://test.org/x2> <http://www.w3.org/2000/01/rdf-schema#label> "x2".
+<http://test.org/x3> <http://www.w3.org/2000/01/rdf-schema#label> "x3".
