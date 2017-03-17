@@ -46,6 +46,7 @@
 		</plugins>
 	</build>
 	<repositories>
+
 		<repository>
 			<id>mvnrepository</id>
 			<name>mvnrepository</name>
@@ -63,6 +64,13 @@
 		</repository>
 	</repositories>
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-queryparser</artifactId>
+			<version>3.6.2</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.aksw.qa</groupId>
 			<artifactId>hawk</artifactId>
