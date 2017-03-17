@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.aksw.hawk.datastructures.Answer;
 import org.aksw.sessa.main.Initializer.interfaces.InitializerInterface;
 import org.aksw.sessa.main.datastructures.MapperDataStruct;
 import org.apache.jena.rdf.model.RDFNode;

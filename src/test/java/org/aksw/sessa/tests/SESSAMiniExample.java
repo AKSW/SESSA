@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class SESSAMiniExample {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -74,7 +75,7 @@ public class SESSAMiniExample {
 		System.out.println("Creating DataBase finished");
 
 		Answer answer = new Answer();
-		answer.answerStr = new HashSet<String>();
+		//answer.answerStr = new HashSet<String>();
 		String keywords = "car doors";
 
 		NGramInterface ngram = new NGramModel();
