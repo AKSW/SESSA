@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import org.aksw.sessa.main.importer.interfaces.GDBInterface;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.aksw.sessa.main.serverproperties.pathvariables;
 import org.neo4j.graphdb.DynamicLabel;
@@ -37,8 +36,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 /* This is the class for starting the graph database server and creating the graph in it */
-public class neo4j implements GDBInterface {
-	private static Logger log = LoggerFactory.getLogger(neo4j.class);
+public class neo4j {
+	private static Logger log = LoggerFactory.getLogger(Neo4j.class);
 
 	private GraphDatabaseService db = null;
 	private String graphpath = null;
@@ -97,7 +96,6 @@ public class neo4j implements GDBInterface {
 		}
 	}
 
-	@Override
 	public void graphdbform(String rdfpath) {
 
 		if (databaseExistsDoNotWrite) {
@@ -176,14 +174,13 @@ public class neo4j implements GDBInterface {
 		});
 	}
 
-	@Override
+
 	public void shutDown() {
 		log.info("Shutting down database ...");
 		db.shutdown();
 	}
 
 	/* Clearing data created on graphdatabase path */
-	@Override
 	public void clearDb(String graphpath) throws IOException {
 		File files = new File(graphpath);
 		for (File file : files.listFiles()) {
@@ -194,7 +191,6 @@ public class neo4j implements GDBInterface {
 	}
 
 	/* Returning the started graph database service */
-	@Override
 	public GraphDatabaseService getgdbservice() {
 		if (this.db == null) {
 			log.info("Database exists already at " + this.graphpath);
