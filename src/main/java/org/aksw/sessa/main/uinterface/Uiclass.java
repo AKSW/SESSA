@@ -4,22 +4,22 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.aksw.sessa.main.Initializer.Initializer;
 import org.aksw.sessa.main.datastructures.ListFunctions;
-import org.aksw.sessa.main.Initializer.initializer;
 import org.aksw.sessa.main.datastructures.ResultDataStruct;
-import org.aksw.sessa.main.importer.neo4j;
+import org.aksw.sessa.main.importer.Neo4j;
 import org.aksw.sessa.main.indexer.ESNode;
 import org.aksw.sessa.main.ngramgenerator.NGramModel;
-import org.aksw.sessa.main.propagator.propagator;
-import org.aksw.sessa.main.serverproperties.pathvariables;
+import org.aksw.sessa.main.propagator.Propagator;
+import org.aksw.sessa.main.serverproperties.Pathvariables;
 import org.aksw.sessa.main.urimapper.Mapper;
 import org.elasticsearch.search.SearchHit;
 import org.neo4j.graphdb.GraphDatabaseService;
 
 public class uiclass {
-    private pathvariables Instance;
+    private Pathvariables Instance;
     public uiclass() throws IOException{
-            this.Instance=new pathvariables();
+            this.Instance=new Pathvariables();
     }
     private File[] rdffileiterator(){
         File folder = new File(this.Instance.getrdf());
@@ -62,7 +62,7 @@ public class uiclass {
         
         Mapper mappings = new Mapper();
         mappings.BuildMappings(esnode,ngrams.getNGramMod());
-        initializer init= new initializer();
+        Initializer init= new Initializer();
         init.initiate(mappings.getMappings(),ngrams.getNGramMod());
         
         /* extracting paths where the graphdb has to be formed*/
@@ -71,7 +71,7 @@ public class uiclass {
         String graphpath = pathsetter.graphpath();
         
         /* Formation of graph database at specified path*/
-        neo4j graphdb = new neo4j(graphpath);
+        Neo4j graphdb = new Neo4j(graphpath);
         GraphDatabaseService gdb=graphdb.getgdbservice();
         System.out.println("asfasf");
         for (File file : listoffiles) { 
@@ -79,7 +79,7 @@ public class uiclass {
                graphdb.graphdbform( pathsetter.Instance.getrdf()+'/'+file.getName());
            }
         }   
-        propagator finalresults = new propagator();
+        Propagator finalresults = new Propagator();
         finalresults.PropagateInit(gdb,init.getResultsList());       
         List<ResultDataStruct> actual= init.getResultsList();
         
