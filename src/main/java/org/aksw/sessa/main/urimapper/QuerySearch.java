@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.aksw.sessa.main.indexer.Interface.IndexerInterface;
+
 import org.aksw.sessa.main.Initializer.EnergyFactory;
-import org.aksw.sessa.main.Initializer.interfaces.EnergyFunction;
+
+import org.aksw.sessa.main.Initializer.EnergyFunction;
 import org.aksw.sessa.main.datastructures.NGramStruct;
+import org.aksw.sessa.main.indexer.ESNode;
 import org.elasticsearch.search.SearchHit;
 
 public class QuerySearch {
@@ -17,11 +19,11 @@ public class QuerySearch {
 	private final EnergyFactory Energy = new EnergyFactory();
 	private final EnergyFunction EnergyCalc = Energy.getEnergyFunction("LevDist");
 
-	public QuerySearch(IndexerInterface node, NGramStruct ngram) {
+	public QuerySearch(ESNode node, NGramStruct ngram) {
 		buildquery(node, ngram);
 	}
 
-	private void buildquery(IndexerInterface node, NGramStruct ngram) {
+	private void buildquery(ESNode node, NGramStruct ngram) {
 		String label = ngram.getLabel();
 		SearchInLemonCluster(node, label, "classes");
 		SearchInLemonCluster(node, label, "properties");
@@ -32,7 +34,7 @@ public class QuerySearch {
 		}
 	}
 
-	private void SearchInLemonCluster(IndexerInterface node, String label, String index) {
+	private void SearchInLemonCluster(ESNode node, String label, String index) {
 		SearchHit[] results = node.transportclient(label, index);
 		for (SearchHit hit : results) {
 			Map<String, Object> result = hit.getSource();
@@ -43,7 +45,7 @@ public class QuerySearch {
 		}
 	}
 
-	private void SearchInRDFCluster(IndexerInterface node, String label, String index) {
+	private void SearchInRDFCluster(ESNode node, String label, String index) {
 		SearchHit[] results = node.transportclient(label, index);
 		for (SearchHit hit : results) {
 			Map<String, Object> result = hit.getSource();
@@ -60,7 +62,7 @@ public class QuerySearch {
 		}
 	}
 
-	public void DatatypeNormalize(IndexerInterface node, String label) {
+	public void DatatypeNormalize(ESNode node, String label) {
 		String NumberString = extractNumber(label);
 		if (label.contains(NumberString + " ")) {
 			label = label.replace(NumberString + " ", "");

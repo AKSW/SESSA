@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.aksw.hawk.datastructures.Answer;
-import org.aksw.sessa.main.Initializer.interfaces.InitializerInterface;
 import org.aksw.sessa.main.datastructures.MapperDataStruct;
 import org.apache.jena.rdf.model.RDFNode;
 import org.aksw.sessa.main.datastructures.NGramStruct;
@@ -14,7 +13,7 @@ import org.aksw.sessa.main.datastructures.ResultDataStruct;
 import org.apache.jena.query.Query;
 
 /* This is the class for activating the nodes initiiated from the mappings.  */
-public class initializer implements InitializerInterface {
+public class Initializer {
     /* Initiating the list of activated nodes. */
     private List<ResultDataStruct> propagator=new ArrayList<ResultDataStruct>();
     private List<String> totalUrilist = new ArrayList<String>();

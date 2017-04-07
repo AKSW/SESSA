@@ -8,7 +8,6 @@ import java.util.Set;
 import org.aksw.sessa.main.datastructures.ListFunctions;
 import org.aksw.sessa.main.datastructures.BlacklistDataStruct;
 import org.aksw.sessa.main.datastructures.ResultDataStruct;
-import org.aksw.sessa.main.propagator.interfaces.PropagatorInterface;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -21,7 +20,7 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.IteratorUtil;
 
 /* This is the class for propagating over the activated nodes */
-public final class propagator implements PropagatorInterface{
+public final class Propagator {
     
     /* Blacklist is used to keep track of the combination of nodes that already has been propagated */
     private List<BlacklistDataStruct> blacklist = new ArrayList<BlacklistDataStruct>();

@@ -7,16 +7,14 @@ import java.util.List;
 
 import org.aksw.sessa.main.datastructures.ListFunctions;
 import org.aksw.sessa.main.datastructures.NGramStruct;
-import org.aksw.sessa.main.ngramgenerator.interfaces.NGramInterface;
 
 /* This is the class for creating Ngram hierarchies out of the given query */
-public class NGramModel implements NGramInterface {
+public class NGramModel {
 
 	private List<NGramStruct> ngrammod = new ArrayList<NGramStruct>();
 
 	/* Initializing n-gram hierarchy with root node */
-	@Override
-	public void CreateNGramModel(String keyword) {
+	public void createNGramModel(String keyword) {
 		ngramhierarchy(0, 1, 0, 0, 0, 0, countchar(keyword), keyword);
 	}
 
@@ -71,7 +69,6 @@ public class NGramModel implements NGramInterface {
 	}
 
 	/* Returning the sorted N-gram hierarchy */
-	@Override
 	public List<NGramStruct> getNGramMod() {
 		// List<NGramStruct> modngrams=new
 		// ArrayList<NGramStruct>(this.ngrammod.size());

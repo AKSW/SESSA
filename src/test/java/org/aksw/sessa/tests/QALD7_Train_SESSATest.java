@@ -8,14 +8,14 @@
 //import org.aksw.qa.commons.datastructure.IQuestion;
 //import org.aksw.qa.commons.load.Dataset;
 //import org.aksw.qa.commons.load.LoaderController;
-//import org.aksw.sessa.main.Initializer.initializer;
+//import org.aksw.sessa.main.Initializer.Initializer;
 //import org.aksw.sessa.main.Initializer.interfaces.InitializerInterface;
 //import org.aksw.sessa.main.datastructures.ListFunctions;
 //import org.aksw.sessa.main.datastructures.ResultDataStruct;
 //import org.aksw.sessa.main.ngramgenerator.NGramModel;
 //import org.aksw.sessa.main.ngramgenerator.interfaces.NGramInterface;
-//import org.aksw.sessa.main.propagator.propagator;
-//import org.aksw.sessa.main.propagator.interfaces.PropagatorInterface;
+//import org.aksw.sessa.main.Propagator.Propagator;
+//import org.aksw.sessa.main.Propagator.interfaces.PropagatorInterface;
 //import org.aksw.sessa.main.urimapper.Mapper;
 //import org.aksw.sessa.main.urimapper.interfaces.MapperInterface;
 //import org.junit.Test;
@@ -39,7 +39,7 @@
 //		NGramInterface ngram = new NGramModel();
 //
 //
-//		ngram.CreateNGramModel(keywords);
+//		ngram.createNGramModel(keywords);
 //
 //
 //		System.out.println("keywords--------------------------------");
@@ -52,9 +52,9 @@
 //
 //		mappings.BuildMappings(sessainit.esnode, ngram.getNGramMod());
 //
-//		InitializerInterface init = new initializer();
+//		InitializerInterface init = new Initializer();
 //		init.initiate(mappings.getMappings(), ngram.getNGramMod());
-//		PropagatorInterface getFinalResults = new propagator();
+//		PropagatorInterface getFinalResults = new Propagator();
 //		getFinalResults.PropagateInit(sessainit.graphdb.getgdbservice(), init.getResultsList());
 //
 //		ListFunctions.sortresults(init.getResultsList());

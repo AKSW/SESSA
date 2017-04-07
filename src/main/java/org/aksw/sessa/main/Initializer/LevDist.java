@@ -1,6 +1,5 @@
 package org.aksw.sessa.main.Initializer;
 
-import org.aksw.sessa.main.Initializer.interfaces.EnergyFunction;
 
 /* This is the class for calculating energy score for given label and the ngram.
     We can enter any other energy function by adding its method in this class. 

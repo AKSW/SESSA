@@ -1,7 +1,7 @@
 
 package org.aksw.sessa.main.datastructures;
 
-/* This datastructure is for the blacklisted URIs whose combinations, the propagator has already considered*/
+/* This datastructure is for the blacklisted URIs whose combinations, the Propagator has already considered*/
 public class BlacklistDataStruct {
    private String URI1;
    private String URI2;

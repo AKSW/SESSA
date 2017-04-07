@@ -16,9 +16,9 @@ import org.aksw.sessa.main.urimapper.Mapper;
 import org.elasticsearch.search.SearchHit;
 import org.neo4j.graphdb.GraphDatabaseService;
 
-public class uiclass {
+public class Uiclass {
     private Pathvariables Instance;
-    public uiclass() throws IOException{
+    public Uiclass() throws IOException{
             this.Instance=new Pathvariables();
     }
     private File[] rdffileiterator(){
@@ -58,7 +58,7 @@ public class uiclass {
         System.out.println("=================================");
         String Query = "Bristol City FC gender";
         NGramModel ngrams = new NGramModel();
-        ngrams.CreateNGramModel(Query);
+        ngrams.createNGramModel(Query);
         
         Mapper mappings = new Mapper();
         mappings.BuildMappings(esnode,ngrams.getNGramMod());
@@ -66,7 +66,7 @@ public class uiclass {
         init.initiate(mappings.getMappings(),ngrams.getNGramMod());
         
         /* extracting paths where the graphdb has to be formed*/
-        uiclass pathsetter =new uiclass();
+        Uiclass pathsetter =new Uiclass();
         File[] listoffiles = pathsetter.rdffileiterator();
         String graphpath = pathsetter.graphpath();
         

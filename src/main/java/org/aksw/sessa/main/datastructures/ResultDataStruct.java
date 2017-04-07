@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/*This class defines the datastructure for results. The initializer and propagator will return a list of this datastructure*/
+/*This class defines the datastructure for results. The Initializer and Propagator will return a list of this datastructure*/
 public class ResultDataStruct {
     private List<Double> scores=new ArrayList<Double>();
     private String URI; 

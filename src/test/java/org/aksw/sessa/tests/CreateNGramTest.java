@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 /**
  * Created by gekko on 20.03.17.
  */
-public class createNGramTest {
+public class CreateNGramTest {
     @Before
     public void setUp() throws Exception {
 

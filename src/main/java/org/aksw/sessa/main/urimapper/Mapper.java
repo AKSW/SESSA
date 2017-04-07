@@ -6,16 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.aksw.sessa.main.indexer.Interface.IndexerInterface;
 import org.aksw.sessa.main.datastructures.MapperDataStruct;
 import org.aksw.sessa.main.datastructures.NGramStruct;
-import org.aksw.sessa.main.urimapper.interfaces.MapperInterface;
+import org.aksw.sessa.main.indexer.ESNode;
 
-public class Mapper implements MapperInterface{
+
+public class Mapper {
     private final Map<Integer,MapperDataStruct> mappings=new HashMap<Integer,MapperDataStruct>();
     
-    @Override
-    public void BuildMappings(IndexerInterface node, List<NGramStruct> ngramlist){
+
+    public void BuildMappings(ESNode node, List<NGramStruct> ngramlist){
         List<String> tempURIs;
         List<String> tempLabels;
         
@@ -33,7 +33,6 @@ public class Mapper implements MapperInterface{
             
         }
     }
-    
-    @Override
+
     public Map<Integer,MapperDataStruct> getMappings(){ return this.mappings; }
 }

@@ -3,11 +3,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-/* This class sets the pathvariables for the graph database and rdf data*/
+/* This class sets the Pathvariables for the graph database and rdf data*/
 
 /* The paths are set as defined in the server properties file in conf folder */
 //FIXME remove this class and replace it with proper property handling
-final public class pathvariables {
+final public class Pathvariables {
     
     private String rdffolder;
     private String graphfolder;
@@ -30,7 +30,7 @@ final public class pathvariables {
             }
         }
     }
-    public pathvariables() { 
+    public Pathvariables() {
         try{
             setpaths();
         }catch(IOException ex){

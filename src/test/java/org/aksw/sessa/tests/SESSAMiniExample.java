@@ -2,24 +2,17 @@ package org.aksw.sessa.tests;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Map;
 
-import org.aksw.hawk.datastructures.Answer;
-import org.aksw.sessa.main.Initializer.initializer;
-import org.aksw.sessa.main.Initializer.interfaces.InitializerInterface;
+import org.aksw.sessa.main.Initializer.Initializer;
 import org.aksw.sessa.main.datastructures.ListFunctions;
 import org.aksw.sessa.main.datastructures.ResultDataStruct;
-import org.aksw.sessa.main.importer.neo4j;
+import org.aksw.sessa.main.importer.Neo4j;
 import org.aksw.sessa.main.indexer.ESNode;
-import org.aksw.sessa.main.indexer.Interface.IndexerInterface;
 import org.aksw.sessa.main.ngramgenerator.NGramModel;
-import org.aksw.sessa.main.ngramgenerator.interfaces.NGramInterface;
-import org.aksw.sessa.main.propagator.propagator;
-import org.aksw.sessa.main.propagator.interfaces.PropagatorInterface;
-import org.aksw.sessa.main.serverproperties.pathvariables;
+import org.aksw.sessa.main.propagator.Propagator;
+import org.aksw.sessa.main.serverproperties.Pathvariables;
 import org.aksw.sessa.main.urimapper.Mapper;
-import org.aksw.sessa.main.urimapper.interfaces.MapperInterface;
 import org.elasticsearch.common.base.Joiner;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -27,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 
 public class SESSAMiniExample {
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	static Logger logger = LoggerFactory.getLogger(SESSAMiniExample.class);
 
 	@Test
 	// TODO write unit test that checks that partial matches are found, e.g.
@@ -44,7 +37,7 @@ public class SESSAMiniExample {
 //		<http://test.org/x2> <http://test.org/doors> "4" .
 	public void getSessaResults() throws FileNotFoundException, IOException {
 
-		IndexerInterface esnode = new ESNode();
+		ESNode esnode = new ESNode();
 		esnode.startCluster("data/testcluster");
 		/* Indexing of classes */
 		esnode.rdfcluster("resources/test_classes.ttl", "classes");
@@ -67,34 +60,32 @@ public class SESSAMiniExample {
 		}
 		System.out.println("Creating DataBase");
 
-		pathvariables Instance = new pathvariables();
-		neo4j graphdb = new neo4j(Instance.getgraph());
+		Pathvariables Instance = new Pathvariables();
+		Neo4j graphdb = new Neo4j(Instance.getgraph());
 
 		graphdb.graphdbform("resources/test_mappings.ttl");
 
 		System.out.println("Creating DataBase finished");
-
-		Answer answer = new Answer();
-		//answer.answerStr = new HashSet<String>();
+		
 		String keywords = "car doors";
 
-		NGramInterface ngram = new NGramModel();
+		NGramModel ngram = new NGramModel();
 
-		ngram.CreateNGramModel(keywords);
+		ngram.createNGramModel(keywords);
 
 		System.out.println("keywords: " + keywords);
 
 		// SESSA results
-		MapperInterface mapper = new Mapper();
+		Mapper mapper = new Mapper();
 
 		mapper.BuildMappings(esnode, ngram.getNGramMod());
 
 		//TODO here is the pruning step missing!!!
-		InitializerInterface init = new initializer();
+		Initializer init = new Initializer();
 		init.initiate(mapper.getMappings(), ngram.getNGramMod());
 		System.out.println("Before propagating: "+ Joiner.on("\n\t").join(init.getResultsList()));
 
-		PropagatorInterface getFinalResults = new propagator();
+		Propagator getFinalResults = new Propagator();
 		getFinalResults.PropagateInit(graphdb.getgdbservice(), init.getResultsList());
 		System.out.println("After propagating: "+ Joiner.on("\n\t").join(init.getResultsList()));
 		ListFunctions.sortresults(init.getResultsList());

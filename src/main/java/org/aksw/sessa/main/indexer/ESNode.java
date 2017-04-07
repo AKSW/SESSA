@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.aksw.sessa.main.indexer.Interface.IndexerInterface;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -35,7 +34,7 @@ import org.openrdf.rio.turtle.TurtleParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ESNode implements IndexerInterface {
+public class ESNode {
 	private static Logger log = LoggerFactory.getLogger(ESNode.class);
 	private Node node;
 	private Client client;
@@ -185,7 +184,7 @@ public class ESNode implements IndexerInterface {
 		System.out.println("Data Entry complete");
 	}
 //TODO allow partial hits
-	@Override
+
 	public SearchHit[] transportclient(String query, String path) {
 		/* Connecting the remote client with the central cluster */
 		Client clientremote = this.node.client();
@@ -200,13 +199,13 @@ public class ESNode implements IndexerInterface {
 		return results;
 	}
 
-	@Override
+
 	public void closeBulkLoader() {
 		if(bulkProcessor!=null)
 		bulkProcessor.close();
 	}
 
-	@Override
+
 	public void closeClient() {
 		client.close();
 	}

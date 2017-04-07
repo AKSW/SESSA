@@ -9,8 +9,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.aksw.sessa.main.serverproperties.Pathvariables;
 import org.apache.commons.io.FileDeleteStrategy;
-import org.aksw.sessa.main.serverproperties.pathvariables;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -36,7 +36,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 /* This is the class for starting the graph database server and creating the graph in it */
-public class neo4j {
+public class Neo4j {
 	private static Logger log = LoggerFactory.getLogger(Neo4j.class);
 
 	private GraphDatabaseService db = null;
@@ -52,9 +52,9 @@ public class neo4j {
 	public static void main(String[] args) {
 		log.info("Creating DataBase");
 
-		pathvariables Instance = new pathvariables();
+		Pathvariables Instance = new Pathvariables();
 		String getgraph = Instance.getgraph();
-		neo4j graphdb = new neo4j(getgraph);
+		Neo4j graphdb = new Neo4j(getgraph);
 
 		graphdb.graphdbform("resources/test_mapping_object_100k.ttl");
 
@@ -67,7 +67,7 @@ public class neo4j {
 	 * 
 	 * @param graphpath
 	 */
-	public neo4j(String graphpath) {
+	public Neo4j(String graphpath) {
 		try {
 			this.graphpath = graphpath;
 			File file = new File(graphpath);
@@ -92,7 +92,7 @@ public class neo4j {
 				});
 			}
 		} catch (Exception e) {
-			log.error("Error while creating neo4j", e);
+			log.error("Error while creating Neo4j", e);
 		}
 	}
 

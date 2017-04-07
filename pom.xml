@@ -33,20 +33,9 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.4.0.v20161208</version>
 			</plugin>
-			<!--<plugin>-->
-				<!--<groupId>org.springframework.boot</groupId>-->
-				<!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-				<!--<configuration>-->
-					<!--<systemProperties>-->
-						<!--<JAVA_OPTS>-Xms415m -Xmx16G -XX:MaxPermSize=1G</JAVA_OPTS>-->
-					<!--</systemProperties>-->
-					<!--<mainClass>org.aksw.hawk.webservice.WebApplication</mainClass>-->
-				<!--</configuration>-->
-			<!--</plugin>-->
 		</plugins>
 	</build>
 	<repositories>
-
 		<repository>
 			<id>mvnrepository</id>
 			<name>mvnrepository</name>
@@ -76,12 +65,7 @@
 			<artifactId>hawk</artifactId>
 			<version>0.3.2</version>
 		</dependency>
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-web-api</artifactId>
-			<version>6.0</version>
-			<scope>provided</scope>
-		</dependency>
+
 		<!-- Graph database 2.2.1 -->
 		<dependency>
 			<groupId>org.neo4j</groupId>
@@ -98,25 +82,14 @@
 			<artifactId>neo4j-io</artifactId>
 			<version>2.2.10</version>
 		</dependency>
-		<!-- Used for utils like lists -->
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.2</version>
-			<type>jar</type>
-		</dependency>
-		<!-- used to create and parse JSON -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.3.1</version>
-		</dependency>
+
 		<!-- Enabled Unit testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
+
 		<!-- Parsing efficiently the RDF files and putting them to Elastic Search 
 			Cluster -->
 		<dependency>
@@ -141,20 +114,6 @@
 			<artifactId>elasticsearch</artifactId>
 			<version>0.20.6</version>
 		</dependency>
-		<!-- Elastic Search -->
-		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-codecs -->
-		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-memory -->
-		<dependency>
-			<groupId>javax.json</groupId>
-			<artifactId>javax.json-api</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
-		<dependency>
-			<groupId>org.glassfish</groupId>
-			<artifactId>javax.json</artifactId>
-			<version>1.0.3</version>
-		</dependency>
 		<!-- DL-Learner used for LGG -->
 		<dependency>
 			<groupId>org.dllearner</groupId>
@@ -166,85 +125,6 @@
 					<groupId>net.minidev</groupId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		<!-- New version for less warnings with Jetty 9 https://mvnrepository.com/artifact/org.ow2.asm/asm -->
-		<dependency>
-			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm</artifactId>
-			<version>5.0.3</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.jamonapi/jamon -->
-		<dependency>
-			<groupId>com.jamonapi</groupId>
-			<artifactId>jamon</artifactId>
-			<version>2.81</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>2.7</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.7</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.json-lib</groupId>
-			<artifactId>json-lib</artifactId>
-			<version>2.4</version>
-			<classifier>jdk15</classifier>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.hp.hpl.jena/jena -->
-		<dependency>
-			<groupId>com.hp.hpl.jena</groupId>
-			<artifactId>jena</artifactId>
-			<version>2.5.5</version>
-		</dependency>
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/de.julielab/aliasi-lingpipe -->
-		<dependency>
-			<groupId>de.julielab</groupId>
-			<artifactId>aliasi-lingpipe</artifactId>
-			<version>4.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>edu.mit</groupId>
-			<artifactId>jwi</artifactId>
-			<version>2.3.3</version>
-		</dependency>
-		<dependency>
-			<groupId>net.didion.jwnl</groupId>
-			<artifactId>jwnl</artifactId>
-			<version>1.4.1.RC2</version>
-		</dependency>
-		<dependency>
-			<groupId>edu.stanford.nlp</groupId>
-			<artifactId>stanford-corenlp</artifactId>
-			<version>3.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>edu.stanford.nlp</groupId>
-			<artifactId>stanford-corenlp</artifactId>
-			<version>3.6.0</version>
-			<classifier>models</classifier>
-		</dependency>
-		<dependency>
-			<groupId>com.clearnlp</groupId>
-			<artifactId>clearnlp</artifactId>
-			<version>2.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.hp.hpl.jena</groupId>
-			<artifactId>json-jena</artifactId>
-			<version>1.0</version>
 		</dependency>
 	</dependencies>
 </project>
