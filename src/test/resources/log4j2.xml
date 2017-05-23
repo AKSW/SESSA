@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+<Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+        <PatternLayout pattern="%d{ABSOLUTE} %-5p [%-30.30c{1.}] %L - %m %n" />
+    </Console>
+    <File name="FileAllLogs" fileName="logs/MyProj_all.txt" immediateFlush="true" append="true">
+        <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </File>
+    <File name="FileAllErrors" fileName="logs/MyProj_errors.txt" immediateFlush="true" append="true">
+        <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </File>
+</Appenders>
+<Loggers>
+    <Root level="error">
+        <AppenderRef ref="FileAllErrors"/>
+    </Root>
+        <Logger name="org.elasticsearch" level="INFO" additivity="false">
+         <AppenderRef ref="Console" />
+         <AppenderRef ref="FileAllLogs"/>
+       </Logger>
+</Loggers>
+</Configuration>

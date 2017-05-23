@@ -1,0 +1,3 @@
+<http://test.org/Sportscar> <http://www.w3.org/2000/01/rdf-schema#label> "sports car" .
+<http://test.org/Electriccar> <http://www.w3.org/2000/01/rdf-schema#label> "electric car" .
+<http://test.org/Vehicle> <http://www.w3.org/2000/01/rdf-schema#label> "vehicle" .
