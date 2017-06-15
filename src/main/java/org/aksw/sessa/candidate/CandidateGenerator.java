@@ -24,7 +24,7 @@ public class CandidateGenerator {
   }
 
   /**
-   * Give a n-gram hierarchy, provides the candidates for all n-grams.
+   * Given a n-gram hierarchy, provides the candidates for all n-grams.
    * In this process, the children will also be pruned of candidates
    * which already present in their parents.
    * @param nGramHierarchy n-gram hierarchy, for which the candidates should be found
