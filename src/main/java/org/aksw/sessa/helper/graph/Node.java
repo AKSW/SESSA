@@ -5,7 +5,7 @@ import org.aksw.sessa.helper.graph.NodeInterface;
 /**
  * Created by Simon Bordewisch on 07.06.17.
  */
-public class Node<T> {
+public class Node<T extends Object> {
   private T nodeContent;
 
 
@@ -64,5 +64,14 @@ public class Node<T> {
 
   public boolean isFactNode(){
     return isFactNode;
+  }
+
+  public boolean equals(Object other){
+    if (other instanceof Node<?>){
+      if ( ((Node<?>)other).getContent().equals(this.nodeContent) ){
+        return true;
+      }
+    }
+    return false;
   }
 }
