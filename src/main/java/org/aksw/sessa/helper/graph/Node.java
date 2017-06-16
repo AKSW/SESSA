@@ -18,7 +18,7 @@ public class Node<T extends Object> {
     this.nodeContent = nodeContent;
     this.explanation = 0;
     this.energy = 0;
-    this.color = new NGramEntryPosition(0,0); // no color
+    this.color = new NGramEntryPosition(0,0); // represents no color
     this.isFactNode = false;
   }
 
