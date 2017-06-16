@@ -6,9 +6,7 @@ import java.util.Set;
 import java.util.Map;
 import org.aksw.sessa.helper.graph.Graph;
 import org.aksw.sessa.helper.graph.Node;
-import org.aksw.sessa.query.models.NGram;
 import org.aksw.sessa.query.models.NGramEntryPosition;
-import org.aksw.sessa.query.models.NGramHierarchy;
 
 /**
  * Created by Simon Bordewisch on 13.06.17.
