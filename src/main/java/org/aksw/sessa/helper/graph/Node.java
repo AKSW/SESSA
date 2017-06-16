@@ -1,6 +1,6 @@
 package org.aksw.sessa.helper.graph;
 
-import org.aksw.sessa.helper.graph.NodeInterface;
+import org.aksw.sessa.query.models.NGramEntryPosition;
 
 /**
  * Created by Simon Bordewisch on 07.06.17.
@@ -11,18 +11,18 @@ public class Node<T extends Object> {
 
   private int explanation;
   private float energy;
-  private int color;
+  private NGramEntryPosition color;
   private boolean isFactNode;
 
   public Node(T nodeContent){
     this.nodeContent = nodeContent;
     this.explanation = 0;
     this.energy = 0;
-    this.color = -1; // -1 is no color
+    this.color = new NGramEntryPosition(0,0); // no color
     this.isFactNode = false;
   }
 
-  public Node(T nodeContent, int explanation, float energy, int color, boolean isFactNode) {
+  public Node(T nodeContent, int explanation, float energy, NGramEntryPosition color, boolean isFactNode) {
     this.nodeContent = nodeContent;
     this.explanation = explanation;
     this.energy = energy;
@@ -50,11 +50,11 @@ public class Node<T extends Object> {
     energy = newEnergy;
   }
 
-  public int getColor() {
+  public NGramEntryPosition getColor() {
     return color;
   }
 
-  public void setColor(int color) {
+  public void setColor(NGramEntryPosition color) {
     this.color = color;
   }
 
