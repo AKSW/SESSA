@@ -22,6 +22,11 @@ public class NGramHierarchy {
   }
 
 
+  public String getNGram(NGramEntryPosition pos){
+    return getNGram(pos.getPosition(), pos.getLength());
+  }
+
+
   public String getNGram(int index, int length){
     if(length == 1){
       return ngram[index];
