@@ -7,21 +7,37 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * Created by Simon Bordewisch on 02.06.17.
+ * This class represents the n-gram hierarchy.
+ * @author Simon Bordewisch
  */
 public class NGramHierarchy {
 
   private String[] ngram;
 
+  /**
+   * Initializes with already splitted n-gram.
+   * The split has to be between the words.
+   * E.g. "birthplace bill gates" should become ["birthplace", "bill", "gates"].
+   * @param ngram already splitted n-gram
+   */
   public NGramHierarchy(String[] ngram){
     this.ngram = ngram;
   }
 
+  /**
+   * Initializes with n-gram sentences in normal String-representation.
+   * @param ngram n-gram in String-representation
+   */
   public NGramHierarchy(String ngram){
     this.ngram = ngram.split(" ");
   }
 
-
+  /**
+   * Returns n-gram with given information.
+   * @param index represents the position within the n-gram of given length
+   * @param length represents the length of the n-gram, e.g. length=2 is a bigram
+   * @return
+   */
   public String getNGram(int index, int length){
     if(length == 1){
       return ngram[index];
@@ -36,6 +52,12 @@ public class NGramHierarchy {
   }
 
 
+  /**
+   * Returns the parents of given n-gram.
+   * @param index represents the position within the n-gram of given length
+   * @param length represents the length of the n-gram, e.g. length=2 is a bigram
+   * @return parents of given n-gram
+   */
   public String[] getParents(int index, int length){
     String parents[];
     if (index == 0){
@@ -61,6 +83,13 @@ public class NGramHierarchy {
   }
 
 
+  /**
+   * Given the position and length for a n-gram, returns direct children,
+   * i.e. the children directly connected to the n-gram within the n-gram hierarchy.
+   * @param index represents the position within the n-gram of given length
+   * @param length represents the length of the n-gram, e.g. length=2 is a bigram
+   * @return directly connected children
+   */
   public String[] getDirectChildren(int index, int length){
     if (length==1) {
       return null;
@@ -72,7 +101,12 @@ public class NGramHierarchy {
     }
   }
 
-
+  /**
+   * Returns the whole n-gram hierarchy sorted by length, then by position.
+   * E.g. "birthplace bill gates" would return
+   * ["birthplace bill gates", "birthplace bill", "bill gates", "birthplace", "bill", "gates"]
+   * @return n-gram hierarchy represented as array
+   */
   public String[] toStringArray(){
     String[] hierarchy = new String[(ngram.length*(ngram.length+1))/2];
     int hierarchyIndex = 0;
@@ -86,6 +120,11 @@ public class NGramHierarchy {
     return  hierarchy;
   }
 
+  /**
+   * Returns length of initial n-gram,
+   * i.e. how many words it has.
+   * @return number of words within the initial n-gram
+   */
   public int getNGramLength(){
     return ngram.length;
   }
