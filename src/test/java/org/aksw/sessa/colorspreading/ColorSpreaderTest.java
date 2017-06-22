@@ -88,18 +88,18 @@ public class ColorSpreaderTest {
 
     // init mapping ngram -> uri
     Map<NGramEntryPosition, Set<Node>> nodeMapping = new HashMap<>();
-    NGramEntryPosition bpEntry = new NGramEntryPosition(0, 1);
+    NGramEntryPosition bpEntry = new NGramEntryPosition(1, 0);
     Set<Node> bpSet = new HashSet<>();
     bpSet.add(bp);
     bpSet.add(pob);
     nodeMapping.put(bpEntry, bpSet);
 
-    NGramEntryPosition bgEntry = new NGramEntryPosition(0, 2);
+    NGramEntryPosition bgEntry = new NGramEntryPosition(2, 0);
     Set<Node> bgSet = new HashSet<>();
     bgSet.add(bg);
     nodeMapping.put(bgEntry, bgSet);
 
-    NGramEntryPosition wifeEntry = new NGramEntryPosition(3, 1);
+    NGramEntryPosition wifeEntry = new NGramEntryPosition(1, 3);
     Set<Node> wifeSet = new HashSet<>();
     wifeSet.add(spouse);
     wifeSet.add(wife);

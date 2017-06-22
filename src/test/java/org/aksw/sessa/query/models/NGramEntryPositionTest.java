@@ -10,7 +10,7 @@ public class NGramEntryPositionTest {
 
   @Test
   public void TestGetAllDecendants_VariousValidTests(){
-    NGramEntryPosition pos1 = new NGramEntryPosition(0,4);
+    NGramEntryPosition pos1 = new NGramEntryPosition(4, 0);
     NGramEntryPosition[] descandantsPos1 = pos1.getAllDescendants();
     for(NGramEntryPosition pos : descandantsPos1){
       System.out.println(pos.toString());
