@@ -43,11 +43,11 @@ public class GraphTest {
     Set<Node> neighborOf1 = new HashSet<>();
     neighborOf1.add(nodes.get(2));
     neighborOf1.add(nodes.get(3));
-    Assert.assertEquals(neighborOf1,graph.getNeighbors(nodes.get(1)));
+    Assert.assertEquals(neighborOf1,graph.getNeighborsLeadingFrom(nodes.get(1)));
 
     Set<Node> neighborOf3 = new HashSet<>();
     neighborOf3.add(nodes.get(0));
-    Assert.assertEquals(neighborOf3,graph.getNeighbors(nodes.get(3)));
+    Assert.assertEquals(neighborOf3,graph.getNeighborsLeadingFrom(nodes.get(3)));
   }
 
 }
