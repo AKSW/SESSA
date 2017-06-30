@@ -83,8 +83,8 @@ public class ColorSpreaderTest {
     graph.addEdge(fact2, mg);
 
     graph.addEdge(fact3, mg);
-    graph.addEdge(fact1, dallas);
-    graph.addEdge(fact1, bp);
+    graph.addEdge(fact3, dallas);
+    graph.addEdge(fact3, bp);
 
     // init mapping ngram -> uri
     Map<NGramEntryPosition, Set<Node>> nodeMapping = new HashMap<>();
@@ -94,7 +94,7 @@ public class ColorSpreaderTest {
     bpSet.add(pob);
     nodeMapping.put(bpEntry, bpSet);
 
-    NGramEntryPosition bgEntry = new NGramEntryPosition(2, 0);
+    NGramEntryPosition bgEntry = new NGramEntryPosition(2, 1);
     Set<Node> bgSet = new HashSet<>();
     bgSet.add(bg);
     nodeMapping.put(bgEntry, bgSet);
@@ -122,12 +122,34 @@ public class ColorSpreaderTest {
 
   @Test
   public void testInitialize_TestInitialColorOfNodes() {
-    Assert.assertEquals(bp.getColor(), pob.getColor());
+    testUnderroutine_TestInitialColorOfNodes();
+  }
 
-    Assert.assertEquals(spouse.getColor(), wife.getColor());
-    Assert.assertEquals(wife.getColor(), theWife.getColor());
 
-    Assert.assertNotEquals(bp.getColor(), bg.getColor());
-    Assert.assertNotEquals(bp.getColor(), spouse.getColor());
+  private void testUnderroutine_TestInitialColorOfNodes(){
+    Assert.assertEquals(bp.getColors(), pob.getColors());
+    Assert.assertEquals(spouse.getColors(), wife.getColors());
+    Assert.assertEquals(wife.getColors(), theWife.getColors());
+    Assert.assertNotEquals(bp.getColors(), bg.getColors());
+    Assert.assertNotEquals(bp.getColors(), spouse.getColors());
+  }
+
+  @Test
+  public void testMakeActiviationStep_OneStepAtATime() {
+    colorspread.makeActiviationStep();
+    Assert.assertEquals(3, fact1.getExplanation());
+    Assert.assertEquals(3, fact2.getExplanation());
+    testUnderroutine_TestInitialColorOfNodes();
+    colorspread.makeActiviationStep();
+    Assert.assertEquals(3, seattle.getExplanation());
+    Assert.assertEquals(3, mg.getExplanation());
+    testUnderroutine_TestInitialColorOfNodes();
+    colorspread.makeActiviationStep();
+    Assert.assertEquals(4, fact3.getExplanation());
+    testUnderroutine_TestInitialColorOfNodes();
+    colorspread.makeActiviationStep();
+    Assert.assertEquals(4, dallas.getExplanation());
+    testUnderroutine_TestInitialColorOfNodes();
+    System.out.println(colorspread.getResult());
   }
 }
