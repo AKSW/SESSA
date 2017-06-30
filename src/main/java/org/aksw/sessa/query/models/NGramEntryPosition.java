@@ -43,9 +43,8 @@ public class NGramEntryPosition {
    * Returns an array of all positional information of descendants of this n-gram entry.
    * @return all positional informtion of descendats of this entry
    */
-  public NGramEntryPosition[] getAllDescendants(){
-    NGramEntryPosition[] decendants = new NGramEntryPosition[(length * length +1) / 2 -1];
-    return getAllDescendants(this).toArray(decendants);
+  public Set<NGramEntryPosition> getAllDescendants(){
+    return getAllDescendants(this);
   }
 
   private static Set<NGramEntryPosition> getAllDescendants(NGramEntryPosition pos){
@@ -76,7 +75,7 @@ public class NGramEntryPosition {
   /**
    * Override for hashcode to get a good and easy hash for the entries.
    * As long as the n-gram does not contain more than 10000 words, it should be unique.
-   * @return
+   * @return hash representation of the n-gram position
    */
   @Override
   public int hashCode() {
