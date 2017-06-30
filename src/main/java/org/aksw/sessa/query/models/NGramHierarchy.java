@@ -32,15 +32,19 @@ public class NGramHierarchy {
     this.ngram = ngram.split(" ");
   }
 
+  /**
+   * Returns the n-gram for which the positional data was given.
+   * @param pos the n-gram entry position
+   * @return n-gram at the given position
+   */
  public String getNGram(NGramEntryPosition pos){
     return getNGram(pos.getPosition(), pos.getLength());
   }
 
   /**
-   * Returns n-gram with given information.
-   * @param index represents the position within the n-gram of given length
-   * @param length represents the length of the n-gram, e.g. length=2 is a bigram
-   * @return
+   * Returns the n-gram for which the positional data was given.
+   * @param pos the n-gram entry position
+   * @return n-gram at the given position
    */
   public String getNGram(int index, int length){
     if(length == 1){
