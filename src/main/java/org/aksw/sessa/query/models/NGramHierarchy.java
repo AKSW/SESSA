@@ -32,6 +32,10 @@ public class NGramHierarchy {
     this.ngram = ngram.split(" ");
   }
 
+ public String getNGram(NGramEntryPosition pos){
+    return getNGram(pos.getPosition(), pos.getLength());
+  }
+
   /**
    * Returns n-gram with given information.
    * @param index represents the position within the n-gram of given length
