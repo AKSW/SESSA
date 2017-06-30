@@ -1,11 +1,13 @@
 package org.aksw.sessa.helper.graph;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 
 /**
  * This class represents a node in graph with given information of class T.
- * Furthermore it holds the scores and the color, which are needed for the
- * color-spreading algorithm.
+ * Furthermore it holds the scores and the colors, which are needed for the
+ * colors-spreading algorithm.
  */
 public class Node<T extends Object> {
 
@@ -13,7 +15,7 @@ public class Node<T extends Object> {
 
   private int explanation;
   private float energy;
-  private NGramEntryPosition color;
+  private Set<NGramEntryPosition> colors;
   private boolean isFactNode;
 
   /**
@@ -25,7 +27,7 @@ public class Node<T extends Object> {
     this.nodeContent = nodeContent;
     this.explanation = 0;
     this.energy = 0;
-    this.color = new NGramEntryPosition(0,0); // represents no color
+    this.colors = new HashSet<>();
     this.isFactNode = false;
   }
 
@@ -34,14 +36,14 @@ public class Node<T extends Object> {
    * @param nodeContent content to be stored in the node.
    * @param explanation explanation score of the node
    * @param energy energy score of the node
-   * @param color represents color for the node
+   * @param color represents colors for the node
    * @param isFactNode is the given node a fact-node?
    */
-  public Node(T nodeContent, int explanation, float energy, NGramEntryPosition color, boolean isFactNode) {
+  public Node(T nodeContent, int explanation, float energy, Set<NGramEntryPosition> color, boolean isFactNode) {
     this.nodeContent = nodeContent;
     this.explanation = explanation;
     this.energy = energy;
-    this.color = color;
+    this.colors = color;
     this.isFactNode = isFactNode;
   }
 
@@ -65,13 +67,18 @@ public class Node<T extends Object> {
     energy = newEnergy;
   }
 
-  public NGramEntryPosition getColor() {
-    return color;
+  public Set<NGramEntryPosition> getColors() {
+    return colors;
   }
 
-  public void setColor(NGramEntryPosition color) {
-    this.color = color;
+  public void addColor(NGramEntryPosition color) {
+    this.colors.add(color);
   }
+
+  public void addColors(Set<NGramEntryPosition> colors) {
+    this.colors.addAll(colors);
+  }
+
 
   /**
    * Sets the node type, i.e. if the node is a fact node (true) or not (false).
@@ -93,5 +100,16 @@ public class Node<T extends Object> {
       }
     }
     return false;
+  }
+
+  @Override
+  public String toString() {
+    return "Node{" +
+        "nodeContent=" + nodeContent +
+        ",\n explanation=" + explanation +
+        ",\n energy=" + energy +
+        ",\n colors=" + colors +
+        ",\n isFactNode=" + isFactNode +
+        '}';
   }
 }
