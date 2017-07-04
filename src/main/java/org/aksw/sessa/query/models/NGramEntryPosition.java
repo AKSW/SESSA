@@ -82,6 +82,13 @@ public class NGramEntryPosition {
     return position * 10000 + length;
   }
 
+  /**
+   * Compares the specified object with this object for equality.
+   * Returns true if the given object is either the same or is of the same class,
+   * and has the same length and position.
+   * @param other object to be compared for equality with this object.
+   * @return
+   */
   @Override
   public boolean equals(Object other) {
     if(this == other){
