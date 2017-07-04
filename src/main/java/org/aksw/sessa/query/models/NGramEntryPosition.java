@@ -40,7 +40,7 @@ public class NGramEntryPosition {
   }
 
   /**
-   * Returns an array of all positional information of descendants of this n-gram entry.
+   * Returns a set of all positional information of descendants of this n-gram entry.
    * @return all positional informtion of descendats of this entry
    */
   public Set<NGramEntryPosition> getAllDescendants(){
