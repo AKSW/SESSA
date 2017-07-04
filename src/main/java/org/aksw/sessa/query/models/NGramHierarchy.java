@@ -1,11 +1,5 @@
 package org.aksw.sessa.query.models;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 /**
  * This class represents the n-gram hierarchy.
  * @author Simon Bordewisch
@@ -38,16 +32,16 @@ public class NGramHierarchy {
    * @return n-gram at the given position
    */
  public String getNGram(NGramEntryPosition pos){
-    return getNGram(pos.getPosition(), pos.getLength());
+    return getNGram(pos.getLength(), pos.getPosition());
   }
 
   /**
    * Returns the n-gram for which the positional data was given.
-   * @param index represents the position within the n-gram of given length
    * @param length represents the length of the n-gram, e.g. length=2 is a bigram
+   * @param index represents the position within the n-gram of given length
    * @return n-gram at the given position
    */
-  public String getNGram(int index, int length){
+  public String getNGram(int length, int index){
     if(length == 1){
       return ngram[index];
     } else {
@@ -63,27 +57,27 @@ public class NGramHierarchy {
 
   /**
    * Returns the parents of given n-gram.
-   * @param index represents the position within the n-gram of given length
    * @param length represents the length of the n-gram, e.g. length=2 is a bigram
+   * @param index represents the position within the n-gram of given length
    * @return parents of given n-gram
    */
-  public String[] getParents(int index, int length){
+  public String[] getParents(int length, int index){
     String parents[];
     if (index == 0){
       if (index + length == ngram.length){
         return null;
       } else {
-        String parent = getNGram(index, length + 1);
+        String parent = getNGram(length + 1, index);
         parents = new String[1];
         parents[0] = parent;
       }
     } else if (index + length == ngram.length) {
-      String parent = getNGram(index-1, length + 1);
+      String parent = getNGram(length + 1, index-1);
       parents = new String[1];
       parents[0] = parent;
     } else {
-      String parent1 = getNGram(index-1, length + 1);
-      String parent2 = getNGram(index, length + 1);
+      String parent1 = getNGram(length + 1, index-1);
+      String parent2 = getNGram(length + 1, index);
       parents = new String[2];
       parents[0] = parent1;
       parents[1] = parent2;
@@ -95,17 +89,17 @@ public class NGramHierarchy {
   /**
    * Given the position and length for a n-gram, returns direct children,
    * i.e. the children directly connected to the n-gram within the n-gram hierarchy.
-   * @param index represents the position within the n-gram of given length
    * @param length represents the length of the n-gram, e.g. length=2 is a bigram
+   * @param index represents the position within the n-gram of given length
    * @return directly connected children
    */
-  public String[] getDirectChildren(int index, int length){
+  public String[] getDirectChildren(int length, int index){
     if (length==1) {
       return null;
     } else {
       String[] children = new String[2];
-      children[0] = getNGram( index, length - 1);
-      children[1] = getNGram(index+1, length - 1);
+      children[0] = getNGram(length - 1, index);
+      children[1] = getNGram(length - 1, index+1);
       return children;
     }
   }
@@ -122,7 +116,7 @@ public class NGramHierarchy {
     for(int l = ngram.length; l > 0; l--)
     {
       for(int i = 0; i+l<=ngram.length; i++) {
-        hierarchy[hierarchyIndex] = getNGram(i,l);
+        hierarchy[hierarchyIndex] = getNGram(l, i);
         hierarchyIndex++;
       }
     }

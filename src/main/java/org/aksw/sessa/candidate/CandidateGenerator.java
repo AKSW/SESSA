@@ -46,8 +46,8 @@ public class CandidateGenerator {
     // second iteration: prune from children
     for(int length=1; length < nGramHierarchy.getNGramLength(); length++){
       for(int index=0; index + length < nGramHierarchy.getNGramLength(); index++){
-        String childNgram = nGramHierarchy.getNGram(index, length);
-        String[] parents = nGramHierarchy.getParents(index, length);
+        String childNgram = nGramHierarchy.getNGram(length, index);
+        String[] parents = nGramHierarchy.getParents(length, index);
         HashSet<String> childCandidates = candidateMap.get(childNgram);
 
         for(String parent : parents) {
