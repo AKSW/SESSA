@@ -12,3 +12,5 @@ data/DBpediacluster
 .project
 .settings/*
 *.ttl
+*.iml
+.idea/
