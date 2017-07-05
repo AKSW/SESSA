@@ -1,11 +1,10 @@
 package org.aksw.sessa.colorspreading;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Map;
-import org.aksw.sessa.helper.graph.Graph;
+import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 
@@ -18,7 +17,7 @@ import org.aksw.sessa.query.models.NGramEntryPosition;
 public class ColorSpreader {
 
 
-  private Graph graph;
+  private GraphInterface graph;
   private Set<Node> lastActivatedNodes;
   private Set<Node> activatedNodes;
   private Set<Node> resultNodes;
@@ -29,7 +28,7 @@ public class ColorSpreader {
    *
    * @param graph Graph on which the color-spreading should be applied to.
    */
-  public ColorSpreader(Graph graph) {
+  public ColorSpreader(GraphInterface graph) {
     this.graph = graph;
     lastActivatedNodes = new HashSet<>();
     activatedNodes = new HashSet<>(lastActivatedNodes);
@@ -37,15 +36,6 @@ public class ColorSpreader {
     bestExplanation = 0;
   }
 
-
-  /**
-   * Returns Graph with updated scores and colors.
-   *
-   * @return calculated graph
-   */
-  public Graph getGraph() {
-    return graph;
-  }
 
   /**
    * First step in color-spreading process.
@@ -75,15 +65,18 @@ public class ColorSpreader {
     // TODO: Handle fact nodes?
     // TODO: Handle energy score?
     for (Node node : lastActivatedNodes) {
-      if (resultNodes.isEmpty()) {
-        resultNodes.add(node);
-        bestExplanation = node.getExplanation();
-      } else {
-        if (node.getExplanation() >= bestExplanation) {
-          if (node.getExplanation() > bestExplanation) {
-            resultNodes = new HashSet<>();
-          }
+      if (!node.isFactNode()) {
+        if (resultNodes.isEmpty()) {
           resultNodes.add(node);
+          bestExplanation = node.getExplanation();
+        } else {
+          if (node.getExplanation() >= bestExplanation) {
+            if (node.getExplanation() > bestExplanation) {
+              resultNodes.clear();
+              bestExplanation = node.getExplanation();
+            }
+            resultNodes.add(node);
+          }
         }
       }
     }
