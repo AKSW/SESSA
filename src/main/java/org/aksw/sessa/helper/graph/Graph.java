@@ -10,7 +10,7 @@ import java.util.Set;
  * This class represents a graph with nodes and edges.
  * @author Simon Bordewisch
  */
-public class Graph {
+public class Graph implements GraphInterface{
 
   private Set<Node> nodes;
   private Map<Node, Set<Node>> edgeMap;
