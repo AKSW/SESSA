@@ -1,4 +1,4 @@
-package org.aksw.sessa.importer.dictionary;
+package org.aksw.sessa.importing.dictionary;
 
 import java.util.List;
 import java.util.Map;

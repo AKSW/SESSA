@@ -1,4 +1,4 @@
-package org.aksw.sessa.importer.dictionary.implementation;
+package org.aksw.sessa.importing.dictionary.implementation;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.aksw.sessa.importer.dictionary.DictionaryImportInterface;
+import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
 
 /**
  * This class is an implementation of the interface
- * {@link org.aksw.sessa.importer.dictionary.DictionaryImportInterface}.
+ * {@link org.aksw.sessa.importing.dictionary.DictionaryImportInterface}.
  * and is capable of importing tsv-file (tab seperated values).
  * Therefore the file has to have one entry per line and an entry has the following format:
  * "URI\t List\t of\t n-grams".
