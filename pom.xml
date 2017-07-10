@@ -59,5 +59,14 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
+
+		<!-- SPARQL Query Engine -
+			https://mvnrepository.com/artifact/org.apache.jena/jena-arq -->
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-arq</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+
 	</dependencies>
 </project>
