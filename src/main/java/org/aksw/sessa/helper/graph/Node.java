@@ -103,13 +103,45 @@ public class Node<T extends Object> {
   }
 
   @Override
+  public int hashCode() {
+    return nodeContent.hashCode();
+  }
+
+
+  /**
+   * Checks if the color of this node an the other are related.
+   * I.e. if they share a color or if they share a decendant of a color.
+   * @param other Node to be tested for related colors
+   * @return true if they are related
+   */
+  public boolean colorsOfNodeAreRelated(Node other){
+    // Get all descendants of colors of the other node
+    Set<NGramEntryPosition> otherColors = other.getColors();
+    for (NGramEntryPosition color : otherColors){
+      otherColors.addAll(color.getAllDescendants());
+    }
+
+    // Get all decendants of colors of this node
+    Set<NGramEntryPosition> colors = new HashSet<>(this.getColors());
+    for (NGramEntryPosition color : colors){
+      colors.addAll(color.getAllDescendants());
+    }
+
+    // Get intersection, if empty, they are not related
+    otherColors.retainAll(colors);
+    return !otherColors.isEmpty();
+
+
+  }
+
+  @Override
   public String toString() {
     return "Node{" +
         "nodeContent=" + nodeContent +
-        ",\n explanation=" + explanation +
-        ",\n energy=" + energy +
-        ",\n colors=" + colors +
-        ",\n isFactNode=" + isFactNode +
+        ", explanation=" + explanation +
+        ", energy=" + energy +
+        ", colors=" + colors +
+        ", isFactNode=" + isFactNode +
         '}';
   }
 }
