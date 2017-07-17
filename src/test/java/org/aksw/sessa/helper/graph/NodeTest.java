@@ -47,7 +47,7 @@ public class NodeTest {
     node1.addColor(new NGramEntryPosition(1,5));
     Node<Integer> node2 = new Node<>(2);
     node2.addColor(new NGramEntryPosition(1,3));
-    Assert.assertFalse(node1.colorsOfNodeAreRelated(node2));
+    Assert.assertFalse(node1.isRelatedTo(node2));
   }
 
   @Test
@@ -56,7 +56,7 @@ public class NodeTest {
     node1.addColor(new NGramEntryPosition(1,5));
     Node<Integer> node2 = new Node<>(2);
     node2.addColor(new NGramEntryPosition(1,3));
-    node1.colorsOfNodeAreRelated(node2);
+    node1.isRelatedTo(node2);
     Assert.assertFalse(node1.getColors().isEmpty());
     Assert.assertFalse(node2.getColors().isEmpty());
   }

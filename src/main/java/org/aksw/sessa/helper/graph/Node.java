@@ -92,29 +92,13 @@ public class Node<T extends Object> {
     return isFactNode;
   }
 
-  @Override
-  public boolean equals(Object other){
-    if (other instanceof Node<?>){
-      if ( ((Node<?>)other).getContent().equals(this.nodeContent) ){
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return nodeContent.hashCode();
-  }
-
-
   /**
-   * Checks if the color of this node an the other are related.
+   * Checks if the color of this node and the other are related.
    * I.e. if they share a color or if they share a decendant of a color.
    * @param other Node to be tested for related colors
    * @return true if they are related
    */
-  public boolean colorsOfNodeAreRelated(Node other){
+  public boolean isRelatedTo(Node other){
     // Get all descendants of colors of the other node
     Set<NGramEntryPosition> otherColors = new HashSet<>(other.getColors());
     for (NGramEntryPosition color : otherColors){
@@ -132,6 +116,22 @@ public class Node<T extends Object> {
     return !otherColors.isEmpty();
 
 
+  }
+
+  @Override
+  public boolean equals(Object other){
+    if (other instanceof Node<?>){
+      if ( ((Node<?>)other).getContent().equals(this.nodeContent) ){
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  @Override
+  public int hashCode() {
+    return nodeContent.hashCode();
   }
 
   @Override
