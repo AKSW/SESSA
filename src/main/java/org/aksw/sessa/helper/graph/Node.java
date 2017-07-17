@@ -116,7 +116,7 @@ public class Node<T extends Object> {
    */
   public boolean colorsOfNodeAreRelated(Node other){
     // Get all descendants of colors of the other node
-    Set<NGramEntryPosition> otherColors = other.getColors();
+    Set<NGramEntryPosition> otherColors = new HashSet<>(other.getColors());
     for (NGramEntryPosition color : otherColors){
       otherColors.addAll(color.getAllDescendants());
     }
