@@ -3,7 +3,6 @@ package org.aksw.sessa.importing.rdf;
 
 import java.util.Formatter;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -11,18 +10,12 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP ;
-import org.apache.jena.sparql.lang.SPARQLParser;
 
 /**
  * Created by Simon Bordewisch on 04.07.17.
  */
 public class SparqlGraphFiller {
-
-  private final String PREFIXES = "";
-      //"PREFIX dbo: <http://dbpedia.org/ontology/> " +
-      //"PREFIX dbr: <http://dbpedia.org/resource/> ";
 
   private final String QUERY_STRING =
       "SELECT DISTINCT ?o WHERE {" +
@@ -31,7 +24,10 @@ public class SparqlGraphFiller {
       "{ ?o <%1$s> <%2$s>. } UNION" +
       "{ <%2$s> <%1$s> ?o. } UNION" +
       "{ <%2$s> ?o <%1$s>. } UNION" +
-      "{ ?o <%2$s> <%1$s>. }} LIMIT 100";
+      "{ ?o <%2$s> <%1$s>. }" +
+      //"FILTER ( strstarts(str(?o), \"http://dbpedia.org\") " +
+      //"&& ?o != <http://dbpedia.org/ontology/wikiPageWikiLink> )" +
+      "} LIMIT 100";
 
 
   public String buildQuery(String uri1, String uri2){
@@ -42,7 +38,7 @@ public class SparqlGraphFiller {
 
   public Set<String> findMissingTripleElement(String uri1, String uri2)
   {
-    String queryStr = PREFIXES + buildQuery(uri1, uri2);
+    String queryStr = buildQuery(uri1, uri2);
     Query query = QueryFactory.create(queryStr);
 
     ResultSet rs = null;
