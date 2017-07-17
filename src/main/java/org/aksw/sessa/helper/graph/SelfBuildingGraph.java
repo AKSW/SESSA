@@ -11,6 +11,9 @@ import org.aksw.sessa.importing.rdf.SparqlGraphFiller;
  * Created by Simon Bordewisch on 04.07.17.
  */
 public class SelfBuildingGraph implements GraphInterface{
+
+  public static final int MAX_SPARQL_ITERATIONS = 3;
+  private int currentIteration;
   private Set<Node> nodes;
 
   /**
@@ -36,6 +39,7 @@ public class SelfBuildingGraph implements GraphInterface{
     this.reversedEdgeMap = new HashMap<>();
     this.lastNewNodes = new HashSet<>(nodes);
     this.comparedNodes = new HashMap<>();
+    this.currentIteration = 1;
   }
 
 
@@ -115,38 +119,40 @@ public class SelfBuildingGraph implements GraphInterface{
   }
 
   public void updateGraph(){
-    SparqlGraphFiller sgf = new SparqlGraphFiller();
-    Set<Node> newNodes = new HashSet<>();
+    if(currentIteration <= MAX_SPARQL_ITERATIONS) {
+      SparqlGraphFiller sgf = new SparqlGraphFiller();
+      Set<Node> newNodes = new HashSet<>();
 
-    // Copies of the node-sets so we can add nodes to the original ones
-    Set<Node> nodes = new HashSet<>(this.nodes);
-    Set<Node> lastNewNodes = new HashSet<>(this.lastNewNodes);
+      // Copies of the node-sets so we can add nodes to the original ones
+      Set<Node> nodes = new HashSet<>(this.nodes);
+      Set<Node> lastNewNodes = new HashSet<>(this.lastNewNodes);
 
-    for(Node lastNewNode : lastNewNodes){
-      for(Node node : nodes){
-        if((!comparedNodes.containsKey(lastNewNode) ||
-            !comparedNodes.get(lastNewNode).contains(node)) &&
-            !node.isFactNode()) {
+      for (Node lastNewNode : lastNewNodes) {
+        for (Node node : nodes) {
+          if ((!comparedNodes.containsKey(lastNewNode) ||
+              !comparedNodes.get(lastNewNode).contains(node)) &&
+              !node.isFactNode()) {
 
-          updateComparedNodes(lastNewNode, node);
+            updateComparedNodes(lastNewNode, node);
 
-          if (!node.getColors().isEmpty() &&
-              !lastNewNode.getColors().isEmpty() &&
-              !node.colorsOfNodeAreRelated(lastNewNode)) {
-            Set<String> newContent = sgf.findMissingTripleElement(
-                node.getContent().toString(),
-                lastNewNode.getContent().toString());
+            if (!node.getColors().isEmpty() &&
+                !lastNewNode.getColors().isEmpty() &&
+                !node.colorsOfNodeAreRelated(lastNewNode)) {
+              Set<String> newContent = sgf.findMissingTripleElement(
+                  node.getContent().toString(),
+                  lastNewNode.getContent().toString());
 
-            for (String content : newContent) {
-              Node<String> foundNode = new Node<>(content);
-              newNodes.add(foundNode);
-              updateGraph(node, lastNewNode, foundNode);
+              for (String content : newContent) {
+                Node<String> foundNode = new Node<>(content);
+                newNodes.add(foundNode);
+                updateGraph(node, lastNewNode, foundNode);
+              }
             }
           }
         }
       }
+      this.lastNewNodes = newNodes;
     }
-    this.lastNewNodes = newNodes;
   }
 
   private void updateComparedNodes(Node newCompared1, Node newCompared2) {
