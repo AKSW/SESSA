@@ -11,7 +11,6 @@ import org.aksw.sessa.importing.rdf.SparqlGraphFiller;
  * Created by Simon Bordewisch on 04.07.17.
  */
 public class SelfBuildingGraph implements GraphInterface{
-
   private Set<Node> nodes;
 
   /**
@@ -23,6 +22,9 @@ public class SelfBuildingGraph implements GraphInterface{
   private Map<Node, Set<Node>> reversedEdgeMap; // we need both ways (besides for fact-nodes)
   private static int factIteratator = 0;
 
+  // Stores already compared key pairs so they don't get compared again
+  private HashMap<Node,Set<Node>> comparedNodes;
+
 
   public SelfBuildingGraph() {
     this(new HashSet<>());
@@ -33,6 +35,7 @@ public class SelfBuildingGraph implements GraphInterface{
     this.edgeMap = new HashMap<>();
     this.reversedEdgeMap = new HashMap<>();
     this.lastNewNodes = new HashSet<>(nodes);
+    this.comparedNodes = new HashMap<>();
   }
 
 
@@ -115,12 +118,9 @@ public class SelfBuildingGraph implements GraphInterface{
     SparqlGraphFiller sgf = new SparqlGraphFiller();
     Set<Node> newNodes = new HashSet<>();
 
-    // Copies of the node sets so we can add nodes to the original ones
+    // Copies of the node-sets so we can add nodes to the original ones
     Set<Node> nodes = new HashSet<>(this.nodes);
     Set<Node> lastNewNodes = new HashSet<>(this.lastNewNodes);
-
-    // Stores already compared key pairs so they don't get compared again
-    HashMap<Node,Set<Node>> comparedNodes = new HashMap<>();
 
     for(Node lastNewNode : lastNewNodes){
       for(Node node : nodes){
@@ -128,15 +128,14 @@ public class SelfBuildingGraph implements GraphInterface{
             !comparedNodes.get(lastNewNode).contains(node)) &&
             !node.isFactNode()) {
 
-          updateComparedNodes(comparedNodes, lastNewNode, node);
+          updateComparedNodes(lastNewNode, node);
 
-          if (!node.colorsOfNodeAreRelated(lastNewNode)) {
+          if (!node.getColors().isEmpty() &&
+              !lastNewNode.getColors().isEmpty() &&
+              !node.colorsOfNodeAreRelated(lastNewNode)) {
             Set<String> newContent = sgf.findMissingTripleElement(
                 node.getContent().toString(),
                 lastNewNode.getContent().toString());
-            if(newContent.contains("http://dbpedia.org/ontology/wikiPageWikiLink")){
-              System.out.println(lastNewNode.toString() + " " + node.toString());
-            }
 
             for (String content : newContent) {
               Node<String> foundNode = new Node<>(content);
@@ -150,10 +149,7 @@ public class SelfBuildingGraph implements GraphInterface{
     this.lastNewNodes = newNodes;
   }
 
-  private void updateComparedNodes(
-      HashMap<Node,Set<Node>> comparedNodes,
-      Node newCompared1,
-      Node newCompared2) {
+  private void updateComparedNodes(Node newCompared1, Node newCompared2) {
     if(!comparedNodes.containsKey(newCompared1)) {
       comparedNodes.put(newCompared1, new HashSet<>());
     }
@@ -172,8 +168,7 @@ public class SelfBuildingGraph implements GraphInterface{
 
   private void updateGraph(Node node1, Node node2, Node newNode){
     if(!nodes.contains(newNode)) {
-      // TODO: change content for fact-nodes?
-      Node<Integer> factNode = new Node<Integer>(factIteratator);
+      Node<Integer> factNode = new Node<>(factIteratator);
       factIteratator++;
       factNode.setNodeType(true);
       addNode(factNode);
@@ -181,9 +176,6 @@ public class SelfBuildingGraph implements GraphInterface{
       addEdge(factNode, node1);
       addEdge(factNode, node2);
       addEdge(factNode, newNode);
-      if (factIteratator % 100 == 0) {
-        System.out.println(factIteratator);
-      }
     }
   }
 
@@ -192,7 +184,7 @@ public class SelfBuildingGraph implements GraphInterface{
     StringBuilder sb = new StringBuilder();
     sb.append("Nodes:\n");
     for(Node node: nodes){
-      sb.append(node.getContent().toString());
+      sb.append(node.toString());
       sb.append("\n");
     }
     sb.append("Edges:\n");
