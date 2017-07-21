@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 
 /**
@@ -13,13 +14,13 @@ import org.aksw.sessa.query.models.NGramHierarchy;
  */
 public class CandidateGenerator {
 
-  private Map<String,HashSet<String>> candidateEntities;
+  private Map<String,Set<String>> candidateEntities;
 
   /**
    * Initialize with a mapping of n-grams to URIs.
    * @param candidateEntities mapping of n-grams to URIs
    */
-  public CandidateGenerator(Map<String, HashSet<String>> candidateEntities){
+  public CandidateGenerator(Map<String, Set<String>> candidateEntities){
     this.candidateEntities = candidateEntities;
   }
 
@@ -29,14 +30,14 @@ public class CandidateGenerator {
    * which already present in their parents.
    * @param nGramHierarchy n-gram hierarchy, for which the candidates should be found
    */
-  public Map<String,HashSet<String>> getCandidateMapping(NGramHierarchy nGramHierarchy) {
-    Map<String,HashSet<String>> candidateMap = new HashMap<>();
+  public Map<NGramEntryPosition,Set<String>> getCandidateMapping(NGramHierarchy nGramHierarchy) {
+    Map<NGramEntryPosition,Set<String>> candidateMap = new HashMap<>();
 
     // first iteration: only add to candidateMap
-    for(String nGram : nGramHierarchy.toStringArray()) {
-      HashSet<String> nGramMappings;
-      if(candidateEntities.containsKey(nGram)) {
-        nGramMappings = candidateEntities.get(nGram);
+    for(NGramEntryPosition nGram : nGramHierarchy.getAllPositions()) {
+      Set<String> nGramMappings;
+      if(candidateEntities.containsKey(nGramHierarchy.getNGram(nGram))) {
+        nGramMappings = candidateEntities.get(nGramHierarchy.getNGram(nGram));
       } else {
         nGramMappings = new HashSet<>();
       }
@@ -44,21 +45,11 @@ public class CandidateGenerator {
     }
 
     // second iteration: prune from children
-    for(int length=1; length < nGramHierarchy.getNGramLength(); length++){
-      for(int index=0; index + length < nGramHierarchy.getNGramLength(); index++){
-        String childNgram = nGramHierarchy.getNGram(length, index);
-        String[] parents = nGramHierarchy.getParents(length, index);
-        HashSet<String> childCandidates = candidateMap.get(childNgram);
-
-        for(String parent : parents) {
-          Set<String> parentCandidates = candidateMap.get(parent);
-          for (String childCandidate : childCandidates) {
-            if (parentCandidates.contains(childCandidate)) {
-              childCandidates.remove(childCandidate);
-            }
-          }
-        }
-        candidateMap.put(childNgram, childCandidates);
+    for(NGramEntryPosition parent : candidateMap.keySet()){
+      for(NGramEntryPosition child : parent.getAllDescendants()){
+        Set<String> parentCandidates = candidateMap.get(parent);
+        Set<String> childCandidates = candidateMap.get(child);
+        childCandidates.removeAll(parentCandidates);
       }
     }
     return candidateMap;

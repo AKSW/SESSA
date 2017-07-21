@@ -3,6 +3,8 @@ package org.aksw.sessa.candidate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,7 +16,7 @@ import org.junit.Test;
 public class CandidateGeneratorTest {
 
   CandidateGenerator candidateGenerator;
-  Map<String, HashSet<String>> candidateMapping;
+  Map<NGramEntryPosition, Set<String>> candidateMapping;
 
   HashSet<String> billGates;
   HashSet<String> wife;
@@ -24,7 +26,7 @@ public class CandidateGeneratorTest {
 
   @Before
   public void initialize(){
-    HashMap<String, HashSet<String>> candidateEntities = new HashMap<>();
+    Map<String, Set<String>> candidateEntities = new HashMap<>();
     spouse = new HashSet<>();
     spouse.add("dbo:spouse");
     candidateEntities.put("spouse", spouse);
@@ -60,7 +62,7 @@ public class CandidateGeneratorTest {
   @Test
   public void testGet_BillGatesContent() {
 
-    Assert.assertEquals(billGates, candidateMapping.get("bill gates"));
+    Assert.assertEquals(billGates, candidateMapping.get(new NGramEntryPosition(2,1)));
 
   }
 
@@ -69,7 +71,7 @@ public class CandidateGeneratorTest {
     // dbr:Bill_Gates pruned, because "bill gates" is father of "gates"
     HashSet<String> noBillGates = new HashSet<>();
     noBillGates.add("dbpedia:The_Gates");
-    Assert.assertEquals(noBillGates, candidateMapping.get("gates"));
+    Assert.assertEquals(noBillGates, candidateMapping.get(new NGramEntryPosition(1,2)));
   }
 
 }
