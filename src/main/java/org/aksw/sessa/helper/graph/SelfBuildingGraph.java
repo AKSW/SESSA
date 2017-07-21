@@ -5,12 +5,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.aksw.sessa.helper.graph.GraphInterface;
+import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.importing.rdf.SparqlGraphFiller;
 
 /**
  * Created by Simon Bordewisch on 04.07.17.
  */
-public class SelfBuildingGraph implements GraphInterface{
+public class SelfBuildingGraph implements GraphInterface {
 
   public static final int MAX_SPARQL_ITERATIONS = 3;
   private int currentIteration;
@@ -113,9 +115,23 @@ public class SelfBuildingGraph implements GraphInterface{
    * Equivallent to the neighbors of a unoriented version of the graph.
    */
   public Set<Node> getAllNeighbors(Node neighborsOf){
+    if(everyNodeHasColor()){
+      updateGraph();
+    }
     Set<Node> allNeighbors = getNeighborsLeadingFrom(neighborsOf);
     allNeighbors.addAll(getNeighborsLeadingTo(neighborsOf));
     return allNeighbors;
+  }
+
+  private boolean everyNodeHasColor(){
+    boolean everyNodeHasColor = true;
+    for(Node node : nodes){
+      if(node.getColors().isEmpty()){
+        everyNodeHasColor = false;
+        break;
+      }
+    }
+    return everyNodeHasColor;
   }
 
   public void updateGraph(){
