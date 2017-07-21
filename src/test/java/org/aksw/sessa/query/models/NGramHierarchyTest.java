@@ -1,5 +1,7 @@
 package org.aksw.sessa.query.models;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -92,5 +94,26 @@ public class NGramHierarchyTest {
                                "birthplace bill", "bill gates", "gates wife",
                                "birthplace", "bill", "gates", "wife"};
     Assert.assertArrayEquals(hierarchyArray, hierarchy.toStringArray());
+  }
+
+  @Test
+  public void testGetAllPositions(){
+    hierarchy = new NGramHierarchy(ngramBill);
+    Set<NGramEntryPosition> hierarchyPositions = new HashSet<>();
+    hierarchyPositions.add(new NGramEntryPosition(4,0));
+
+    hierarchyPositions.add(new NGramEntryPosition(3,0));
+    hierarchyPositions.add(new NGramEntryPosition(3,1));
+
+    hierarchyPositions.add(new NGramEntryPosition(2,0));
+    hierarchyPositions.add(new NGramEntryPosition(2,1));
+    hierarchyPositions.add(new NGramEntryPosition(2,2));
+
+    hierarchyPositions.add(new NGramEntryPosition(1,0));
+    hierarchyPositions.add(new NGramEntryPosition(1,1));
+    hierarchyPositions.add(new NGramEntryPosition(1,2));
+    hierarchyPositions.add(new NGramEntryPosition(1,3));
+
+    Assert.assertEquals(hierarchyPositions, hierarchy.getAllPositions());
   }
 }

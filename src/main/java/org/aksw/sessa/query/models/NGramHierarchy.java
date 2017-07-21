@@ -1,5 +1,8 @@
 package org.aksw.sessa.query.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * This class represents the n-gram hierarchy.
  * @author Simon Bordewisch
@@ -121,6 +124,24 @@ public class NGramHierarchy {
       }
     }
     return  hierarchy;
+  }
+
+  /**
+   * Generates all possible NGramEntryPositions for this n-gram hierarchy.
+   * I.e. if the n-gram has a length of 3, it would generate the NGramEntryPositions for
+   * the trigram, for the 2 possible bigrams and for the 3 unigrams.
+   * @see NGramEntryPosition
+   * @return all possible NgramEntryPositions as set
+   */
+  public Set<NGramEntryPosition> getAllPositions(){
+    Set<NGramEntryPosition> positions = new HashSet<>();
+    for(int l = ngram.length; l > 0; l--)
+    {
+      for(int i = 0; i+l<=ngram.length; i++) {
+        positions.add(new NGramEntryPosition(l,i));
+      }
+    }
+    return  positions;
   }
 
   /**
