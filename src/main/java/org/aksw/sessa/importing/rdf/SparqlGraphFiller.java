@@ -10,7 +10,7 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.sparql.engine.http.QueryEngineHTTP ;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 
 /**
  * Created by Simon Bordewisch on 04.07.17.
@@ -19,39 +19,37 @@ public class SparqlGraphFiller {
 
   private final String QUERY_STRING =
       "SELECT DISTINCT ?o WHERE {" +
-      "{ <%1$s> <%2$s> ?o. } UNION" +
-      "{ <%1$s> ?o <%2$s>. } UNION" +
-      "{ ?o <%1$s> <%2$s>. } UNION" +
-      "{ <%2$s> <%1$s> ?o. } UNION" +
-      "{ <%2$s> ?o <%1$s>. } UNION" +
-      "{ ?o <%2$s> <%1$s>. }" +
-      //"FILTER ( strstarts(str(?o), \"http://dbpedia.org\") " +
-      //"&& ?o != <http://dbpedia.org/ontology/wikiPageWikiLink> )" +
-      "} LIMIT 100";
+          "{ <%1$s> <%2$s> ?o. } UNION" +
+          "{ <%1$s> ?o <%2$s>. } UNION" +
+          "{ ?o <%1$s> <%2$s>. } UNION" +
+          "{ <%2$s> <%1$s> ?o. } UNION" +
+          "{ <%2$s> ?o <%1$s>. } UNION" +
+          "{ ?o <%2$s> <%1$s>. }" +
+          //"FILTER ( strstarts(str(?o), \"http://dbpedia.org\") " +
+          //"&& ?o != <http://dbpedia.org/ontology/wikiPageWikiLink> )" +
+          "} LIMIT 100";
 
 
-  public String buildQuery(String uri1, String uri2){
-    return new Formatter().format( QUERY_STRING, uri1, uri2).toString();
+  public String buildQuery(String uri1, String uri2) {
+    return new Formatter().format(QUERY_STRING, uri1, uri2).toString();
   }
 
 
-
-  public Set<String> findMissingTripleElement(String uri1, String uri2)
-  {
+  public Set<String> findMissingTripleElement(String uri1, String uri2) {
     String queryStr = buildQuery(uri1, uri2);
     Query query = QueryFactory.create(queryStr);
 
     ResultSet rs = null;
     Set<String> test = new HashSet<>();
     // Remote execution.
-    try ( QueryExecution qexec = QueryExecutionFactory
-        .sparqlService("http://dbpedia.org/sparql", query) ) {
+    try (QueryExecution qexec = QueryExecutionFactory
+        .sparqlService("http://dbpedia.org/sparql", query)) {
       // Set the DBpedia specific timeout.
-      ((QueryEngineHTTP)qexec).addParam("timeout", "10000") ;
+      ((QueryEngineHTTP) qexec).addParam("timeout", "10000");
 
       // Execute.
       rs = qexec.execSelect();
-      while(rs.hasNext()){
+      while (rs.hasNext()) {
         QuerySolution qs = rs.next();
         test.add(qs.get("?o").toString());
       }
@@ -60,14 +58,5 @@ public class SparqlGraphFiller {
     }
     return test;
   }
-
-  public static void main(String[] args){
-    SparqlGraphFiller filler = new SparqlGraphFiller();
-    Set<String> qsList = filler.findMissingTripleElement("dbo:birthPlace", "dbr:Bill_Gates");
-    for (String qs : qsList){
-      System.out.println(qs);
-    }
-  }
-
 
 }

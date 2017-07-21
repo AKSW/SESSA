@@ -8,10 +8,15 @@ import java.util.Set;
 public interface GraphInterface {
 
   void addNode(Node node);
+
   Set<Node> getNodes();
+
   void addEdge(Node from, Node to);
+
   Set<Node> getNeighborsLeadingFrom(Node neighborsOf);
+
   Set<Node> getNeighborsLeadingTo(Node neighborsOf);
+
   Set<Node> getAllNeighbors(Node neighborsOf);
 
 }

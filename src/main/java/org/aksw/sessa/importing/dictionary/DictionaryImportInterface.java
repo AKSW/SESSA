@@ -8,9 +8,10 @@ import java.util.Set;
  * This interface provides the skeleton for classes which should
  * import files, which contain entries of the format "URI -> List of n-grams".
  * Those files will be used to make a reverse dictionary, i. e."n-gram -> List of URIS".
+ *
  * @author Simon Bordewisch
  */
 public interface DictionaryImportInterface {
 
-  Map<String,Set<String>> getDictionary(String fileName);
+  Map<String, Set<String>> getDictionary(String fileName);
 }

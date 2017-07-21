@@ -21,9 +21,10 @@ public class Node<T extends Object> {
   /**
    * Initializes node with the given information.
    * All scores are initialized with default parameters.
+   *
    * @param nodeContent content to be stored in the node
    */
-  public Node(T nodeContent){
+  public Node(T nodeContent) {
     this.nodeContent = nodeContent;
     this.explanation = 0;
     this.energy = 0;
@@ -33,13 +34,15 @@ public class Node<T extends Object> {
 
   /**
    * Initializes node with given information and scores.
+   *
    * @param nodeContent content to be stored in the node.
    * @param explanation explanation score of the node
    * @param energy energy score of the node
    * @param color represents colors for the node
    * @param isFactNode is the given node a fact-node?
    */
-  public Node(T nodeContent, int explanation, float energy, Set<NGramEntryPosition> color, boolean isFactNode) {
+  public Node(T nodeContent, int explanation, float energy, Set<NGramEntryPosition> color,
+      boolean isFactNode) {
     this.nodeContent = nodeContent;
     this.explanation = explanation;
     this.energy = energy;
@@ -47,11 +50,11 @@ public class Node<T extends Object> {
     this.isFactNode = isFactNode;
   }
 
-  public T getContent(){
+  public T getContent() {
     return nodeContent;
   }
 
-  public int getExplanation(){
+  public int getExplanation() {
     return explanation;
   }
 
@@ -59,11 +62,11 @@ public class Node<T extends Object> {
     this.explanation = explanation;
   }
 
-  public float getEnergy(){
+  public float getEnergy() {
     return energy;
   }
 
-  public void setEnergy(float newEnergy){
+  public void setEnergy(float newEnergy) {
     energy = newEnergy;
   }
 
@@ -82,32 +85,34 @@ public class Node<T extends Object> {
 
   /**
    * Sets the node type, i.e. if the node is a fact node (true) or not (false).
+   *
    * @param isFactNode is the given node a fact-node?
    */
-  public void setNodeType(boolean isFactNode){
+  public void setNodeType(boolean isFactNode) {
     this.isFactNode = isFactNode;
   }
 
-  public boolean isFactNode(){
+  public boolean isFactNode() {
     return isFactNode;
   }
 
   /**
    * Checks if the color of this node and the other are related.
    * I.e. if they share a color or if they share a decendant of a color.
+   *
    * @param other Node to be tested for related colors
    * @return true if they are related
    */
-  public boolean isRelatedTo(Node other){
+  public boolean isRelatedTo(Node other) {
     // Get all descendants of colors of the other node
     Set<NGramEntryPosition> otherColors = new HashSet<>(other.getColors());
-    for (NGramEntryPosition color : otherColors){
+    for (NGramEntryPosition color : otherColors) {
       otherColors.addAll(color.getAllDescendants());
     }
 
     // Get all decendants of colors of this node
     Set<NGramEntryPosition> colors = new HashSet<>(this.getColors());
-    for (NGramEntryPosition color : colors){
+    for (NGramEntryPosition color : colors) {
       colors.addAll(color.getAllDescendants());
     }
 

@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Map;
-import org.aksw.sessa.helper.graph.Graph;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.helper.graph.SelfBuildingGraph;
@@ -27,9 +26,10 @@ public class ColorSpreader {
 
   /**
    * Constructs the initial graph in colorspreader with the given candidate mapping.
+   *
    * @param nodeMapping provides the mapping (reverse dictionary) of n-grams to candidates
    */
-  public ColorSpreader(Map<NGramEntryPosition, Set<String>> nodeMapping){
+  public ColorSpreader(Map<NGramEntryPosition, Set<String>> nodeMapping) {
     lastActivatedNodes = new HashSet<>();
     activatedNodes = new HashSet<>(lastActivatedNodes);
     resultNodes = new HashSet<>();
@@ -105,7 +105,7 @@ public class ColorSpreader {
     for (Node neighbor : graph.getAllNeighbors(node)) {
       explanation += neighbor.getExplanation();
       energy += neighbor.getEnergy();
-      colors.addAll(neighbor.getColors()); // Why is there a warning?
+      colors.addAll(neighbor.getColors()); // TODO: Get rid of the warning
     }
     node.setEnergy(energy);
     node.setExplanation(explanation);
@@ -166,7 +166,7 @@ public class ColorSpreader {
   private boolean colorsCanBeCombined(Node node) {
     Set<NGramEntryPosition> colors = new HashSet<>();
     for (Node neighbor : graph.getAllNeighbors(node)) {
-      colors.addAll(neighbor.getColors()); // why is there a warning?
+      colors.addAll(neighbor.getColors()); // TODO: Get rid of the warning
     }
     for (NGramEntryPosition color : colors) {
       Set<NGramEntryPosition> intersection = new HashSet<>(colors);
@@ -178,16 +178,27 @@ public class ColorSpreader {
     return true;
   }
 
-  public Set<Node> spreadColors(){
+  /**
+   * Spreads colors until there are no changes, i.e.
+   * it repeats the activation step until no node was updated.
+   *
+   * @return the nodes with the highest explanation score
+   */
+  public Set<Node> spreadColors() {
     boolean colorsHaveSpread = true;
 
-    while(colorsHaveSpread){
+    while (colorsHaveSpread) {
       colorsHaveSpread = makeActiviationStep();
     }
     return getResult();
   }
 
-  public GraphInterface getGraph(){
+  /**
+   * Returns build graph with all updates.
+   *
+   * @return used graph
+   */
+  public GraphInterface getGraph() {
     return graph;
   }
 

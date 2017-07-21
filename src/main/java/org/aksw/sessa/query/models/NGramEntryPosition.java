@@ -5,6 +5,7 @@ import java.util.Set;
 
 /**
  * This class represents a position in the n-gram hierarchy.
+ *
  * @author Simon Bordewisch
  */
 public class NGramEntryPosition {
@@ -27,10 +28,11 @@ public class NGramEntryPosition {
    * represent the third bigram.
    * If the whole n-gram is "birthplace bill gates wife",
    * the object would represent "gates wife".
+   *
    * @param length length of the n-gram
    * @param position position in the "row"
    */
-  public NGramEntryPosition(int length, int position){
+  public NGramEntryPosition(int length, int position) {
     this.position = position;
     this.length = length;
   }
@@ -41,19 +43,21 @@ public class NGramEntryPosition {
 
   /**
    * Returns a set of all positional information of descendants of this n-gram entry.
+   *
    * @return all positional informtion of descendats of this entry
    */
-  public Set<NGramEntryPosition> getAllDescendants(){
+  public Set<NGramEntryPosition> getAllDescendants() {
     return getAllDescendants(this);
   }
 
-  private static Set<NGramEntryPosition> getAllDescendants(NGramEntryPosition pos){
-    if(pos.getLength() == 1){
+  private Set<NGramEntryPosition> getAllDescendants(NGramEntryPosition pos) {
+    if (pos.getLength() == 1) {
       return new HashSet<>();
     } else {
       Set<NGramEntryPosition> decendants = new HashSet<>();
       NGramEntryPosition child1 = new NGramEntryPosition(pos.getLength() - 1, pos.getPosition());
-      NGramEntryPosition child2 = new NGramEntryPosition(pos.getLength() - 1, pos.getPosition() + 1);
+      NGramEntryPosition child2 = new NGramEntryPosition(pos.getLength() - 1,
+          pos.getPosition() + 1);
       decendants.add(child1);
       decendants.add(child2);
       decendants.addAll(getAllDescendants(child1));
@@ -68,13 +72,14 @@ public class NGramEntryPosition {
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     return "Entry( position: " + position + ", length: " + length + ")";
   }
 
   /**
    * Override for hashcode to get a good and easy hash for the entries.
    * As long as the n-gram does not contain more than 10000 words, it should be unique.
+   *
    * @return hash representation of the n-gram position
    */
   @Override
@@ -86,27 +91,28 @@ public class NGramEntryPosition {
    * Compares the specified object with this object for equality.
    * Returns true if the given object is either the same or is of the same class,
    * and has the same length and position.
-   * @param other object to be compared for equality with this object.
-   * @return
+   *
+   * @param other object to be compared for equality with this object
+   * @return true if the given object is of the same class and has the same length and position,
+   * else false
    */
   @Override
   public boolean equals(Object other) {
-    if(this == other){
+    if (this == other) {
       return true;
     }
-    if(other.getClass() != this.getClass()){
+    if (other.getClass() != this.getClass()) {
       return false;
     }
-    if(((NGramEntryPosition)other).getLength() != this.getLength()){
+    if (((NGramEntryPosition) other).getLength() != this.getLength()) {
       return false;
     }
-    if(((NGramEntryPosition)other).getPosition() != this.getPosition()){
+    if (((NGramEntryPosition) other).getPosition() != this.getPosition()) {
       return false;
     }
     return true;
 
   }
-
 
 
 }
