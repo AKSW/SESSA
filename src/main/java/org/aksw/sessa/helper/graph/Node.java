@@ -118,21 +118,21 @@ public class Node<T extends Object> {
 
   }
 
-  @Override
-  public boolean equals(Object other){
-    if (other instanceof Node<?>){
-      if ( ((Node<?>)other).getContent().equals(this.nodeContent) ){
-        return true;
-      }
-    }
-    return false;
-  }
-
-
-  @Override
-  public int hashCode() {
-    return nodeContent.hashCode();
-  }
+//  @Override
+//  public boolean equals(Object other){
+//    if (other instanceof Node<?>){
+//      if ( ((Node<?>)other).getContent().equals(this.nodeContent) ){
+//        return true;
+//      }
+//    }
+//    return false;
+//  }
+//
+//
+//  @Override
+//  public int hashCode() {
+//    return nodeContent.hashCode();
+//  }
 
   @Override
   public String toString() {
