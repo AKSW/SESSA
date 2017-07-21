@@ -4,8 +4,10 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Map;
+import org.aksw.sessa.helper.graph.Graph;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
+import org.aksw.sessa.helper.graph.SelfBuildingGraph;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 
 /**
@@ -24,16 +26,16 @@ public class ColorSpreader {
   private int bestExplanation;
 
   /**
-   * Initializing with the reified graph.
-   *
-   * @param graph Graph on which the color-spreading should be applied to.
+   * Constructs the initial graph in colorspreader with the given candidate mapping.
+   * @param nodeMapping provides the mapping (reverse dictionary) of n-grams to candidates
    */
-  public ColorSpreader(GraphInterface graph) {
-    this.graph = graph;
+  public ColorSpreader(Map<NGramEntryPosition, Set<String>> nodeMapping){
     lastActivatedNodes = new HashSet<>();
     activatedNodes = new HashSet<>(lastActivatedNodes);
     resultNodes = new HashSet<>();
     bestExplanation = 0;
+    graph = new SelfBuildingGraph();
+    initialize(nodeMapping);
   }
 
 
@@ -43,14 +45,16 @@ public class ColorSpreader {
    *
    * @param nodeMapping provides the mapping (reverse dictionary) of n-grams to candidates
    */
-  public void initialize(Map<NGramEntryPosition, Set<Node>> nodeMapping) {
-    for (Entry<NGramEntryPosition, Set<Node>> entry : nodeMapping.entrySet()) {
-      for (Node node : entry.getValue()) {
+  private void initialize(Map<NGramEntryPosition, Set<String>> nodeMapping) {
+    for (Entry<NGramEntryPosition, Set<String>> entry : nodeMapping.entrySet()) {
+      for (String value : entry.getValue()) {
+        Node<String> node = new Node<>(value);
         node.addColor(entry.getKey());
         int explanationScore = entry.getKey().getLength();
         node.setExplanation(explanationScore);
         node.setEnergy(1); // TODO: set actual energy with some metric
         lastActivatedNodes.add(node);
+        graph.addNode(node);
       }
     }
     activatedNodes.addAll(lastActivatedNodes);
@@ -172,6 +176,19 @@ public class ColorSpreader {
       }
     }
     return true;
+  }
+
+  public Set<Node> spreadColors(){
+    boolean colorsHaveSpread = true;
+
+    while(colorsHaveSpread){
+      colorsHaveSpread = makeActiviationStep();
+    }
+    return getResult();
+  }
+
+  public GraphInterface getGraph(){
+    return graph;
   }
 
 
