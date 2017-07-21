@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.aksw.sessa.helper.graph.Node;
-import org.aksw.sessa.helper.graph.SelfBuildingGraph;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,7 +13,7 @@ import org.junit.Test;
 /**
  * Created by Simon Bordewisch on 15.06.17.
  */
-public class ColorSpreaderWithSelfbuildTest {
+public class ColorSpreaderTest {
 
   private ColorSpreader colorspread;
   private Map<NGramEntryPosition, Set<String>> nodeMapping;
