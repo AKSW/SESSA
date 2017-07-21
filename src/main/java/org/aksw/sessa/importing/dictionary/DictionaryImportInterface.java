@@ -2,6 +2,7 @@ package org.aksw.sessa.importing.dictionary;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This interface provides the skeleton for classes which should
@@ -11,5 +12,5 @@ import java.util.Map;
  */
 public interface DictionaryImportInterface {
 
-  Map<String,List<String>> getDictionary(String fileName);
+  Map<String,Set<String>> getDictionary(String fileName);
 }
