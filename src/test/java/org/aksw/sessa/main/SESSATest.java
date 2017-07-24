@@ -6,7 +6,7 @@ import org.junit.Assert;
 
 public class SESSATest {
 
-  public static final String TSV_FILE = "src/test/resources/en_surface_forms.tsv";
+  public static final String TSV_FILE = "src/test/resources/en_surface_forms_small.tsv";
   SESSA sessa = new SESSA(TSV_FILE);
   String question;
   Set<String> answer;
@@ -33,5 +33,5 @@ public class SESSATest {
 
   // TODO: create tests for other questions
 
-  // TODO: create tests for accesibility to QueryProcessing & Co.
+  // TODO: create tests for accessibility to QueryProcessing & Co.
 }
