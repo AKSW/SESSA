@@ -1,25 +1,34 @@
 package org.aksw.sessa.main;
 
+import java.util.Set;
 import org.junit.Test;
 import org.junit.Assert;
 
 public class SESSATest {
 
-  SESSA sessa = new SESSA();
+  public static final String TSV_FILE = "src/test/resources/en_surface_forms.tsv";
+  SESSA sessa = new SESSA(TSV_FILE);
   String question;
-  String a;
+  Set<String> answer;
 	@Test
-	public void testEmpty() {
+	public void testAnswer_onEmpty() {
     question = "";
-	  a = sessa.answer(question);
-    Assert.assertEquals("", a);
+	  answer = sessa.answer(question);
+    Assert.assertNull(answer);
   }
 
   @Test
-  public void test() {
+  public void testAnswer_onRunningExample() {
     question = "birthplace bill gates wife";
-    a = sessa.answer(question);
-    Assert.assertEquals("Dallas", a);
+    answer = sessa.answer(question);
+    Assert.assertTrue(answer.contains("http://dbpedia.org/resource/Dallas"));
+  }
+
+  @Test
+  public void testAnswer_onObamaExample() {
+    question = "birthplace barack obama wife";
+    answer = sessa.answer(question);
+    Assert.assertTrue(answer.contains("http://dbpedia.org/resource/Chicago"));
   }
 
   // TODO: create tests for other questions
