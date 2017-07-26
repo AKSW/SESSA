@@ -8,7 +8,11 @@ import java.util.Set;
 import org.aksw.sessa.importing.rdf.SparqlGraphFiller;
 
 /**
- * Created by Simon Bordewisch on 04.07.17.
+ * This class implements a graph, that builds itself using
+ * its node-contents to find new nodes.
+ * This is currently realized using {@link org.aksw.sessa.importing.rdf.SparqlGraphFiller}.
+ * The class only searches for new nodes if every node has an explanation score.
+ * @author Simon Bordewisch
  */
 public class SelfBuildingGraph implements GraphInterface {
 
@@ -26,7 +30,7 @@ public class SelfBuildingGraph implements GraphInterface {
    */
   private Set<Node> lastNewNodes;
   private Map<Node, Set<Node>> edgeMap;
-  private Map<Node, Set<Node>> reversedEdgeMap; // we need both ways (besides for fact-nodes)
+  private Map<Node, Set<Node>> reversedEdgeMap; // we need both ways (except for fact-nodes)
   private static int factIteratator = 0;
 
   // Stores already compared key pairs so they don't get compared again
@@ -58,16 +62,11 @@ public class SelfBuildingGraph implements GraphInterface {
     lastNewNodes.add(node);
   }
 
+
   public Set<Node> getNodes() {
     return nodes;
   }
 
-  /**
-   * Add oriented edge between two nodes.
-   *
-   * @param from node from which the edge originates
-   * @param to node to which the edge leads to
-   */
   public void addEdge(Node from, Node to) {
     //TODO: Make sure the nodes are in the graph.
     addEdge(from, to, edgeMap);
@@ -86,14 +85,7 @@ public class SelfBuildingGraph implements GraphInterface {
     }
   }
 
-  /**
-   * Returns neighbors of a node, i.e. all nodes,
-   * which share an edge with the given node and the edge has to originate from
-   * the given node.
-   *
-   * @param neighborsOf node from which the neighbours should be found for
-   * @return neighbors of given node.
-   */
+
   public Set<Node> getNeighborsLeadingFrom(Node neighborsOf) {
     Set<Node> neighbors = edgeMap.get(neighborsOf);
     if (neighbors != null) {
@@ -103,14 +95,7 @@ public class SelfBuildingGraph implements GraphInterface {
     }
   }
 
-  /**
-   * Returns neighbors of a node, i.e. all nodes,
-   * which share an edge with the given node and the edge has to lead to
-   * the given node.
-   *
-   * @param neighborsOf node from which the neighbours should be found for
-   * @return neighbors of given node.
-   */
+
   public Set<Node> getNeighborsLeadingTo(Node neighborsOf) {
     Set<Node> neighbors = reversedEdgeMap.get(neighborsOf);
     if (neighbors != null) {
@@ -120,11 +105,7 @@ public class SelfBuildingGraph implements GraphInterface {
     }
   }
 
-  /**
-   * Returns neighbors of a given node, i.e. all nodes
-   * for which an edge either leads to or originates from the given node.
-   * Equivallent to the neighbors of a unoriented version of the graph.
-   */
+
   public Set<Node> getAllNeighbors(Node neighborsOf) {
     if (everyNodeHasColor()) {
       expandGraph();
@@ -158,7 +139,7 @@ public class SelfBuildingGraph implements GraphInterface {
    *
    * @see SparqlGraphFiller
    */
-  private void expandGraph() {
+  protected void expandGraph() {
     if (currentIteration <= MAX_EXPANSIONS) {
       SparqlGraphFiller sgf = new SparqlGraphFiller();
       Set<Node> newNodes = new HashSet<>();
@@ -242,6 +223,16 @@ public class SelfBuildingGraph implements GraphInterface {
     }
   }
 
+  /**
+   * Returns a string representation of this class.
+   * The string representation consists of a list of nodes and edges.
+   * Nodes are lead by the word 'Nodes:' followed by one node per line.
+   * The nodes are represented by their string representation.
+   * The edges are introduced by 'Edges:' followed by one edge per line.
+   * One edge consists of the content of the first node, followed by an
+   * arrow '->' followed by the content of the second node.
+   * @return a string representation of this graph class
+   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
