@@ -10,6 +10,8 @@ import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
 import org.aksw.sessa.importing.dictionary.implementation.TsvDictionaryImport;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
+import org.aksw.sessa.query.processing.QueryProcessingInterface;
+import org.aksw.sessa.query.processing.implementation.SimpleQueryProcessing;
 
 /**
  * Main class of project SESSA, which returns answers to asked questions.
@@ -44,7 +46,8 @@ public class SESSA {
     if (question.equals("")) {
       return null;
     } else {
-      NGramHierarchy nGramHierarchy = new NGramHierarchy(question);
+      QueryProcessingInterface queryProcess = new SimpleQueryProcessing();
+      NGramHierarchy nGramHierarchy = queryProcess .processQuery(question);
       CandidateGenerator canGen = new CandidateGenerator(dictionary);
       Map<NGramEntryPosition, Set<String>> canMap = canGen.getCandidateMapping(nGramHierarchy);
       ColorSpreader colorSpreader = new ColorSpreader(canMap);
