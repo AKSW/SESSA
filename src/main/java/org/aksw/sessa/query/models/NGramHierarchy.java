@@ -5,6 +5,11 @@ import java.util.Set;
 
 /**
  * This class represents the n-gram hierarchy.
+ * For a given n-gram it represents a tree.
+ * The root of the tree is the n-gram itself.
+ * The children of each node are the different 'n-1-grams'.
+ * E.g. the children of the trigram "bill gates wife" are
+ * bigrams "bill gates" and "gates wife".
  *
  * @author Simon Bordewisch
  */
@@ -15,9 +20,10 @@ public class NGramHierarchy {
   /**
    * Initializes with already splitted n-gram.
    * The split has to be between the words.
-   * E.g. "birthplace bill gates" should become ["birthplace", "bill", "gates"].
+   * E.g. the orginal n-gram "birthplace bill gates" has to be given as
+   * '["birthplace", "bill", "gates"]'.
    *
-   * @param ngram already splitted n-gram
+   * @param ngram already split n-gram
    */
   public NGramHierarchy(String[] ngram) {
     this.ngram = ngram;
@@ -25,6 +31,7 @@ public class NGramHierarchy {
 
   /**
    * Initializes with n-gram sentences in normal String-representation.
+   * Unigram has to be split by one single space.
    *
    * @param ngram n-gram in String-representation
    */

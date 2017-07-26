@@ -50,6 +50,13 @@ public class NGramEntryPosition {
     return getAllDescendants(this);
   }
 
+  /**
+   * This method is used for recursive calls to get all decendants for this n-gram position.
+   *
+   * @param pos position of the ngram entry for which the decendants should be searched for
+   * @return all descendants of the given node
+   * @see #getAllDescendants()
+   */
   private Set<NGramEntryPosition> getAllDescendants(NGramEntryPosition pos) {
     if (pos.getLength() == 1) {
       return new HashSet<>();
@@ -66,11 +73,21 @@ public class NGramEntryPosition {
     }
   }
 
-
+  /**
+   * Returns length of this entry.
+   * I.e. an entry for a bigram would have a length of 2.
+   *
+   * @return length of this entry
+   */
   public int getLength() {
     return length;
   }
 
+  /**
+   * Returns string representation of this n-gram position entry.
+   * It has the following scheme (#var represent the values of the variable):
+   * Entry( position: #position, length: #length)
+   */
   @Override
   public String toString() {
     return "Entry( position: " + position + ", length: " + length + ")";

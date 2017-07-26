@@ -12,14 +12,20 @@ import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
 /**
  * This class is an implementation of the interface
  * {@link org.aksw.sessa.importing.dictionary.DictionaryImportInterface}.
- * and is capable of importing tsv-file (tab seperated values).
- * Therefore the file has to have one entry per line and an entry has the following format:
- * "URI\t List\t of\t n-grams".
- *
+ * and is capable of importing tsv-files (tab seperated values).
  * @author Simon Bordewisch
  */
 public class TsvDictionaryImport implements DictionaryImportInterface {
 
+  /**
+   * Given a file name, returns a dictionary of n-gram to set of URIs.
+   * The file has to be a mapping of URIs to a list of n-grams.
+   * The file has to have the tsv-format. Therefore the file has to have one
+   * entry per line and an entry has the following format:
+   * "URI\tList\tof\tn-grams".
+   * @param fileName name (and location) of a file with a mapping of URI's to a list/set of n-grams
+   * @return mapping of n-grams to set of URIs
+   */
   @Override
   public Map<String, Set<String>> getDictionary(String fileName) {
     // TODO: Consider other Maps (e.g. PatriciaTrees)

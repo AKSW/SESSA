@@ -1,5 +1,6 @@
 package org.aksw.sessa.colorspreading;
 
+import java.awt.Color;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -27,26 +28,25 @@ public class ColorSpreader {
   /**
    * Constructs the initial graph in colorspreader with the given candidate mapping.
    *
-   * @param nodeMapping provides the mapping (reverse dictionary) of n-grams to candidates
+   * @param nGramMapping provides the mapping (reverse dictionary) of n-grams to candidates
    */
-  public ColorSpreader(Map<NGramEntryPosition, Set<String>> nodeMapping) {
+  public ColorSpreader(Map<NGramEntryPosition, Set<String>> nGramMapping) {
     lastActivatedNodes = new HashSet<>();
     activatedNodes = new HashSet<>(lastActivatedNodes);
     resultNodes = new HashSet<>();
     bestExplanation = 0;
     graph = new SelfBuildingGraph();
-    initialize(nodeMapping);
+    initializeWithEmptyGraph(nGramMapping);
   }
-
 
   /**
    * First step in color-spreading process.
    * Sets the initial explanation scores of the mapped nodes
    *
-   * @param nodeMapping provides the mapping (reverse dictionary) of n-grams to candidates
+   * @param nGramMapping provides the mapping (reverse dictionary) of n-grams to candidates
    */
-  private void initialize(Map<NGramEntryPosition, Set<String>> nodeMapping) {
-    for (Entry<NGramEntryPosition, Set<String>> entry : nodeMapping.entrySet()) {
+  private void initializeWithEmptyGraph(Map<NGramEntryPosition, Set<String>> nGramMapping) {
+    for (Entry<NGramEntryPosition, Set<String>> entry : nGramMapping.entrySet()) {
       for (String value : entry.getValue()) {
         Node<String> node = new Node<>(value);
         node.addColor(entry.getKey());

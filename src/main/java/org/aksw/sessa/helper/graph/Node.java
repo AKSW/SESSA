@@ -20,6 +20,7 @@ public class Node<T extends Object> {
 
   /**
    * Initializes node with the given information.
+   * For example, the information can contain URIs.
    * All scores are initialized with default parameters.
    *
    * @param nodeContent content to be stored in the node
@@ -36,7 +37,7 @@ public class Node<T extends Object> {
    * Initializes node with given information and scores.
    *
    * @param nodeContent content to be stored in the node.
-   * @param explanation explanation score of the node
+   * @param explanation explanation score of the node (see {@link #setExplanation(int)})
    * @param energy energy score of the node
    * @param color represents colors for the node
    * @param isFactNode is the given node a fact-node?
@@ -50,34 +51,79 @@ public class Node<T extends Object> {
     this.isFactNode = isFactNode;
   }
 
+  /**
+   * Returns the content of this node.
+   */
   public T getContent() {
     return nodeContent;
   }
 
+  /**
+   * Returns the explanation score of this node.
+   * For explanation of this score see {@link #setExplanation(int)}.
+   */
   public int getExplanation() {
     return explanation;
   }
 
+  /**
+   * Sets the explanation score for this node.
+   * The explanation score provides information on how many unigrams this node is build on.
+   * E.g. this node might hold content about Bill Gates and is explained
+   * by the unigrams "bill" & "gates" and thefore has an explanation score of 2.
+   *
+   * @param explanation explanation score of this node
+   */
   public void setExplanation(int explanation) {
     this.explanation = explanation;
   }
 
+  /**
+   * Returns the energy score of this node.
+   *
+   * @return energy score of this node
+   */
   public float getEnergy() {
     return energy;
   }
 
+  /**
+   * Sets the energy score for this node.
+   * The energy score is another score that tries to explain how good trustworthy
+   * the n-gram mapping to the content is.
+   * E.g. this can be realized via Levenshtein distance.
+   */
   public void setEnergy(float newEnergy) {
     energy = newEnergy;
   }
 
+  /**
+   * Returns the colors of this node as set.
+   *
+   * @return set of colors of this node
+   */
   public Set<NGramEntryPosition> getColors() {
     return colors;
   }
 
+  /**
+   * Adds a color to this node.
+   * Colors are repsentated by ngram-positions in the n-gram hierarchy.
+   * They show which n-grams were used to explain the content of this node.
+   *
+   * @param color position of the n-gram in the n-gram hierarchy
+   * @see NGramEntryPosition
+   */
   public void addColor(NGramEntryPosition color) {
     this.colors.add(color);
   }
 
+  /**
+   * Adds multiple colors to this node.
+   *
+   * @param colors set of n-gram positions in the n-gram hierarchy
+   * @see #addColor(NGramEntryPosition)
+   */
   public void addColors(Set<NGramEntryPosition> colors) {
     this.colors.addAll(colors);
   }
@@ -85,13 +131,18 @@ public class Node<T extends Object> {
 
   /**
    * Sets the node type, i.e. if the node is a fact node (true) or not (false).
-   *
-   * @param isFactNode is the given node a fact-node?
+   * Fact nodes are nodes which link normal nodes with each other, showing that they
+   * belong together.
+   * @param isFactNode set 'true' if this node is a fact node
    */
   public void setNodeType(boolean isFactNode) {
     this.isFactNode = isFactNode;
   }
 
+  /**
+   * Returns true if this node is a fact node.
+   * @return true if this node is a fact node
+   */
   public boolean isFactNode() {
     return isFactNode;
   }
@@ -139,6 +190,13 @@ public class Node<T extends Object> {
 //    return nodeContent.hashCode();
 //  }
 
+  /**
+   * Returns a string representation of this node.
+   * It has the following scheme ('#var' represent the variables):
+   * Node{nodeContent=#nodeContent, explanation=#explanation, energy=#energy,
+   * colors=#colors, isFactNode=#isFactNode}
+   * @return string reprensetation of this node
+   */
   @Override
   public String toString() {
     return "Node{" +
