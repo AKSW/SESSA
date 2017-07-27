@@ -15,12 +15,10 @@ public class SparqlGraphFillerTest {
     String seattle = "http://dbpedia.org/resource/Seattle";
 
     SparqlGraphFiller sgf = new SparqlGraphFiller();
-    System.out.println("SPARQL-Query is:");
-    System.out.println(sgf.buildQuery(seattle, bg).replace("UNION", "UNION\n").replace("{{", "{\n{"));
+    //System.out.println("SPARQL-Query is:");
+    //System.out.println(sgf.buildQuery(seattle, bg).replace("UNION", "UNION\n").replace("{{", "{\n{"));
     Set<String> resultSet = sgf.findMissingTripleElement(seattle, bg);
 
-    System.out.println("Results are:");
-    System.out.println(resultSet);
-    Assert.assertEquals(1, resultSet.size());
+    Assert.assertTrue(resultSet.contains("http://dbpedia.org/resource/Seattle"));
   }
 }

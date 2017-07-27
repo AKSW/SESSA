@@ -22,8 +22,6 @@ public class SelfbuildingGraphTest {
 
   @Test
   public void testUpdateGraph(){
-    graph.updateGraph();
-    graph.updateGraph();
-    System.out.println(graph.toString());
+    //FIXME: Tests for this probably would not differ from ColorSpreaderTest and GraphTest
   }
 }
