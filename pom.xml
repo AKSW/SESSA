@@ -68,5 +68,12 @@
 			<version>3.3.0</version>
 		</dependency>
 
+		<!-- For the F1-measurements -->
+		<dependency>
+			<groupId>org.aksw.qa</groupId>
+			<artifactId>commons</artifactId>
+			<version>0.4.0</version>
+		</dependency>
+
 	</dependencies>
 </project>
