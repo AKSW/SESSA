@@ -107,6 +107,7 @@ public class SelfBuildingGraph implements GraphInterface {
 
 
   public Set<Node> getAllNeighbors(Node neighborsOf) {
+    //TODO: For now expanding graph in here should be enough, but maybe search for better solution
     if (everyNodeHasColor()) {
       expandGraph();
     }

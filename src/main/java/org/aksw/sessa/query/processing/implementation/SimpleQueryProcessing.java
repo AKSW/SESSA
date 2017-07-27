@@ -4,16 +4,18 @@ import org.aksw.sessa.query.models.NGramHierarchy;
 import org.aksw.sessa.query.processing.QueryProcessingInterface;
 
 /**
- * Created by Simon Bordewisch on 02.06.17.
- * Most simple query processing class.
+ * Simplest query processing class.
+ * Does not process the query before it is transformed to a n-gram hiearchy.
+ * Using this class is recommended with keyword-search only, i.e.
+ * 'birthplace bill gates wife" instead of 'Where was Bill Gates wife born?'.
+ * @author Simon Bordewisch
  */
 public class SimpleQueryProcessing implements QueryProcessingInterface {
 
   /**
    * Gives unprocessed query to NGramHierarchy and returns it.
-   *
    * @param query human written query
-   * @return the NGram-hierarchy of the query
+   * @return the n-gram hierarchy of the unprocessed query
    */
   @Override
   public NGramHierarchy processQuery(String query) {

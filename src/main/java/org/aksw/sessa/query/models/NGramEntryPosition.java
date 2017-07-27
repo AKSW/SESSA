@@ -37,6 +37,11 @@ public class NGramEntryPosition {
     this.length = length;
   }
 
+  /**
+   * Returns position within the n-gram hierarchy with the same length.
+   *
+   * @return position within the n-gram hierarchy with the same length
+   */
   public int getPosition() {
     return position;
   }
