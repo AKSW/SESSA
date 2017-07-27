@@ -19,6 +19,7 @@ import org.aksw.sessa.query.processing.implementation.SimpleQueryProcessing;
 public class SESSA {
 
   private Map<String, Set<String>> dictionary;
+  private QueryProcessingInterface queryProcess;
 
   /**
    * Initilize class with a tsv file which contains a dictionary
@@ -30,6 +31,7 @@ public class SESSA {
   public SESSA(String fileName) {
     DictionaryImportInterface dictImporter = new TsvDictionaryImport();
     dictionary = dictImporter.getDictionary(fileName);
+    queryProcess = new SimpleQueryProcessing();
   }
 
   /**
@@ -46,8 +48,7 @@ public class SESSA {
     if (question.equals("")) {
       return null;
     } else {
-      QueryProcessingInterface queryProcess = new SimpleQueryProcessing();
-      NGramHierarchy nGramHierarchy = queryProcess .processQuery(question);
+      NGramHierarchy nGramHierarchy = queryProcess.processQuery(question);
       CandidateGenerator canGen = new CandidateGenerator(dictionary);
       Map<NGramEntryPosition, Set<String>> canMap = canGen.getCandidateMapping(nGramHierarchy);
       ColorSpreader colorSpreader = new ColorSpreader(canMap);
