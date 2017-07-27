@@ -119,7 +119,7 @@ public class ColorSpreader {
    *
    * @return true if at least one node was updated (i.e. it got a new color)
    */
-  public boolean makeActiviationStep() {
+  private boolean makeActiviationStep() {
     Set<Node> updatedLastActivatedNodes = new HashSet<>();
     for (Node node : lastActivatedNodes) {
       Set<Node> neighbors = graph.getAllNeighbors(node);
