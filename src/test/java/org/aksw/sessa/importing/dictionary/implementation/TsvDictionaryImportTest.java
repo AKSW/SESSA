@@ -12,7 +12,7 @@ import org.junit.Test;
 public class TsvDictionaryImportTest {
 
   private Map<String, Set<String>> dictionary = null;
-  private final String fileName = "src/test/resources/en_surface_forms.tsv";
+  private final String fileName = "src/test/resources/en_surface_forms_small.tsv";
 
   @Before
   public void init(){

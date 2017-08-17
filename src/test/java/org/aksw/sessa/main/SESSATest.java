@@ -21,6 +21,7 @@ public class SESSATest {
   public void testAnswer_onRunningExample() {
     question = "birthplace bill gates wife";
     answer = sessa.answer(question);
+    System.out.println(answer);
     Assert.assertTrue(answer.contains("http://dbpedia.org/resource/Dallas"));
   }
 
