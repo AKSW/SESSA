@@ -1,0 +1,16 @@
+resources/indexOntology/
+resources/ontologyClasses/
+resources/ontologyProperties/
+logs/
+data/
+log.out
+target/*
+data/DBpediacluster
+/target/
+/bin/
+.classpath
+.project
+.settings/*
+*.ttl
+*.iml
+.idea/
