@@ -163,10 +163,11 @@ public class ColorSpreader {
    * @param node Node to check the criterion for
    * @return true if the colors can be combined
    */
-  private boolean colorsCanBeCombined(Node node) {
+  @SuppressWarnings("unchecked")
+private boolean colorsCanBeCombined(Node node) {
     Set<NGramEntryPosition> colors = new HashSet<>();
     for (Node neighbor : graph.getAllNeighbors(node)) {
-      colors.addAll(neighbor.getColors()); // TODO: Get rid of the warning
+      colors.addAll(neighbor.getColors());
     }
     for (NGramEntryPosition color : colors) {
       Set<NGramEntryPosition> intersection = new HashSet<>(colors);

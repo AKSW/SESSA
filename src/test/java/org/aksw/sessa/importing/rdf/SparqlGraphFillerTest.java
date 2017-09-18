@@ -6,6 +6,8 @@ import org.junit.Test;
 
 /**
  * Created by Simon Bordewisch on 06.07.17.
+ * @author abddatascienceadmin
+ * @author ricardousbeck
  */
 public class SparqlGraphFillerTest {
 
@@ -15,10 +17,9 @@ public class SparqlGraphFillerTest {
     String seattle = "http://dbpedia.org/resource/Seattle";
 
     SparqlGraphFiller sgf = new SparqlGraphFiller();
-    //System.out.println("SPARQL-Query is:");
-    //System.out.println(sgf.buildQuery(seattle, bg).replace("UNION", "UNION\n").replace("{{", "{\n{"));
     Set<String> resultSet = sgf.findMissingTripleElement(seattle, bg);
 
-    Assert.assertTrue(resultSet.contains("http://dbpedia.org/resource/Seattle"));
+    boolean contains = resultSet.contains("http://dbpedia.org/ontology/birthPlace");
+	Assert.assertTrue(contains);
   }
 }

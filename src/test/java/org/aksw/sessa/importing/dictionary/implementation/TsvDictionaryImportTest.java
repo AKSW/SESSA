@@ -28,7 +28,7 @@ public class TsvDictionaryImportTest {
       System.out.println(list);
       Assert.assertTrue(list.contains(uri));
 
-      uri = "http://dbpedia.org/ontology/birthplace";
+      uri = "http://dbpedia.org/ontology/birthPlace";
       list = dictionary.get("birthplace");
       System.out.println(list);
       Assert.assertTrue(list.contains(uri));

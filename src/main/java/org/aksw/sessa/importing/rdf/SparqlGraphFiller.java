@@ -42,7 +42,7 @@ public class SparqlGraphFiller {
   }
 
   /**
-   * Given to URIs, it tries to find the missing triple element.
+   * Given two URIs, it tries to find the missing triple element.
    * Example (URIs shortened):
    * Given dbr:Bill_Gates and dbo:birthPlace this method should at least
    * provide dbr:Seattle, because 'dbr:Bill_Gates dbo:birthPlace dbr:Seattle.'
@@ -55,7 +55,11 @@ public class SparqlGraphFiller {
   public Set<String> findMissingTripleElement(String uri1, String uri2) {
     String queryStr = buildQuery(uri1, uri2);
     Query query = QueryFactory.create(queryStr);
-
+    
+    
+    //System.out.println("Before result set");
+    
+    
     ResultSet rs = null;
     Set<String> test = new HashSet<>();
     // Remote execution.
@@ -64,14 +68,21 @@ public class SparqlGraphFiller {
       // Set the DBpedia specific timeout.
       ((QueryEngineHTTP) qexec).addParam("timeout", "10000");
 
+      
+    //  System.out.println("Before result set1");
       // Execute.
       rs = qexec.execSelect();
+      
+      //System.out.println("Before result set3");
       while (rs.hasNext()) {
         QuerySolution qs = rs.next();
         test.add(qs.get("?o").toString());
+      //  System.out.println("Before result set4");
       }
     } catch (Exception e) {
       e.printStackTrace();
+      
+     // System.out.println("Before result set2");
     }
     return test;
   }
