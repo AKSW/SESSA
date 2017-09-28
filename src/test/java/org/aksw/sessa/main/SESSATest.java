@@ -6,7 +6,7 @@ import org.junit.Assert;
 
 public class SESSATest {
 
-  public static final String TSV_FILE = "src/test/resources/en_surface_forms_small.tsv";
+  public static final String TSV_FILE = "src/main/resources/en_surface_forms_small.tsv";
   SESSA sessa = new SESSA(TSV_FILE);
   String question;
   Set<String> answer;
@@ -29,6 +29,7 @@ public class SESSATest {
   public void testAnswer_onObamaExample() {
     question = "birthplace barack obama wife";
     answer = sessa.answer(question);
+    System.out.println(answer);
     Assert.assertTrue(answer.contains("http://dbpedia.org/resource/Chicago"));
   }
 

@@ -1,7 +1,11 @@
 package org.aksw.sessa.main;
 
+import java.util.List;
 import java.util.Set;
+
 import org.aksw.qa.commons.datastructure.IQuestion;
+import org.aksw.qa.commons.load.Dataset;
+import org.aksw.qa.commons.load.LoaderController;
 import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
 
 /**
@@ -9,24 +13,30 @@ import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
  */
 public class SESSAMeasurement {
 
-  private SESSA sessa;
+	private SESSA sessa;
 
-  public SESSAMeasurement(){
-    sessa = new SESSA("src/test/resources/en_surface_forms.tsv");
-  }
-  public double precision(IQuestion question){
-    Set<String> answers = sessa.answer(question.getLanguageToQuestion().get("en"));
-    return AnswerBasedEvaluation.precision(answers,question);
-  }
+	public SESSAMeasurement() {
+		sessa = new SESSA("src/main/resources/en_surface_forms_small.tsv");
+		
+		//sessa = new SESSA("/home/abddatascienceadmin/Downloads/dbpedia/dbpedia_2016-10.nt");
+	}
 
-  public double recall(IQuestion question){
-    Set<String> answers = sessa.answer(question.getLanguageToQuestion().get("en"));
-    return AnswerBasedEvaluation.recall(answers,question);
-  }
+	public static void main(String[] args) {
+		SESSAMeasurement myMess = new SESSAMeasurement();
+		//for (Dataset d : Dataset.values()) {
+			Dataset qald7TrainMultilingual = Dataset.QALD7_Train_Multilingual;
+			List<IQuestion> questions = LoaderController.load(qald7TrainMultilingual);
+			
+			for (IQuestion q : questions) {
+				String x = q.getLanguageToQuestion().get("en");
+				Set<String> answers = myMess.sessa.answer(x);
+				System.out.println(x);
+				System.out.println("\t SESSA: " + answers);
+				System.out.println("\t GOLD:  " + q.getGoldenAnswers());
+				double fmeasure = AnswerBasedEvaluation.fMeasure(answers, q);
+				System.out.println("\t==> " + fmeasure);
 
-  public double fMeasure(IQuestion question){
-    Set<String> answers = sessa.answer(question.getLanguageToQuestion().get("en"));
-    return AnswerBasedEvaluation.fMeasure(answers,question);
-  }
-
+			}
+		}
+	
 }

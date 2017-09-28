@@ -16,7 +16,6 @@ import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
  * @author Simon Bordewisch
  */
 public class TsvDictionaryImport implements DictionaryImportInterface {
-
   /**
    * Given a file name, returns a dictionary of n-gram to set of URIs.
    * The file has to be a mapping of URIs to a list of n-grams.
@@ -38,19 +37,22 @@ public class TsvDictionaryImport implements DictionaryImportInterface {
           // TODO: error handling for false tsv-entries
           String[] entryArray = line.split("\t");
           for (int i = 1; i < entryArray.length; i++) {
-            Set<String> uriSet = dictionary.get(entryArray[i]);
-            if (uriSet == null) {
-              uriSet = new HashSet<>();
+            Set<String> surfaceformset = dictionary.get(entryArray[i]);
+            if (surfaceformset == null) {
+              surfaceformset = new HashSet<>();
             }
-            uriSet.add(entryArray[0]);
-            dictionary.put(entryArray[i].toLowerCase(), uriSet);
+            surfaceformset.add(entryArray[0]);
+            String uri = entryArray[i].toLowerCase();
+			dictionary.put(uri, surfaceformset);
           }
         }
       } finally {
         reader.close();
       }
     } catch (IOException e) {
-      System.err.println("Error while handling " + fileName);
+   //.error("Error while handling " + fileName);
+    	//FIXME use logger of logback
+    	System.out.println(e.getLocalizedMessage());
     }
     return dictionary;
   }

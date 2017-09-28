@@ -1,8 +1,9 @@
 package org.aksw.sessa.main;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
+
 import org.aksw.sessa.candidate.CandidateGenerator;
 import org.aksw.sessa.colorspreading.ColorSpreader;
 import org.aksw.sessa.helper.graph.Node;
@@ -28,12 +29,19 @@ public class SESSA {
    *
    * @param fileName tsv file which contains mapping.
    */
-  public SESSA(String fileName) {
+  
+   public SESSA(String fileName) {
     DictionaryImportInterface dictImporter = new TsvDictionaryImport();
     dictionary = dictImporter.getDictionary(fileName);
     queryProcess = new SimpleQueryProcessing();
   }
-
+  
+ /* public SESSA(String fileName) {
+	DictionaryImportInterface dictImporter = new RdfDictionaryImport();
+	dictionary = dictImporter.getDictionary(fileName);
+	queryProcess = new SimpleQueryProcessing();
+  }
+   */
   /**
    * This method tries to answer the given question using the method descripted in the <a
    * href="https://docs.google.com/viewer?a=v&pid=sites&srcid=ZGVmYXVsdGRvbWFpbnxubGl3b2QyMDE0fGd4Ojc5NjU1YjhhMzNhMDczNWI">corresponding
