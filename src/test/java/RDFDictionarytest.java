@@ -1,4 +1,3 @@
-
 import java.util.Map;
 import java.util.Set;
 
@@ -37,11 +36,8 @@ public class RDFDictionarytest {
 	public void rdfdictionaryLabelsAndOntology() {
 		RdfDictionaryImport rdfdictimporter = new RdfDictionaryImport();
 
-		Map<String, Set<String>> dict = rdfdictimporter
-				.getDictionary("/home/abddatascienceadmin/Downloads/dbpedia/test_1.nt");
-		// Map<String, Set<String>> dict =
-		// rdfdictimporter.getDictionary("/home/abddatascienceadmin/Downloads/dbpedia/test_2.ttl");
-		dict.putAll(rdfdictimporter.getDictionary("/home/abddatascienceadmin/Downloads/dbpedia/test_2.ttl"));
+		Map<String, Set<String>> dict = rdfdictimporter.getDictionary("src/test/resources/test_1.nt");
+		dict.putAll(rdfdictimporter.getDictionary("src/test/resources/test_2.ttl"));
 		int size = dict.size();
 		Set<String> set_1 = dict.get("http://dbpedia.org/ontology/");
 		String o_1 = "DBpedia Maintainers";

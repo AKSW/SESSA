@@ -6,7 +6,7 @@ import org.junit.Assert;
 
 public class SESSATest {
 
-  public static final String TSV_FILE = "src/main/resources/en_surface_forms_small.tsv";
+  public static final String TSV_FILE = "src/test/resources/en_surface_forms_small.tsv";
   SESSA sessa = new SESSA(TSV_FILE);
   String question;
   Set<String> answer;
