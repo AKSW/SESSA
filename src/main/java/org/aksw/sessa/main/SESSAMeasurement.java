@@ -7,6 +7,7 @@ import org.aksw.qa.commons.datastructure.IQuestion;
 import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
 import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
+import org.apache.jena.ext.com.google.common.base.Joiner;
 
 /**
  * Created by Simon Bordewisch on 27.07.17.
@@ -32,8 +33,9 @@ public class SESSAMeasurement {
 		List<IQuestion> questions = LoaderController.load(qald7TrainMultilingual);
 
 		for (IQuestion q : questions) {
-			String x = q.getLanguageToQuestion().get("en");
-			Set<String> answers = myMess.sessa.answer(x);
+			List<String> x = q.getLanguageToKeywords().get("en");
+			String keyphrase = Joiner.on(" ").join(x);
+			Set<String> answers = myMess.sessa.answer(keyphrase);
 			System.out.println(x);
 			System.out.println("\t SESSA: " + answers);
 			System.out.println("\t GOLD:  " + q.getGoldenAnswers());
