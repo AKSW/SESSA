@@ -30,18 +30,19 @@ public class RdfDictionaryImport implements DictionaryImportInterface {
 				if (uri.equals(rdfslabeluri)) {
 					Node object = statement.getObject();
 					String surfaceform = object.getLiteral().getLexicalForm();
+					String subjectURI = statement.getSubject().toString();
 
-					if (dictionary.containsKey(statement.getSubject().toString())) {
+					if (dictionary.containsKey(surfaceform)) {
 						// we see the uri a second time, and thus add the
 						// surfaceform to the set
-						Set<String> tmpset = dictionary.get(statement.getSubject().toString());
-						tmpset.add(surfaceform);
-						dictionary.put(statement.getSubject().toString(), tmpset);
+						Set<String> tmpset = dictionary.get(surfaceform);
+						tmpset.add(subjectURI);
+						dictionary.put(surfaceform, tmpset);
 					} else {
 						// we see the (uri,surfaceform) pair for the first time
-						Set<String> surfaceformset = new HashSet<String>();
-						surfaceformset.add(surfaceform);
-						dictionary.put(statement.getSubject().toString(), surfaceformset);
+						Set<String> tmpset = new HashSet<String>();
+						tmpset.add(subjectURI);
+						dictionary.put(surfaceform, tmpset);
 					}
 				}
 

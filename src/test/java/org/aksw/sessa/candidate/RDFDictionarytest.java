@@ -18,8 +18,8 @@ public class RDFDictionarytest {
 		Map<String, Set<String>> dict = rdfdictimporter.getDictionary(NT_FILE);
 
 		int size = dict.size();
-		Set<String> set = dict.get("http://dbpedia.org/resource/AfghanistanHistory");
-		String o = "AfghanistanHistory";
+		Set<String> set = dict.get("AfghanistanHistory");
+		String o = "http://dbpedia.org/resource/AfghanistanHistory";
 
 		System.out.println("Size of the dictionary " + size);
 		System.out.println("Size of the surface form set for dbr:AfghanistanHistory " + set.size());
@@ -42,14 +42,14 @@ public class RDFDictionarytest {
 		System.out.println("Size of the dictionary " + size);
 
 		// checking surface forms from the ontology file
-		Set<String> surfaceformset = dict.get("http://dbpedia.org/ontology/LunarCrater");
-		String target_surfaceform = "lunar crater";
+		Set<String> surfaceformset = dict.get("lunar crater");
+		String target_surfaceform = "http://dbpedia.org/ontology/LunarCrater";
 
 		Assert.assertTrue(surfaceformset.contains(target_surfaceform));
 
 		// checking surface forms from the labels file
-		surfaceformset = dict.get("http://dbpedia.org/resource/ActionFilm");
-		target_surfaceform = "ActionFilm";
+		surfaceformset = dict.get("ActionFilm");
+		target_surfaceform = "http://dbpedia.org/resource/ActionFilm";
 
 		Assert.assertTrue(surfaceformset.contains(target_surfaceform));
 	}

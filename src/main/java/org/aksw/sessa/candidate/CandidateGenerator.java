@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 
@@ -38,8 +39,9 @@ public class CandidateGenerator {
     // first iteration: only add to candidateMap
     for (NGramEntryPosition nGram : nGramHierarchy.getAllPositions()) {
       Set<String> nGramMappings;
-      if (candidateEntities.containsKey(nGramHierarchy.getNGram(nGram))) {
-        nGramMappings = candidateEntities.get(nGramHierarchy.getNGram(nGram));
+      String nGram2 = nGramHierarchy.getNGram(nGram);
+	if (candidateEntities.containsKey(nGram2)) {
+        nGramMappings = candidateEntities.get(nGram2);
       } else {
         nGramMappings = new HashSet<>();
       }
