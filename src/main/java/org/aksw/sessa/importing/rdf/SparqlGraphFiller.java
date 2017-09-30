@@ -16,6 +16,7 @@ import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
  * This class uses the DBPedia-SPARQL interface to provide
  * information about the missing triple elements.
  */
+//FIXME hard coded DBpedia
 public class SparqlGraphFiller {
 
   private final String DBPEDIA_URI = "http://dbpedia.org/sparql";

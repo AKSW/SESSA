@@ -16,9 +16,13 @@ public class SESSAMeasurement {
 	private SESSA sessa;
 
 	public SESSAMeasurement() {
-		String TSV_File = "src/main/resources/en_surface_forms_small.tsv";
 		sessa = new SESSA();
-		sessa.loadFileToDictionaryTSV(TSV_File);
+
+		String RDF_labels = "src/main/resources/labels_en.ttl";
+		String RDF_ontology = "src/main/resources/dbpedia_2016-10.nt";
+		sessa.loadFileToDictionaryRDF(RDF_labels);
+		sessa.loadFileToDictionaryRDF(RDF_ontology);
+		System.gc();
 	}
 
 	public static void main(String[] args) {

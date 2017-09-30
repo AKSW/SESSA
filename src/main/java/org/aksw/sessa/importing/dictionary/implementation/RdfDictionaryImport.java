@@ -13,6 +13,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.openrdf.model.vocabulary.RDFS;
 
 public class RdfDictionaryImport implements DictionaryImportInterface {
 
@@ -30,43 +31,26 @@ public class RdfDictionaryImport implements DictionaryImportInterface {
 		StmtIterator iter = model.listStatements();
 		while (iter.hasNext()) {
 			Statement statement = iter.nextStatement(); // get next statement
-			RDFNode object = statement.getObject();
 
-			if (object.isLiteral()) {
+			String uri = statement.getPredicate().asResource().getURI();
+			String rdfslabeluri = RDFS.LABEL.stringValue();
+			if (uri.equals(rdfslabeluri)) {
+				RDFNode object = statement.getObject();
 				String surfaceform = object.asLiteral().getString();
 
 				if (dictionary.containsKey(statement.getSubject().toString())) {
-					// we see the uri a second time, and thus add the surfaceform to the set
+					// we see the uri a second time, and thus add the
+					// surfaceform to the set
 					Set<String> tmpset = dictionary.get(statement.getSubject().toString());
 					tmpset.add(surfaceform);
 					dictionary.put(statement.getSubject().toString(), tmpset);
 				} else {
 					// we see the (uri,surfaceform) pair for the first time
-					HashSet surfaceformset = new HashSet<>();
+					Set<String> surfaceformset = new HashSet<String>();
 					surfaceformset.add(surfaceform);
 					dictionary.put(statement.getSubject().toString(), surfaceformset);
 				}
-			} else {
-				if (object.isURIResource()) {
-
-					String surfaceform = object.toString();
-
-					if (dictionary.containsKey(statement.getSubject().toString())) {
-						// we see the uri a second time, and thus add the surfaceform to the set
-						Set<String> tmpset = dictionary.get(statement.getSubject().toString());
-						tmpset.add(surfaceform);
-						dictionary.put(statement.getSubject().toString(), tmpset);
-					} else {
-						// we see the (uri,surfaceform) pair for the first time
-						HashSet surfaceformset = new HashSet<>();
-						surfaceformset.add(surfaceform);
-						dictionary.put(statement.getSubject().toString(), surfaceformset);
-
-					}
-
-				}
 			}
-			// System.out.println(stmt);
 		}
 		return dictionary;
 	}
