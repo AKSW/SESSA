@@ -2,4 +2,3 @@
 <http://dbpedia.org/resource/AfghanistanMilitary> <http://www.w3.org/2000/01/rdf-schema#label> "AfghanistanMilitary"@en .
 <http://dbpedia.org/resource/AfghanistanMilitary> <http://www.w3.org/2000/01/rdf-schema#label> "Military of Afghanistan"@en .
 <http://dbpedia.org/resource/AfghanistanMilitary> <http://www.w3.org/2000/01/rdf-schema#label> "Military of Afghanistan supreme"@en .
-<http://dbpedia.org/ontology/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .
