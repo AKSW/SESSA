@@ -86,6 +86,14 @@ public class SESSA {
 			NGramHierarchy nGramHierarchy = queryProcess.processQuery(question);
 			CandidateGenerator canGen = new CandidateGenerator(dictionary);
 			Map<NGramEntryPosition, Set<String>> canMap = canGen.getCandidateMapping(nGramHierarchy);
+			for (NGramEntryPosition entry : canMap.keySet()) {
+				System.out.println("\t" + entry.toString());
+				System.out.print("\t\t");
+				for (String val : canMap.get(entry)) {
+					System.out.print(val + ", ");
+				}
+				System.out.println();
+			}
 			ColorSpreader colorSpreader = new ColorSpreader(canMap);
 			colorSpreader.spreadColors();
 			Set<Node> results = colorSpreader.getResult();

@@ -35,8 +35,8 @@ public class SESSAMeasurement {
 		for (IQuestion q : questions) {
 			List<String> x = q.getLanguageToKeywords().get("en");
 			String keyphrase = Joiner.on(" ").join(x);
-			Set<String> answers = myMess.sessa.answer(keyphrase);
 			System.out.println(x);
+			Set<String> answers = myMess.sessa.answer(keyphrase);
 			System.out.println("\t SESSA: " + answers);
 			System.out.println("\t GOLD:  " + q.getGoldenAnswers());
 			double fmeasure = AnswerBasedEvaluation.fMeasure(answers, q);
