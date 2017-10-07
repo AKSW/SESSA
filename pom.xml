@@ -51,5 +51,12 @@
 			<artifactId>commons</artifactId>
 			<version>0.4.13</version>
 		</dependency>
+
+		<!-- This is the core artifact; several other ones build on that. -->
+		<dependency>
+			<groupId>org.aksw.jena-sparql-api</groupId>
+			<artifactId>jena-sparql-api-core</artifactId>
+			<version>3.4.0-1</version>
+		</dependency>
 	</dependencies>
 </project>

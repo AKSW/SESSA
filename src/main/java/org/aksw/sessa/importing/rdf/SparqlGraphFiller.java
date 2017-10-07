@@ -4,13 +4,19 @@ package org.aksw.sessa.importing.rdf;
 import java.util.Formatter;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.jena.query.Query;
+import org.aksw.jena_sparql_api.cache.h2.CacheCoreH2;
+import org.aksw.jena_sparql_api.http.QueryExecutionFactoryHttp;
+import org.aksw.jena_sparql_api.pagination.core.QueryExecutionFactoryPaginated;
+import org.aksw.jena_sparql_api.retry.core.QueryExecutionFactoryRetry;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
+import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
+import org.aksw.jena_sparql_api.cache.extra.CacheBackend;
+import org.aksw.jena_sparql_api.cache.extra.CacheFrontend;
+import org.aksw.jena_sparql_api.cache.extra.CacheFrontendImpl;
+import org.aksw.jena_sparql_api.cache.core.QueryExecutionFactoryCacheEx;
+
 
 /**
  * This class uses the DBPedia-SPARQL interface to provide
@@ -29,6 +35,9 @@ public class SparqlGraphFiller {
           "{ <%2$s> ?o <%1$s>. } UNION" +
           "{ ?o <%2$s> <%1$s>. }" +
           "} LIMIT 100";
+
+  // one day for now
+  private final long TIME_TO_LIVE = 24L * 60L * 60L * 1000L;
 
 
   /**
@@ -55,37 +64,33 @@ public class SparqlGraphFiller {
    */
   public Set<String> findMissingTripleElement(String uri1, String uri2) {
     String queryStr = buildQuery(uri1, uri2);
-    Query query = QueryFactory.create(queryStr);
-    
-    
-    //System.out.println("Before result set");
-    
-    
-    ResultSet rs = null;
-    Set<String> test = new HashSet<>();
-    // Remote execution.
-    try (QueryExecution qexec = QueryExecutionFactory
-        .sparqlService(DBPEDIA_URI, query)) {
-      // Set the DBpedia specific timeout.
-      ((QueryEngineHTTP) qexec).addParam("timeout", "10000");
 
-      
-    //  System.out.println("Before result set1");
-      // Execute.
-      rs = qexec.execSelect();
-      
-      //System.out.println("Before result set3");
+    QueryExecutionFactory qef = new QueryExecutionFactoryHttp(DBPEDIA_URI, "http://dbpedia.org");
+    qef = new QueryExecutionFactoryRetry(qef, 5, 5000);
+    
+    ResultSet rs;
+    Set<String> finalSet = new HashSet<>();
+
+
+    try{
+      //CacheBackend cacheBackend = CacheCoreH2.create("./baseDir", TIME_TO_LIVE, true);
+      //CacheFrontend cacheFrontend = new CacheFrontendImpl(cacheBackend);
+      //qef = new QueryExecutionFactoryCacheEx(qef, cacheFrontend);
+
+      // Add pagination
+      qef = new QueryExecutionFactoryPaginated(qef, 900);
+      QueryExecution qe = qef.createQueryExecution(queryStr);
+      rs = qe.execSelect();
       while (rs.hasNext()) {
         QuerySolution qs = rs.next();
-        test.add(qs.get("?o").toString());
+        finalSet.add(qs.get("?o").toString());
       //  System.out.println("Before result set4");
       }
-    } catch (Exception e) {
+
+    } catch(Exception e){
       e.printStackTrace();
-      
-     // System.out.println("Before result set2");
     }
-    return test;
+    return finalSet;
   }
 
 }
