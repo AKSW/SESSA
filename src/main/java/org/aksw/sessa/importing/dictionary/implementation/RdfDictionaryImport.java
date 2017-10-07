@@ -29,7 +29,7 @@ public class RdfDictionaryImport implements DictionaryImportInterface {
 				String rdfslabeluri = RDFS.LABEL.stringValue();
 				if (uri.equals(rdfslabeluri)) {
 					Node object = statement.getObject();
-					String surfaceform = object.getLiteral().getLexicalForm();
+					String surfaceform = object.getLiteral().getLexicalForm().toLowerCase();
 					String subjectURI = statement.getSubject().toString();
 
 					if (dictionary.containsKey(surfaceform)) {
@@ -40,7 +40,7 @@ public class RdfDictionaryImport implements DictionaryImportInterface {
 						dictionary.put(surfaceform, tmpset);
 					} else {
 						// we see the (uri,surfaceform) pair for the first time
-						Set<String> tmpset = new HashSet<String>();
+						Set<String> tmpset = new HashSet<>();
 						tmpset.add(subjectURI);
 						dictionary.put(surfaceform, tmpset);
 					}
