@@ -2,9 +2,9 @@ package org.aksw.sessa.main;
 
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 public class SESSATest {
 
@@ -35,6 +35,10 @@ public class SESSATest {
 
 	@Test
 	public void testAnswer_onObamaExample() {
+		String TSV_FILE = "src/test/resources/en_surface_forms_small.tsv";
+		SESSA sessa = new SESSA();
+		sessa.loadFileToDictionaryTSV(TSV_FILE);
+
 		question = "birthplace barack obama wife";
 		answer = sessa.answer(question);
 		System.out.println(answer);
