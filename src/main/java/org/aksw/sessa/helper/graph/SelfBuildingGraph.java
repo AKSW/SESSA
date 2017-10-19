@@ -21,7 +21,7 @@ public class SelfBuildingGraph implements GraphInterface {
    * the graph should not be further expanded.
    */
   public static final int MAX_EXPANSIONS = 3;
-  private int currentIteration;
+  private int currentExpansion;
   private Set<Node> nodes;
 
   /**
@@ -31,7 +31,7 @@ public class SelfBuildingGraph implements GraphInterface {
   private Set<Node> lastNewNodes;
   private Map<Node, Set<Node>> edgeMap;
   private Map<Node, Set<Node>> reversedEdgeMap; // we need both ways (except for fact-nodes)
-  private static int factIteratator = 0;
+  private static int factIterator = 0;
 
   // Stores already compared key pairs so they don't get compared again
   private HashMap<Node, Set<Node>> comparedNodes;
@@ -53,7 +53,7 @@ public class SelfBuildingGraph implements GraphInterface {
     this.reversedEdgeMap = new HashMap<>();
     this.lastNewNodes = new HashSet<>(nodes);
     this.comparedNodes = new HashMap<>();
-    this.currentIteration = 1;
+    this.currentExpansion = 1;
   }
 
 
@@ -141,7 +141,7 @@ public class SelfBuildingGraph implements GraphInterface {
    * @see SparqlGraphFiller
    */
   protected void expandGraph() {
-    if (currentIteration <= MAX_EXPANSIONS) {
+    if (currentExpansion <= MAX_EXPANSIONS) {
       SparqlGraphFiller sgf = new SparqlGraphFiller();
       Set<Node> newNodes = new HashSet<>();
 
@@ -174,6 +174,7 @@ public class SelfBuildingGraph implements GraphInterface {
         }
       }
       this.lastNewNodes = newNodes;
+      currentExpansion++;
     }
   }
 
@@ -213,8 +214,8 @@ public class SelfBuildingGraph implements GraphInterface {
    */
   private void integrateNewNode(Node node1, Node node2, Node newNode) {
     if (!nodes.contains(newNode)) {
-      Node<Integer> factNode = new Node<>(factIteratator);
-      factIteratator++;
+      Node<Integer> factNode = new Node<>(factIterator);
+      factIterator++;
       factNode.setNodeType(true);
       addNode(factNode);
       addNode(newNode);
