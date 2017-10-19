@@ -1,6 +1,5 @@
 package org.aksw.sessa.colorspreading;
 
-import java.awt.Color;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -9,6 +8,8 @@ import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.helper.graph.SelfBuildingGraph;
 import org.aksw.sessa.query.models.NGramEntryPosition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class's main purpose is to color the given reified graph and
@@ -24,6 +25,7 @@ public class ColorSpreader {
   private Set<Node> activatedNodes;
   private Set<Node> resultNodes;
   private int bestExplanation;
+  private static final Logger log = LoggerFactory.getLogger(ColorSpreader.class);
 
   /**
    * Constructs the initial graph in colorspreader with the given candidate mapping.
@@ -115,7 +117,7 @@ public class ColorSpreader {
   /**
    * Makes one step of the spreading activation algorithm.
    * Mainly checks neighbors of nodes which where activated in the last step for the
-   * activation criteria and updates their scores if they fullfill those.
+   * activation criteria and updates their scores if they fulfill those.
    *
    * @return true if at least one node was updated (i.e. it got a new color)
    */
@@ -124,25 +126,25 @@ public class ColorSpreader {
     for (Node node : lastActivatedNodes) {
       Set<Node> neighbors = graph.getAllNeighbors(node);
       for (Node neighbor : neighbors) {
-        boolean fullfillsMinimumActivationCriterion = true;
+        boolean fulfillsMinimumActivationCriterion = true;
 
         /* We are considering neighbors of already activated nodes,
-         * therefore only fact nodes could potentially not fullfill the
+         * therefore only fact nodes could potentially not fulfill the
          * minimum activation criterion.
          */
         if (neighbor.isFactNode()) {
           Set<Node> neighborsOfFactNode = graph.getNeighborsLeadingFrom(neighbor);
           int countActivated = 0;
-          for (Node factNodeNeigbor : neighborsOfFactNode) {
-            if (factNodeNeigbor.getExplanation() > 0 && factNodeNeigbor.getEnergy() > 0) {
+          for (Node factNodeNeighbor : neighborsOfFactNode) {
+            if (factNodeNeighbor.getExplanation() > 0 && factNodeNeighbor.getEnergy() > 0) {
               countActivated++;
             }
           }
           if (countActivated < 2) {
-            fullfillsMinimumActivationCriterion = false;
+            fulfillsMinimumActivationCriterion = false;
           }
         }
-        if (fullfillsMinimumActivationCriterion &&
+        if (fulfillsMinimumActivationCriterion &&
             colorsCanBeCombined(neighbor) &&
             !activatedNodes.contains(neighbor)) {
           updateNode(neighbor);
@@ -187,10 +189,16 @@ private boolean colorsCanBeCombined(Node node) {
    */
   public Set<Node> spreadColors() {
     boolean colorsHaveSpread = true;
-
+    int activationSteps = 0;
     while (colorsHaveSpread) {
+      activationSteps++;
+      log.debug("Starting new activation step (#{}).", activationSteps);
+      log.debug("\tNumber of nodes in graph: {}", graph.getNodes().size());
       colorsHaveSpread = makeActiviationStep();
     }
+    log.debug("Spreading colors completed");
+    log.debug("Final number of activation steps: {}", activationSteps);
+
     return getResult();
   }
 

@@ -12,6 +12,8 @@ import org.aksw.jena_sparql_api.retry.core.QueryExecutionFactoryRetry;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -34,6 +36,7 @@ public class SparqlGraphFiller {
 
   // one day for now
   private final long TIME_TO_LIVE = 24L * 60L * 60L * 1000L;
+  private static final Logger log = LoggerFactory.getLogger(SparqlGraphFiller.class);
 
 
   /**
@@ -76,7 +79,6 @@ public class SparqlGraphFiller {
       // Add pagination
       qef = new QueryExecutionFactoryPaginated(qef, 900);
       QueryExecution qe = qef.createQueryExecution(queryStr);
-      System.out.println(queryStr);
       rs = qe.execSelect();
       while (rs.hasNext()) {
         QuerySolution qs = rs.next();
@@ -85,8 +87,9 @@ public class SparqlGraphFiller {
       }
 
     } catch(Exception e){
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
     }
+    log.trace("Query: '{}'. Found: {}", queryStr, finalSet);
     return finalSet;
   }
 
