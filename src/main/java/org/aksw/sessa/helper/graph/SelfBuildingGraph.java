@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import org.aksw.sessa.importing.rdf.SparqlGraphFiller;
 
 /**
@@ -110,6 +111,7 @@ public class SelfBuildingGraph implements GraphInterface {
     //TODO: For now expanding graph in here should be enough, but maybe search for better solution
     if (everyNodeHasColor()) {
       expandGraph();
+      //TODO this is called too often, see call hierachy, possibly the same nodes get added and added again and the graph is not unique, see unit test
     }
     Set<Node> allNeighbors = getNeighborsLeadingFrom(neighborsOf);
     allNeighbors.addAll(getNeighborsLeadingTo(neighborsOf));

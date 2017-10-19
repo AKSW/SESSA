@@ -4,18 +4,14 @@ package org.aksw.sessa.importing.rdf;
 import java.util.Formatter;
 import java.util.HashSet;
 import java.util.Set;
-import org.aksw.jena_sparql_api.cache.h2.CacheCoreH2;
+
+import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.aksw.jena_sparql_api.http.QueryExecutionFactoryHttp;
 import org.aksw.jena_sparql_api.pagination.core.QueryExecutionFactoryPaginated;
 import org.aksw.jena_sparql_api.retry.core.QueryExecutionFactoryRetry;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
-import org.aksw.jena_sparql_api.cache.extra.CacheBackend;
-import org.aksw.jena_sparql_api.cache.extra.CacheFrontend;
-import org.aksw.jena_sparql_api.cache.extra.CacheFrontendImpl;
-import org.aksw.jena_sparql_api.cache.core.QueryExecutionFactoryCacheEx;
 
 
 /**
@@ -80,6 +76,7 @@ public class SparqlGraphFiller {
       // Add pagination
       qef = new QueryExecutionFactoryPaginated(qef, 900);
       QueryExecution qe = qef.createQueryExecution(queryStr);
+      System.out.println(queryStr);
       rs = qe.execSelect();
       while (rs.hasNext()) {
         QuerySolution qs = rs.next();

@@ -14,7 +14,9 @@ mvn clean package
 
 Needed files:
 ```
-cd src/main/resources
+cd src/main
+mkdir resources
+cd resources
 wget downloads.dbpedia.org/2016-10/dbpedia_2016-10.nt
 wget downloads.dbpedia.org/2016-10/core-i18n/en/labels_en.ttl.bz2
 bunzip2 labels_en.ttl.bz2

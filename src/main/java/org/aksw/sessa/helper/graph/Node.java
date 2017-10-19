@@ -2,6 +2,7 @@ package org.aksw.sessa.helper.graph;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import org.aksw.sessa.query.models.NGramEntryPosition;
 
 /**
@@ -178,6 +179,9 @@ public class Node<T extends Object> {
 	 *         colors.addAll(color.getAllDescendants()); }
 	 */
 	public boolean isRelatedTo(Node other) {
+		if(this == other)
+			return true;
+		
 		// Get all descendants of colors of the other node
 		Set<NGramEntryPosition> otherColors = new HashSet<NGramEntryPosition>();
 		for (NGramEntryPosition color : new HashSet<NGramEntryPosition>(other.getColors())) {
