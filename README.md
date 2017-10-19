@@ -21,3 +21,7 @@ wget downloads.dbpedia.org/2016-10/dbpedia_2016-10.nt
 wget downloads.dbpedia.org/2016-10/core-i18n/en/labels_en.ttl.bz2
 bunzip2 labels_en.ttl.bz2
 ```
+
+To generate the needed dictionary start the main()-method in the 
+ReversedTsvDictionarySaver-class once (the above files are still needed!).
+The resulting dictionary ca be imported faster than the other methods.

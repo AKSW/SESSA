@@ -1,6 +1,8 @@
 package org.aksw.sessa.importing.dictionary.implementation;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,6 +36,10 @@ public class ReverseTsvDictionaryImport implements DictionaryImportInterface {
         }
         dictionary.put(record[0], values);
       }
+    } catch (FileNotFoundException fnfe) {
+      System.err.println("The file " + fileName +
+          " was not found. It was probably not generated yet.\n" +
+          "Please use the ReversedTsvDictionarySaver once to generate it");
     } catch (Exception e) {
       e.printStackTrace();
     }

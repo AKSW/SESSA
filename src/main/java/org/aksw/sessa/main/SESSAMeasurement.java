@@ -22,11 +22,11 @@ public class SESSAMeasurement {
 	public SESSAMeasurement() {
 		sessa = new SESSA();
 		log.info("Building Dictionary");
-		String RDF_labels = "src/main/resources/labels_en.ttl";
-		String RDF_ontology = "src/main/resources/dbpedia_2016-10.nt";
-		sessa.loadFileToDictionaryRDF(RDF_labels);
-		sessa.loadFileToDictionaryRDF(RDF_ontology);
-//    sessa.loadFileToDictionaryReverseTSV("src/main/resources/dictionary.tsv");
+//		String RDF_labels = "src/main/resources/labels_en.ttl";
+//		String RDF_ontology = "src/main/resources/dbpedia_2016-10.nt";
+//		sessa.loadFileToDictionaryRDF(RDF_labels);
+//		sessa.loadFileToDictionaryRDF(RDF_ontology);
+    sessa.loadFileToDictionaryReverseTSV("src/main/resources/dictionary.tsv");
 		log.info("Finished building Dictionary");
 		System.gc();
 	}
