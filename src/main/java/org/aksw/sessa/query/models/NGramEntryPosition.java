@@ -16,18 +16,15 @@ public class NGramEntryPosition {
   private int length;
 
   /**
-   * Defines the position in it's "row".
-   * All n-grams with the same length are in the same row.
+   * Defines the position in it's "row". All n-grams with the same length are in the same row.
    */
   private int position;
 
 
   /**
-   * Initializes object with length and position in the "row".
-   * I.e. if e.g. length=2, position=2, this object would
-   * represent the third bigram.
-   * If the whole n-gram is "birthplace bill gates wife",
-   * the object would represent "gates wife".
+   * Initializes object with length and position in the "row". I.e. if e.g. length=2, position=2,
+   * this object would represent the third bigram. If the whole n-gram is "birthplace bill gates
+   * wife", the object would represent "gates wife".
    *
    * @param length length of the n-gram
    * @param position position in the "row"
@@ -79,8 +76,7 @@ public class NGramEntryPosition {
   }
 
   /**
-   * Returns length of this entry.
-   * I.e. an entry for a bigram would have a length of 2.
+   * Returns length of this entry. I.e. an entry for a bigram would have a length of 2.
    *
    * @return length of this entry
    */
@@ -89,18 +85,17 @@ public class NGramEntryPosition {
   }
 
   /**
-   * Returns string representation of this n-gram position entry.
-   * It has the following scheme (#var represent the values of the variable):
-   * Entry( position: #position, length: #length)
+   * Returns string representation of this n-gram position entry. It has the following scheme (#var
+   * represent the values of the variable): Entry( position: #position, length: #length)
    */
   @Override
   public String toString() {
-    return "Entry( position: " + position + ", length: " + length + ")";
+    return "Entry( length: " + length + ", position: " + position + ")";
   }
 
   /**
-   * Override for hashcode to get a good and easy hash for the entries.
-   * As long as the n-gram does not contain more than 10000 words, it should be unique.
+   * Override for hashcode to get a good and easy hash for the entries. As long as the n-gram does
+   * not contain more than 10000 words, it should be unique.
    *
    * @return hash representation of the n-gram position
    */
@@ -110,9 +105,8 @@ public class NGramEntryPosition {
   }
 
   /**
-   * Compares the specified object with this object for equality.
-   * Returns true if the given object is either the same or is of the same class,
-   * and has the same length and position.
+   * Compares the specified object with this object for equality. Returns true if the given object
+   * is either the same or is of the same class, and has the same length and position.
    *
    * @param other object to be compared for equality with this object
    * @return true if the given object is of the same class and has the same length and position,
