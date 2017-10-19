@@ -183,38 +183,39 @@ public class Node<T extends Object> {
 			return true;
 		
 		// Get all descendants of colors of the other node
-		Set<NGramEntryPosition> otherColors = new HashSet<NGramEntryPosition>();
+		Set<NGramEntryPosition> otherColors = new HashSet<>();
 		for (NGramEntryPosition color : new HashSet<NGramEntryPosition>(other.getColors())) {
 			otherColors.addAll(color.getAllDescendants());
 		}
+		otherColors.addAll(other.getColors());
 
 		// Get all decendants of colors of this node
-		Set<NGramEntryPosition> colors = new HashSet<NGramEntryPosition>();
-		for (NGramEntryPosition color : new HashSet<NGramEntryPosition>(this.getColors())) {
+		Set<NGramEntryPosition> colors = new HashSet<>();
+		for (NGramEntryPosition color : new HashSet<>(this.getColors())) {
 			colors.addAll(color.getAllDescendants());
 		}
+		colors.addAll(this.getColors());
 
 		// Get intersection, if empty, they are not related
 		otherColors.retainAll(colors);
 		return !otherColors.isEmpty();
-
 	}
 
-	// @Override
-	// public boolean equals(Object other){
-	// if (other instanceof Node<?>){
-	// if ( ((Node<?>)other).getContent().equals(this.nodeContent) ){
-	// return true;
-	// }
-	// }
-	// return false;
-	// }
-	//
-	//
-	// @Override
-	// public int hashCode() {
-	// return nodeContent.hashCode();
-	// }
+//	@Override
+//	public boolean equals(Object other) {
+//		if (other instanceof Node<?>) {
+//			if (((Node<?>) other).getContent().equals(this.nodeContent)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+//
+//
+//	@Override
+//	public int hashCode() {
+//		return nodeContent.hashCode();
+//	}
 
 	/**
 	 * Returns a string representation of this node. It has the following scheme
