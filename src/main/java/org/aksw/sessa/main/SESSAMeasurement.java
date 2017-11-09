@@ -30,7 +30,7 @@ public class SESSAMeasurement {
     SESSAMeasurement myMess = new SESSAMeasurement();
     long endTime = System.nanoTime();
     log.info("Finished building Dictionary (in {}sec).",
-        (endTime - startTime) / 1000 * 1000 * 1000);
+        (endTime - startTime) / (1000 * 1000 * 1000));
     startTime = endTime;
     // for (Dataset d : Dataset.values()) {
     Dataset qald7TrainMultilingual = Dataset.QALD7_Train_Multilingual;
@@ -58,7 +58,7 @@ public class SESSAMeasurement {
       }
     }
     endTime = System.nanoTime();
-    log.info("Finished questioning (in {}sec).", (endTime - startTime) / 1000 * 1000 * 1000);
+    log.info("Finished questioning (in {}sec).", (endTime - startTime) / (1000 * 1000 * 1000));
     log.info("Number of questions asked: {}.", numberOfQuestions);
     log.info("Final average F-measure: {}", avg_fmeasure / numberOfQuestions);
     log.info("Number of partially right answered questions: {}.", numberOfUsableAnswers);
