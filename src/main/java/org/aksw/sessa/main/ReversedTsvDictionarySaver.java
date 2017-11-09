@@ -12,7 +12,7 @@ public class ReversedTsvDictionarySaver {
   static String RDF_labels = "src/main/resources/labels_en.ttl";
   static String RDF_ontology = "src/main/resources/dbpedia_2016-10.nt";
 
-  private static final String target = "src/main/dictionary.tsv";
+  private static final String target = "src/main/resources/dictionary.tsv";
 
   private static Map<String, Set<String>> dictionary;
 
