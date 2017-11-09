@@ -20,7 +20,7 @@ public class SimpleQueryProcessing implements QueryProcessingInterface {
   @Override
   public NGramHierarchy processQuery(String query) {
 
-    NGramHierarchy hierarchy = new NGramHierarchy(query);
+    NGramHierarchy hierarchy = new NGramHierarchy(query.toLowerCase());
     return hierarchy;
   }
 }

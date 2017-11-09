@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import org.aksw.sessa.importing.rdf.SparqlGraphFiller;
 
 /**
@@ -21,7 +22,7 @@ public class SelfBuildingGraph implements GraphInterface {
    * the graph should not be further expanded.
    */
   public static final int MAX_EXPANSIONS = 3;
-  private int currentIteration;
+  private int currentExpansion;
   private Set<Node> nodes;
 
   /**
@@ -31,7 +32,7 @@ public class SelfBuildingGraph implements GraphInterface {
   private Set<Node> lastNewNodes;
   private Map<Node, Set<Node>> edgeMap;
   private Map<Node, Set<Node>> reversedEdgeMap; // we need both ways (except for fact-nodes)
-  private static int factIteratator = 0;
+  private static int factIterator = 0;
 
   // Stores already compared key pairs so they don't get compared again
   private HashMap<Node, Set<Node>> comparedNodes;
@@ -53,7 +54,7 @@ public class SelfBuildingGraph implements GraphInterface {
     this.reversedEdgeMap = new HashMap<>();
     this.lastNewNodes = new HashSet<>(nodes);
     this.comparedNodes = new HashMap<>();
-    this.currentIteration = 1;
+    this.currentExpansion = 1;
   }
 
 
@@ -110,6 +111,7 @@ public class SelfBuildingGraph implements GraphInterface {
     //TODO: For now expanding graph in here should be enough, but maybe search for better solution
     if (everyNodeHasColor()) {
       expandGraph();
+      //TODO this is called too often, see call hierachy, possibly the same nodes get added and added again and the graph is not unique, see unit test
     }
     Set<Node> allNeighbors = getNeighborsLeadingFrom(neighborsOf);
     allNeighbors.addAll(getNeighborsLeadingTo(neighborsOf));
@@ -141,7 +143,7 @@ public class SelfBuildingGraph implements GraphInterface {
    * @see SparqlGraphFiller
    */
   protected void expandGraph() {
-    if (currentIteration <= MAX_EXPANSIONS) {
+    if (currentExpansion <= MAX_EXPANSIONS) {
       SparqlGraphFiller sgf = new SparqlGraphFiller();
       Set<Node> newNodes = new HashSet<>();
 
@@ -174,6 +176,7 @@ public class SelfBuildingGraph implements GraphInterface {
         }
       }
       this.lastNewNodes = newNodes;
+      currentExpansion++;
     }
   }
 
@@ -213,8 +216,8 @@ public class SelfBuildingGraph implements GraphInterface {
    */
   private void integrateNewNode(Node node1, Node node2, Node newNode) {
     if (!nodes.contains(newNode)) {
-      Node<Integer> factNode = new Node<>(factIteratator);
-      factIteratator++;
+      Node<Integer> factNode = new Node<>(factIterator);
+      factIterator++;
       factNode.setNodeType(true);
       addNode(factNode);
       addNode(newNode);

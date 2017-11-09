@@ -1,11 +1,8 @@
-resources/indexOntology/
-resources/ontologyClasses/
-resources/ontologyProperties/
-logs/
-data/
-log.out
-target/*
-data/DBpediacluster
+src/main/resources/labels_en.ttl
+src/main/resources/dbpedia_2016-10.nt
+
+log.out*
+
 /target/
 /bin/
 .classpath

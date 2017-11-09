@@ -50,7 +50,7 @@ public class NodeTest {
   }
 
   @Test
-  public void testColorsOfNodeAreRelated_simpleTest(){
+  public void testColorsOfNodeAreRelated_simpleTest_NoRelation(){
     Node<Integer> node1 = new Node<>(1);
     node1.addColor(new NGramEntryPosition(1,5));
     Node<Integer> node2 = new Node<>(2);
@@ -64,9 +64,32 @@ public class NodeTest {
     node1.addColor(new NGramEntryPosition(1,5));
     Node<Integer> node2 = new Node<>(2);
     node2.addColor(new NGramEntryPosition(1,3));
-    node1.isRelatedTo(node2);
+    Assert.assertFalse(node1.isRelatedTo(node2));
     Assert.assertFalse(node1.getColors().isEmpty());
     Assert.assertFalse(node2.getColors().isEmpty());
+  }
+
+  @Test
+  public void testColorsOfNodeAreRelated_simpleTest1_HasRelation(){
+    // taken from QALD tests (question "How many seats, stadium of FC Porto")
+    Node<String> node1 = new Node<>("http://dbpedia.org/resource/HoW");
+    Node<String> node2 = new Node<>("http://dbpedia.org/resource/How_Many");
+
+    node1.addColor(new NGramEntryPosition(1,0));
+    node2.addColor(new NGramEntryPosition(2, 0));
+
+    Assert.assertTrue(node1.isRelatedTo(node2));
+  }
+
+  @Test
+  public void testColorsOfNodeAreRelated_simpleTest2_HasRelation(){
+    Node<Integer> node1 = new Node<>(1);
+    Node<Integer> node2 = new Node<>(2);
+
+    node1.addColor(new NGramEntryPosition(4,3));
+    node2.addColor(new NGramEntryPosition(4, 2));
+
+    Assert.assertTrue(node1.isRelatedTo(node2));
   }
 
 }
