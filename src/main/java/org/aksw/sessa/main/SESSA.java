@@ -1,15 +1,14 @@
 package org.aksw.sessa.main;
 
-import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.aksw.sessa.candidate.CandidateGenerator;
 import org.aksw.sessa.colorspreading.ColorSpreader;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionaryImport;
 import org.aksw.sessa.importing.dictionary.implementation.ReverseTsvDictionaryImport;
 import org.aksw.sessa.importing.dictionary.implementation.RdfDictionaryImport;
 import org.aksw.sessa.importing.dictionary.implementation.TsvDictionaryImport;
@@ -25,7 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SESSA {
 
-	private Map<String, Set<String>> dictionary;
+	private DictionaryImportInterface dictionary;
 	private QueryProcessingInterface queryProcess;
 	private static final Logger log = LoggerFactory.getLogger(SESSA.class);
 
@@ -43,17 +42,14 @@ public class SESSA {
 	 * 
 	 * @param file
 	 */
-	public void loadFileToDictionaryRDF(String file) {
-		log.info("Loading RDF file to dictionary");
-		DictionaryImportInterface dictImporter = new RdfDictionaryImport();
-		loadDictionaryDataset(file, dictImporter);
+	private void loadFileToDictionaryRDF(String file) {
+		log.info("Loading RDF file '{}' to dictionary.", file);
+		if(dictionary == null){
+			dictionary = new RdfDictionaryImport(file);
+		} else if(dictionary instanceof RdfDictionaryImport){
+			((FileBasedDictionaryImport)dictionary).putAll(file);
+		}
 	}
-
-	public void loadFileToDictionaryReverseTSV(String file){
-		log.info("Loading reverse TSV file to dictionary");
-	  DictionaryImportInterface dictImporter = new ReverseTsvDictionaryImport();
-	  loadDictionaryDataset(file, dictImporter);
-  }
 
 
 	/**
@@ -61,22 +57,26 @@ public class SESSA {
 	 * as key and keywords to the URI as values (tab separated). This is needed
 	 * for the candidate mapping.
 	 *
-	 * @param fileName
+	 * @param file
 	 *            tsv file which contains mapping.
 	 */
 
 	public void loadFileToDictionaryTSV(String file) {
-		log.info("Loading TSV file to dictionary");
-		DictionaryImportInterface dictImporter = new TsvDictionaryImport();
-		loadDictionaryDataset(file, dictImporter);
-
+		log.info("Loading TSV file '{}' to dictionary", file);
+		if(dictionary == null){
+			dictionary = new TsvDictionaryImport(file);
+		} else if(dictionary instanceof TsvDictionaryImport){
+			((FileBasedDictionaryImport)dictionary).putAll(file);
+		}
 	}
 
-	private void loadDictionaryDataset(String file, DictionaryImportInterface dictImporter) {
-		if (dictionary == null) {
-			dictionary = dictImporter.getDictionary(file);
-		} else {
-			dictionary.putAll(dictImporter.getDictionary(file));
+
+	public void loadFileToDictionaryReverseTSV(String file) {
+		log.info("Loading reverse TSV file '{}' to dictionary", file);
+		if(dictionary == null){
+			dictionary = new ReverseTsvDictionaryImport(file);
+		} else if(dictionary instanceof ReverseTsvDictionaryImport){
+			((FileBasedDictionaryImport)dictionary).putAll(file);
 		}
 	}
 

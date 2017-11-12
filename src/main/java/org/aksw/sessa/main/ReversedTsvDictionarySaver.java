@@ -1,10 +1,9 @@
 package org.aksw.sessa.main;
 
 import java.io.PrintWriter;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionaryImport;
 import org.aksw.sessa.importing.dictionary.implementation.RdfDictionaryImport;
 
 public class ReversedTsvDictionarySaver {
@@ -14,7 +13,7 @@ public class ReversedTsvDictionarySaver {
 
   private static final String target = "src/main/resources/dictionary.tsv";
 
-  private static Map<String, Set<String>> dictionary;
+  private static FileBasedDictionaryImport dictionary;
 
   public static void main(String[] args) {
 
@@ -26,16 +25,10 @@ public class ReversedTsvDictionarySaver {
 
 
   private static void loadFileToDictionaryRDF(String file) {
-    DictionaryImportInterface dictImporter = new RdfDictionaryImport();
-    loadDictionaryDataset(file, dictImporter);
-  }
-
-
-  private static void loadDictionaryDataset(String file, DictionaryImportInterface dictImporter) {
-    if (dictionary == null) {
-      dictionary = dictImporter.getDictionary(file);
-    } else {
-      dictionary.putAll(dictImporter.getDictionary(file));
+    if(dictionary == null){
+      dictionary = new RdfDictionaryImport(file);
+    } else{
+      dictionary.putAll(file);
     }
   }
 
