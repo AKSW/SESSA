@@ -1,4 +1,4 @@
-package org.aksw.sessa.candidate;
+package org.aksw.sessa.importing.dictionary.implementation;
 import java.util.Map;
 import java.util.Set;
 
@@ -8,7 +8,7 @@ import org.junit.Test;
 import junit.framework.Assert;
 
 @SuppressWarnings("deprecation")
-public class RDFDictionarytest {
+public class RdfDictionaryTest {
 
 	@Test
 	public void rdfdictionaryOneLine() {
