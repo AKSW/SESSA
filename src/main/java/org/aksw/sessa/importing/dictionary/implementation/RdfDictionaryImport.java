@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionaryImport;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.riot.RDFDataMgr;
@@ -13,10 +13,15 @@ import org.apache.jena.riot.system.StreamRDF;
 import org.apache.jena.sparql.core.Quad;
 import org.openrdf.model.vocabulary.RDFS;
 
-public class RdfDictionaryImport implements DictionaryImportInterface {
+public class RdfDictionaryImport extends FileBasedDictionaryImport {
 
-	@Override
-	public Map<String, Set<String>> getDictionary(String fileName) {
+
+	public RdfDictionaryImport(String fileName){
+		dictionary = createDictionary(fileName);
+	}
+
+
+	protected Map<String, Set<String>> createDictionary(String fileName) {
 
 		Map<String, Set<String>> dictionary = new HashMap<>();
 
@@ -72,6 +77,11 @@ public class RdfDictionaryImport implements DictionaryImportInterface {
 		RDFDataMgr.parse(destination, fileName);
 
 		return dictionary;
+	}
+
+	@Override
+	public Set<String> get(String nGram){
+		return dictionary.get(nGram);
 	}
 
 }
