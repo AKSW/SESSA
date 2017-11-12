@@ -11,17 +11,15 @@ import junit.framework.Assert;
 public class RdfDictionaryTest {
 
 	@Test
-	public void rdfdictionaryOneLine() {
-		RdfDictionaryImport rdfdictimporter = new RdfDictionaryImport();
+	public void rdfDictionaryOneLine() {
 
 		String NT_FILE = "src/test/resources/test_twoURI_fourSF.nt";
-		Map<String, Set<String>> dict = rdfdictimporter.getDictionary(NT_FILE);
+		RdfDictionaryImport dict = new RdfDictionaryImport(NT_FILE);
+		System.out.println(dict.entrySet());
 
-		int size = dict.size();
-		Set<String> set = dict.get("AfghanistanHistory");
+		Set<String> set = dict.get("afghanistanhistory");
 		String o = "http://dbpedia.org/resource/AfghanistanHistory";
 
-		System.out.println("Size of the dictionary " + size);
 		System.out.println("Size of the surface form set for dbr:AfghanistanHistory " + set.size());
 		System.out.println("Target surface form AfghanistanHistory" + o);
 
@@ -29,28 +27,24 @@ public class RdfDictionaryTest {
 	}
 
 	@Test
-	public void rdfdictionaryLabelsAndOntology() {
-		RdfDictionaryImport rdfdictimporter = new RdfDictionaryImport();
+	public void rdfDictionaryLabelsAndOntology() {
 
 		String file_sample_dbpedia_ontology = "src/test/resources/file_sample_dbpedia_ontology.nt";
 		String file_sample_dbpedia_labels = "src/test/resources/file_sample_dbpedia_labels.nt";
 
-		Map<String, Set<String>> dict = rdfdictimporter.getDictionary(file_sample_dbpedia_ontology);
-		dict.putAll(rdfdictimporter.getDictionary(file_sample_dbpedia_labels));
-
-		int size = dict.size();
-		System.out.println("Size of the dictionary " + size);
+		RdfDictionaryImport dict = new RdfDictionaryImport(file_sample_dbpedia_ontology);
+		dict.putAll(file_sample_dbpedia_labels);
 
 		// checking surface forms from the ontology file
-		Set<String> surfaceformset = dict.get("lunar crater");
-		String target_surfaceform = "http://dbpedia.org/ontology/LunarCrater";
+		Set<String> surfaceFormSet = dict.get("lunar crater");
+		String targetSurfaceForm = "http://dbpedia.org/ontology/LunarCrater";
 
-		Assert.assertTrue(surfaceformset.contains(target_surfaceform));
+		Assert.assertTrue(surfaceFormSet!=null && surfaceFormSet.contains(targetSurfaceForm));
 
 		// checking surface forms from the labels file
-		surfaceformset = dict.get("ActionFilm");
-		target_surfaceform = "http://dbpedia.org/resource/ActionFilm";
+		surfaceFormSet = dict.get("actionfilm");
+		targetSurfaceForm = "http://dbpedia.org/resource/ActionFilm";
 
-		Assert.assertTrue(surfaceformset.contains(target_surfaceform));
+		Assert.assertTrue(surfaceFormSet.contains(targetSurfaceForm));
 	}
 }
