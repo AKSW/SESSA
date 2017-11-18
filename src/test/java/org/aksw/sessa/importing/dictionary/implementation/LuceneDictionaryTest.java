@@ -2,8 +2,8 @@ package org.aksw.sessa.importing.dictionary.implementation;
 
 import java.io.IOException;
 import java.util.Set;
-import org.aksw.sessa.helper.files.FileHandlerInterface;
-import org.aksw.sessa.helper.files.TsvFileHandler;
+import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
+import org.aksw.sessa.helper.files.handler.TsvFileHandler;
 import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
 import org.junit.Assert;
 import org.junit.Before;
