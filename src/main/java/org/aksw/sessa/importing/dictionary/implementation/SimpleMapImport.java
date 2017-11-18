@@ -1,10 +1,13 @@
 package org.aksw.sessa.importing.dictionary.implementation;
 
-import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Set;
 import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
 
+/**
+ * This class provides an easy implementation of dictionaries.
+ * It essentially just wraps the  given Map<String, Set<String>>.
+ */
 public class SimpleMapImport implements DictionaryImportInterface {
 
   private Map<String, Set<String>> dictionary;
