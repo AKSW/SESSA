@@ -1,17 +1,14 @@
 package org.aksw.sessa.importing.dictionary.implementation;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Scanner;
 import java.util.Set;
-import org.aksw.sessa.helper.files.FileHandlerInterface;
-import org.aksw.sessa.helper.files.TsvFileHandler;
+import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
@@ -28,9 +25,10 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
-//import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.LoggerFactory;
+
+//import org.apache.lucene.store.RAMDirectory;
 
 public class LuceneDictionary implements DictionaryImportInterface {
 
@@ -68,12 +66,10 @@ public class LuceneDictionary implements DictionaryImportInterface {
 
   public Set<String> get(final String object) {
     if (STOP_WORDS.contains(object.toLowerCase())) {
-      log.debug("Stopword detected: |" + object + "|");
-      return ImmutableSet.of();
+      return new HashSet<>();
     }
     Set<String> uris = new HashSet<>();
     try {
-      log.debug("Start asking index...");
       PhraseQuery q = new PhraseQuery();
       for(String obj : object.split(" ")) {
         q.add(new Term(FIELD_NAME_KEY, obj));
@@ -88,7 +84,6 @@ public class LuceneDictionary implements DictionaryImportInterface {
         Document hitDoc = iSearcher.doc(hit.doc);
         uris.add(hitDoc.get(FIELD_NAME_VALUE));
       }
-      log.debug("Finished asking index.");
     } catch (Exception e) {
       log.error(e.getLocalizedMessage() + " -> " + object, e);
     }
@@ -109,7 +104,6 @@ public class LuceneDictionary implements DictionaryImportInterface {
       log.debug("Starting indexing for  file '{}'", handler.getFileName());
       int count = 0;
       for (Entry<String, String> entry; (entry = handler.nextEntry()) != null; ){
-        log.debug("Adding {}:{} to index", entry.getKey(), entry.getValue());
         addDocumentToIndex(entry.getKey(), entry.getValue());
         count++;
       }
