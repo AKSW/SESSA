@@ -1,6 +1,5 @@
 package org.aksw.sessa.main;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -8,14 +7,10 @@ import java.util.Set;
 import org.aksw.sessa.candidate.CandidateGenerator;
 import org.aksw.sessa.colorspreading.ColorSpreader;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
-import org.aksw.sessa.helper.files.handler.RdfFileHandler;
-import org.aksw.sessa.helper.files.handler.ReverseTsvFileHandler;
-import org.aksw.sessa.helper.files.handler.TsvFileHandler;
 import org.aksw.sessa.helper.graph.Node;
-import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionaryImport;
+import org.aksw.sessa.importing.dictionary.DictionaryInterface;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
-import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 import org.aksw.sessa.query.processing.QueryProcessingInterface;
@@ -28,7 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SESSA {
 
-  private DictionaryImportInterface dictionary;
+  private DictionaryInterface dictionary;
   private QueryProcessingInterface queryProcess;
   private static final Logger log = LoggerFactory.getLogger(SESSA.class);
 
@@ -44,7 +39,7 @@ public class SESSA {
     if (dictionary == null) {
       dictionary = new HashMapDictionary(handler);
     } else if (dictionary instanceof HashMapDictionary) {
-      ((FileBasedDictionaryImport) dictionary).putAll(handler);
+      ((FileBasedDictionary) dictionary).putAll(handler);
     }
   }
 

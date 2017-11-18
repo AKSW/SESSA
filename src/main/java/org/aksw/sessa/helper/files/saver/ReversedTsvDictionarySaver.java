@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.files.handler.RdfFileHandler;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionaryImport;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ public class ReversedTsvDictionarySaver {
 
   private static final Logger log = LoggerFactory.getLogger(ReversedTsvDictionarySaver.class);
 
-  private static FileBasedDictionaryImport dictionary;
+  private static FileBasedDictionary dictionary;
 
   public static void saveDictionary(String target, String... sources) {
 

@@ -3,10 +3,11 @@ package org.aksw.sessa.helper.files.handler;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 
 /**
  * This class is an implementation of the abstract class
- * {@link org.aksw.sessa.importing.dictionary.FileBasedDictionaryImport}.
+ * {@link FileBasedDictionary}.
  * and is capable of importing tsv-files (tab seperated values). Unlike {@link
  * TsvFileHandler}, this class uses a
  * tsv-file which has a mapping of n-grams to a list of URIs. Therefore, this class is mainly used

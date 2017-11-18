@@ -9,7 +9,7 @@ import java.util.Set;
  *
  * @author Simon Bordewisch
  */
-public interface DictionaryImportInterface {
+public interface DictionaryInterface {
 
   /**
    * Given a n-gram, returns a set of URIs related to it or null if this map contains

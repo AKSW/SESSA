@@ -1,14 +1,14 @@
 //package org.aksw.sessa.importing.dictionary.implementation;
 //
 //import java.util.Set;
-//import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
+//import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 //import org.junit.Assert;
 //import org.junit.Before;
 //import org.junit.Test;
 //
 //public class ReverseTsvDictionaryImportTest {
 //
-//  private DictionaryImportInterface rtd;
+//  private DictionaryInterface rtd;
 //  private final String fileName = "src/test/resources/small_reverse_dictionary.tsv";
 //  @Before
 //  public void setUp(){

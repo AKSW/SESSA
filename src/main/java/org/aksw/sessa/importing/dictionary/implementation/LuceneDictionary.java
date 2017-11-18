@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
-import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
+import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
@@ -30,10 +30,10 @@ import org.slf4j.LoggerFactory;
 
 //import org.apache.lucene.store.RAMDirectory;
 
-public class LuceneDictionary implements DictionaryImportInterface {
+public class LuceneDictionary implements DictionaryInterface {
 
   private static final Version LUCENE_VERSION = Version.LUCENE_46;
-  private org.slf4j.Logger log = LoggerFactory.getLogger(DictionaryImportInterface.class);
+  private org.slf4j.Logger log = LoggerFactory.getLogger(DictionaryInterface.class);
 
   public final String FIELD_NAME_KEY = "N-GRAM";
   public final String FIELD_NAME_VALUE = "URI";

@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 
-public abstract class FileBasedDictionaryImport implements DictionaryImportInterface {
+public abstract class FileBasedDictionary implements DictionaryInterface {
 
   protected Map<String, Set<String>> dictionary;
 

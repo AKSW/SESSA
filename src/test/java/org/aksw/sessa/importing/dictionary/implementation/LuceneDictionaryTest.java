@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.files.handler.TsvFileHandler;
-import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
+import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class LuceneDictionaryTest {
 
   private final String TEST_FILE = "src/test/resources/en_surface_forms_small";
   private FileHandlerInterface handler;
-  private DictionaryImportInterface dictionary;
+  private DictionaryInterface dictionary;
 
   @Before
   public void init() throws IOException {

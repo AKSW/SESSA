@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.files.handler.TsvFileHandler;
-import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
+import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import org.junit.Test;
  */
 public class HashMapDictionaryTest {
 
-  private DictionaryImportInterface dictionary = null;
+  private DictionaryInterface dictionary = null;
   private final String fileName = "src/test/resources/en_surface_forms_small.tsv";
 
   @Before

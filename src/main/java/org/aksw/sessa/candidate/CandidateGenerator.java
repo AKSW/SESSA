@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.aksw.sessa.importing.dictionary.DictionaryImportInterface;
+import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 
@@ -15,14 +15,14 @@ import org.aksw.sessa.query.models.NGramHierarchy;
  */
 public class CandidateGenerator {
 
-  private DictionaryImportInterface candidateEntities;
+  private DictionaryInterface candidateEntities;
 
   /**
    * Initialize with a mapping of n-grams to URIs.
    *
    * @param candidateEntities mapping of n-grams to URIs
    */
-  public CandidateGenerator(DictionaryImportInterface candidateEntities) {
+  public CandidateGenerator(DictionaryInterface candidateEntities) {
     this.candidateEntities = candidateEntities;
   }
 

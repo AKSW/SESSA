@@ -7,19 +7,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionaryImport;
+import org.aksw.sessa.importing.dictionary.DictionaryInterface;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Provides a HashMap-based dictionary given a file handler.
- * This class is an implementation of the interface {@link org.aksw.sessa.importing.dictionary.DictionaryImportInterface}.
+ * This class is an implementation of the interface {@link DictionaryInterface}.
  *
  * @author Simon Bordewisch
  */
-public class HashMapDictionary extends FileBasedDictionaryImport {
+public class HashMapDictionary extends FileBasedDictionary {
 
-  private static final Logger log = LoggerFactory.getLogger(FileBasedDictionaryImport.class);
+  private static final Logger log = LoggerFactory.getLogger(FileBasedDictionary.class);
   private Map<String, Set<String>> dictionary;
 
   public HashMapDictionary(FileHandlerInterface handler) {
