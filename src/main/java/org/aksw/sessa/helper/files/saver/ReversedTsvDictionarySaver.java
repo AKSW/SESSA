@@ -1,4 +1,4 @@
-package org.aksw.sessa.main;
+package org.aksw.sessa.helper.files.saver;
 
 import java.io.IOException;
 import java.io.PrintWriter;
