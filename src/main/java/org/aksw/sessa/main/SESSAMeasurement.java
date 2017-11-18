@@ -1,12 +1,14 @@
 package org.aksw.sessa.main;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import org.aksw.qa.commons.datastructure.IQuestion;
 import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
 import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
+import org.aksw.sessa.helper.files.handler.ReverseTsvFileHandler;
 import org.aksw.sessa.helper.files.saver.ReversedTsvDictionarySaver;
 import org.apache.jena.ext.com.google.common.base.Joiner;
 import org.slf4j.Logger;
@@ -29,7 +31,12 @@ public class SESSAMeasurement {
     checkDictionary();
     log.info("Importing dictionary. This could take some time!");
     long startTime = System.nanoTime();
-    sessa.loadFileToDictionaryReverseTSV(REVERSE_TSV_FILE);
+    try {
+      //Change the handler and the file to be handled here
+      sessa.loadFileToHashMapDictionary(new ReverseTsvFileHandler(REVERSE_TSV_FILE));
+    }catch (IOException e){
+      log.error(e.getLocalizedMessage(), e);
+    }
     System.gc();
     long endTime = System.nanoTime();
     log.info("Finished importing Dictionary (in {}sec).",

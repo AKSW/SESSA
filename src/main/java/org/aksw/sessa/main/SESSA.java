@@ -40,54 +40,11 @@ public class SESSA {
     queryProcess = new SimpleQueryProcessing();
   }
 
-  /**
-   * loading of files to a dictionary there by reading all rdfs:labels from a file
-   */
-  private void loadFileToDictionaryRDF(String file) {
-    log.info("Loading RDF file '{}' to dictionary.", file);
-    try (FileHandlerInterface handler = new RdfFileHandler(file)) {
-      if (dictionary == null) {
-        dictionary = new HashMapDictionary(handler);
-      } else if (dictionary instanceof HashMapDictionary) {
-        ((FileBasedDictionaryImport) dictionary).putAll(handler);
-      }
-    } catch (IOException e) {
-      log.error(e.getLocalizedMessage(), e);
-    }
-  }
-
-
-  /**
-   * Loads a dictionary from a tsv file which contains a dictionary with URIs as key and keywords to
-   * the URI as values (tab separated). This is needed for the candidate mapping.
-   *
-   * @param file tsv file which contains mapping.
-   */
-
-  public void loadFileToDictionaryTSV(String file) {
-    log.info("Loading TSV file '{}' to dictionary.", file);
-    try (FileHandlerInterface handler = new TsvFileHandler(file)) {
-      if (dictionary == null) {
-        dictionary = new HashMapDictionary(handler);
-      } else if (dictionary instanceof HashMapDictionary) {
-        ((FileBasedDictionaryImport) dictionary).putAll(handler);
-      }
-    } catch (IOException e) {
-      log.error(e.getLocalizedMessage(), e);
-    }
-  }
-
-
-  public void loadFileToDictionaryReverseTSV(String file) {
-    log.info("Loading reverse TSV file '{}' to dictionary.", file);
-    try (FileHandlerInterface handler = new ReverseTsvFileHandler(file)) {
-      if (dictionary == null) {
-        dictionary = new LuceneDictionary(handler);
-      } else if (dictionary instanceof HashMapDictionary) {
-        ((FileBasedDictionaryImport) dictionary).putAll(handler);
-      }
-    } catch (IOException e) {
-      log.error(e.getLocalizedMessage(), e);
+  public void loadFileToHashMapDictionary(FileHandlerInterface handler){
+    if (dictionary == null) {
+      dictionary = new HashMapDictionary(handler);
+    } else if (dictionary instanceof HashMapDictionary) {
+      ((FileBasedDictionaryImport) dictionary).putAll(handler);
     }
   }
 
