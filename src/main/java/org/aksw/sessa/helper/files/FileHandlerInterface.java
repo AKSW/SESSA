@@ -11,5 +11,7 @@ public interface FileHandlerInterface extends AutoCloseable {
 
   Entry<String, String> nextEntry() throws IOException;
 
+  String getFileName();
+
   void close() throws IOException;
 }

@@ -15,8 +15,10 @@ public class TsvFileHandler implements FileHandlerInterface {
   private BufferedReader reader;
   private String value;
   private Stack<String> keys;
+  private String file;
 
   public TsvFileHandler(String file) throws IOException {
+    this.file = file;
     reader = new BufferedReader((new FileReader(file)));
     keys = new Stack<>();
   }
@@ -52,5 +54,10 @@ public class TsvFileHandler implements FileHandlerInterface {
   @Override
   public void close() throws IOException {
     reader.close();
+  }
+
+  @Override
+  public String getFileName(){
+    return file;
   }
 }
