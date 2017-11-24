@@ -1,6 +1,7 @@
 package org.aksw.sessa.helper.files.handler;
 
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashSet;
@@ -31,7 +32,7 @@ public class ReverseTsvFileHandlerTest {
   @Test
   public void testNextEntry_CountEntries(){
     // dictionary size is read directly from file
-    final int SIZE = 9;
+    final int SIZE = 10;
     Assert.assertEquals(SIZE, entrySet.size());
   }
 
@@ -57,6 +58,18 @@ public class ReverseTsvFileHandlerTest {
         "1996 los angeles dodgers season",
         "http://dbpedia.org/resource/1996_Los_Angeles_Dodgers_season");
     Assert.assertThat(entrySet, hasItem(expected));
+  }
+
+  @Test
+  public void testNextEntry_testEntryWithTwoValues() throws Exception {
+    String key = "alberto valentim carmo nieto";
+    Entry<String, String> expected1 = new SimpleEntry<>(
+        key,
+        "http://dbpedia.org/resource/Glossop_North_End_AFC_Fake");
+    Entry<String, String> expected2 = new SimpleEntry<>(
+        key,
+        "http://dbpedia.org/resource/Alberto_Valentim_Carmo_Nieto");
+    Assert.assertThat(entrySet, hasItems(expected1, expected2));
   }
 
 }
