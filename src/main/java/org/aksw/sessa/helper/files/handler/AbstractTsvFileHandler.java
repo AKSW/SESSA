@@ -6,13 +6,14 @@ import java.io.IOException;
 import java.util.Stack;
 
 /**
- * This class provides the ability to read tsv-files.
- * How the information in the files is processed has to be handled by child classes.
+ * This class provides the ability to read tsv-files. How the information in the files is processed
+ * has to be handled by child classes.
+ *
  * @author Simon Bordewisch
  */
 public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
 
-  BufferedReader reader;
+  private BufferedReader reader;
   String firstEntry;
   Stack<String> otherEntries;
   protected String file;
@@ -38,9 +39,8 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
   }
 
 
-
   @Override
-  public String getFileName(){
+  public String getFileName() {
     return file;
   }
 
