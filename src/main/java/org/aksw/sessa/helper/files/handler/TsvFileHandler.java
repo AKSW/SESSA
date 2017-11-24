@@ -17,7 +17,7 @@ public class TsvFileHandler extends AbstractTsvFileHandler {
   public Entry<String, String> nextEntry() throws IOException {
     String key;
     if (otherEntries.isEmpty()) {
-      if (!getNextPair()) {
+      if (!super.getNextPair()) {
         return null;
       }
     }
