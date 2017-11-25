@@ -114,8 +114,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       //directory = new RAMDirectory();
       IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, analyzer);
       iWriter = new IndexWriter(directory, config);
-      iWriter.commit();
-      updateReaderAndSearcher();
+      commitAndUpdate();
       if (!Files.exists(path) && handler != null) {
         putAll(handler);
       }
@@ -182,8 +181,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   public void clearIndex() {
     try {
       iWriter.deleteAll();
-      iWriter.commit();
-      updateReaderAndSearcher();
+      commitAndUpdate();
     } catch (IOException ioE) {
       log.error(ioE.getLocalizedMessage(), ioE);
     }
@@ -197,12 +195,9 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
         addDocumentToIndex(entry.getKey(), entry.getValue());
         count++;
       }
-      iWriter.commit();
-      updateReaderAndSearcher();
+      commitAndUpdate();
       log.debug("Number of entries added: {}", count);
       log.debug("Total number of entries in index: {}", iReader.numDocs());
-      log.debug("Total number of entries in index (including docs not yet flushed): {}",
-          iWriter.numDocs());
     } catch (IOException e) {
       log.error(e.getLocalizedMessage(), e);
     }
@@ -215,7 +210,11 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     iWriter.addDocument(doc);
   }
 
-  private void updateReaderAndSearcher() throws IOException {
+  /**
+   * Commits all pending write operations and updates iReader and iSearcher
+   */
+  private void commitAndUpdate() throws IOException {
+    iWriter.commit();
     iReader = DirectoryReader.open(directory);
     iSearcher = new IndexSearcher(iReader);
   }
