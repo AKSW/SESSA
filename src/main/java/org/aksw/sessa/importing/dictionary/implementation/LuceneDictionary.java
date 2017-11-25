@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
@@ -38,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Provides a Lucene-based dictionary given a file handler. The path to the index is stored in the
- * variable PATH_TO_INDEX. This class is an implementation of the interface {@link
+ * variable DEFAULT_PATH_TO_INDEX. This class is an implementation of the interface {@link
  * DictionaryInterface}.
  *
  * @author Simon Bordewisch
@@ -51,7 +50,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   /**
    * Contains the path to the index.
    */
-  public static final String PATH_TO_INDEX = "resources/index";
+  public static final String DEFAULT_PATH_TO_INDEX = "resources/index";
 
   /**
    * Contains the field name for the keys in Lucene.
@@ -74,8 +73,6 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   public static final List<String> STOP_WORDS = ImmutableList
       .of("the", "of", "on", "in", "for", "at", "to");
 
-  public static final boolean DEFAULT_INDEX_CLEAR = false;
-
 
   private Directory directory;
   private IndexSearcher iSearcher;
@@ -83,32 +80,41 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   private IndexWriter iWriter;
 
   /**
-   * Calls {@link #LuceneDictionary(FileHandlerInterface, boolean) LuceneDictionary(FileHandlerInterface,
-   * DEFAULT_INDEX_CLEAR)}. This means that the index (if present) will not be cleared and instead
-   * reused.
+   * Calls {@link #LuceneDictionary(FileHandlerInterface, String) LuceneDictionary(null,
+   * DEFAULT_PATH_TO_INDEX)}. Therefore, no entries will be added to the Lucene index and the
+   * location is the default location.
+   */
+  public LuceneDictionary() {
+    this(null, DEFAULT_PATH_TO_INDEX);
+  }
+
+  /**
+   * Calls {@link #LuceneDictionary(FileHandlerInterface, String) LuceneDictionary(FileHandlerInterface,
+   * DEFAULT_PATH_TO_INDEX)}. This means that the index will be written in the in default location
+   * (
    *
    * @param handler file handler, which contains file and is capable of parsing said file
    */
   public LuceneDictionary(FileHandlerInterface handler) {
-    this(handler, DEFAULT_INDEX_CLEAR);
+    this(handler, DEFAULT_PATH_TO_INDEX);
   }
 
+
   /**
-   * @param handler file handler, which contains file and is capable of parsing said file
+   * Constructs a LuceneDictionary with given handler and location of index.
+   *
+   * @param handler file handler that contains file name
+   * @param indexLocation indicates where the index should be saved
    */
-  public LuceneDictionary(FileHandlerInterface handler, boolean clearIndex) {
+  public LuceneDictionary(FileHandlerInterface handler, String indexLocation) {
     try {
       SimpleAnalyzer analyzer = new SimpleAnalyzer(LUCENE_VERSION);
-      Path path = FileSystems.getDefault().getPath(PATH_TO_INDEX);
+      Path path = FileSystems.getDefault().getPath(indexLocation);
       directory = MMapDirectory.open(path.toFile());
       //directory = new RAMDirectory();
       IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, analyzer);
       iWriter = new IndexWriter(directory, config);
-      if (clearIndex) {
-        clearIndex();
-      }
-
-      if (!Files.exists(path)) {
+      if (!Files.exists(path) && handler != null) {
         putAll(handler);
       }
       iReader = DirectoryReader.open(directory);
