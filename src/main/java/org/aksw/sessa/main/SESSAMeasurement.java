@@ -2,6 +2,9 @@ package org.aksw.sessa.main;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 import org.aksw.qa.commons.datastructure.IQuestion;
@@ -10,6 +13,7 @@ import org.aksw.qa.commons.load.LoaderController;
 import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
 import org.aksw.sessa.helper.files.handler.ReverseTsvFileHandler;
 import org.aksw.sessa.helper.files.saver.ReversedTsvDictionarySaver;
+import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.apache.jena.ext.com.google.common.base.Joiner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +36,13 @@ public class SESSAMeasurement {
     log.info("Importing dictionary. This could take some time!");
     long startTime = System.nanoTime();
     try {
-      //Change the handler and the file to be handled here
-      sessa.loadFileToHashMapDictionary(new ReverseTsvFileHandler(REVERSE_TSV_FILE));
+      Path path = FileSystems.getDefault().getPath(LuceneDictionary.DEFAULT_PATH_TO_INDEX);
+      if (!Files.exists(path)) {
+        //Change the handler and the file to be handled here
+        sessa.loadFileToLuceneDictionary(new ReverseTsvFileHandler(REVERSE_TSV_FILE));
+      } else {
+        sessa.loadFileToLuceneDictionary(null);
+      }
     }catch (IOException e){
       log.error(e.getLocalizedMessage(), e);
     }
