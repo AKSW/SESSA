@@ -11,16 +11,14 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
 
   /**
    * Adds the entries in the give handler to the dictionary.
+   *
    * @param handler handler with file information
    */
-  public void putAll(FileHandlerInterface handler){
-    dictionary.putAll(createDictionary(handler));
-  }
-
-  protected abstract Map<String, Set<String>> createDictionary(FileHandlerInterface handler);
+  public abstract void putAll(FileHandlerInterface handler);
 
   /**
    * Returns a set view of the mappings contained in this map.
+   *
    * @return a set view of the mappings contained in this map
    */
   public Set<Entry<String, Set<String>>> entrySet() {
