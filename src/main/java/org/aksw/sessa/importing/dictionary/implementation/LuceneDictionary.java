@@ -114,11 +114,13 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       //directory = new RAMDirectory();
       IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, analyzer);
       iWriter = new IndexWriter(directory, config);
+      iWriter.commit();
+      updateReaderAndSearcher();
       if (!Files.exists(path) && handler != null) {
         putAll(handler);
       }
-      iReader = DirectoryReader.open(directory);
-      iSearcher = new IndexSearcher(iReader);
+      log.debug("Loaded LuceneDictionary. Total number of entries in dictionary: {}",
+          iReader.numDocs());
     } catch (Exception e) {
       log.error(e.getLocalizedMessage(), e);
     }
@@ -194,6 +196,11 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
         count++;
       }
       iWriter.commit();
+      updateReaderAndSearcher();
+      log.debug("Number of entries added: {}", count);
+      log.debug("Total number of entries in index: {}", iReader.numDocs());
+      log.debug("Total number of entries in index (including docs not yet flushed): {}",
+          iWriter.numDocs());
     } catch (IOException e) {
       log.error(e.getLocalizedMessage(), e);
     }
@@ -204,6 +211,11 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     doc.add(new TextField(FIELD_NAME_KEY, key, Store.YES));
     doc.add(new StringField(FIELD_NAME_VALUE, value, Store.YES));
     iWriter.addDocument(doc);
+  }
+
+  private void updateReaderAndSearcher() throws IOException {
+    iReader = DirectoryReader.open(directory);
+    iSearcher = new IndexSearcher(iReader);
   }
 }
 
