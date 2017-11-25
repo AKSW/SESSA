@@ -167,8 +167,8 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   public void close() {
     try {
       iReader.close();
-      directory.close();
       iWriter.close();
+      directory.close();
     } catch (IOException e) {
       log.error(e.getLocalizedMessage(), e);
     }
@@ -193,7 +193,6 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
         addDocumentToIndex(entry.getKey(), entry.getValue());
         count++;
       }
-      log.debug("Number of entries added: {}", count);
       iWriter.commit();
     } catch (IOException e) {
       log.error(e.getLocalizedMessage(), e);
