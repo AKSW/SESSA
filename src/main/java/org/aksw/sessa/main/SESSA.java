@@ -70,11 +70,16 @@ public class SESSA {
       CandidateGenerator canGen = new CandidateGenerator(dictionary);
       Map<NGramEntryPosition, Set<String>> canMap = canGen.getCandidateMapping(nGramHierarchy);
       log.debug("Candidate map content:");
-      for(Entry entry:  canMap.entrySet()){
-        log.debug("\t{}", entry);
+      for (Entry<NGramEntryPosition, Set<String>> entry : canMap.entrySet()) {
+        NGramEntryPosition pos = entry.getKey();
+        log.debug("\t{}='{}'=>{}",
+            pos,
+            nGramHierarchy.getNGram(pos.getLength(), pos.getPosition()),
+            entry.getValue());
       }
       ColorSpreader colorSpreader = new ColorSpreader(canMap);
       colorSpreader.spreadColors();
+      log.debug("{}", colorSpreader.getGraph());
       Set<Node> results = colorSpreader.getResult();
       Set<String> stringResults = new HashSet<>();
       for (Node result : results) {
