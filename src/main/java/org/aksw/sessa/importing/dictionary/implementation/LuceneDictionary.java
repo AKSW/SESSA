@@ -110,14 +110,15 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     try {
       SimpleAnalyzer analyzer = new SimpleAnalyzer(LUCENE_VERSION);
       Path path = FileSystems.getDefault().getPath(indexLocation);
+      boolean filesExists = Files.exists(path);
       directory = MMapDirectory.open(path.toFile());
-      //directory = new RAMDirectory();
+      //directory = new RAMDirectory(); // alternative to file based Lucene
       IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, analyzer);
       iWriter = new IndexWriter(directory, config);
-      commitAndUpdate();
-      if (!Files.exists(path) && handler != null) {
+      if (!filesExists && handler != null) {
         putAll(handler);
       }
+      commitAndUpdate();
       log.debug("Loaded LuceneDictionary. Total number of entries in dictionary: {}",
           iReader.numDocs());
     } catch (Exception e) {
@@ -149,12 +150,14 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       TopScoreDocCollector collector = TopScoreDocCollector
           .create(NUMBER_OF_DOCS_RECEIVED_FROM_INDEX, true);
 
+      //log.debug("Searching for term {}", nGram);
       iSearcher.search(wholeQuery, collector);
       ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
       for (ScoreDoc hit : hits) {
         Document hitDoc = iSearcher.doc(hit.doc);
         uris.add(hitDoc.get(FIELD_NAME_VALUE));
+        //log.debug("\tFound {} with score {}. Keyword: {}", hitDoc.get(FIELD_NAME_VALUE), hit.score, hitDoc.get(FIELD_NAME_KEY));
       }
     } catch (Exception e) {
       log.error(e.getLocalizedMessage() + " -> " + nGram, e);
