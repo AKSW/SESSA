@@ -1,5 +1,6 @@
 src/main/resources/
 /resources/
+src/test/resources/index
 
 log.out*
 
