@@ -7,10 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
@@ -41,7 +43,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Simon Bordewisch
  */
-public class LuceneDictionary implements DictionaryInterface, AutoCloseable {
+public class LuceneDictionary extends FileBasedDictionary implements AutoCloseable {
 
   private static final Version LUCENE_VERSION = Version.LUCENE_46;
   private org.slf4j.Logger log = LoggerFactory.getLogger(DictionaryInterface.class);
@@ -107,7 +109,7 @@ public class LuceneDictionary implements DictionaryInterface, AutoCloseable {
       }
 
       if (!Files.exists(path)) {
-        index(handler);
+        putAll(handler);
       }
       iReader = DirectoryReader.open(directory);
       iSearcher = new IndexSearcher(iReader);
@@ -160,6 +162,7 @@ public class LuceneDictionary implements DictionaryInterface, AutoCloseable {
     try {
       iReader.close();
       directory.close();
+      iWriter.close();
     } catch (IOException e) {
       log.error(e.getLocalizedMessage(), e);
     }
@@ -176,7 +179,7 @@ public class LuceneDictionary implements DictionaryInterface, AutoCloseable {
     }
   }
 
-  private void index(FileHandlerInterface handler) {
+  public void putAll(FileHandlerInterface handler) {
     try {
       log.debug("Starting indexing for  file '{}'", handler.getFileName());
       int count = 0;
@@ -186,7 +189,6 @@ public class LuceneDictionary implements DictionaryInterface, AutoCloseable {
       }
       log.debug("Number of entries added: {}", count);
       iWriter.commit();
-      iWriter.close();
     } catch (IOException e) {
       log.error(e.getLocalizedMessage(), e);
     }
