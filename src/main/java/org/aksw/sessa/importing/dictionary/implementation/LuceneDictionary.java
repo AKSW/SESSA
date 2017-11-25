@@ -140,7 +140,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       String[] uniGrams = nGram.split(" ");
       SpanQuery[] queryTerms = new SpanQuery[uniGrams.length];
       for (int i = 0; i < uniGrams.length; i++) {
-        FuzzyQuery fq = new FuzzyQuery(new Term("FIELD_NAME_KEY", uniGrams[i]));
+        FuzzyQuery fq = new FuzzyQuery(new Term(FIELD_NAME_KEY, uniGrams[i]));
         queryTerms[i] = new SpanMultiTermQueryWrapper<>(fq);
       }
       SpanNearQuery wholeQuery = new SpanNearQuery(queryTerms, 0, true);
