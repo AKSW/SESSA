@@ -182,6 +182,8 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   public void clearIndex() {
     try {
       iWriter.deleteAll();
+      iWriter.commit();
+      updateReaderAndSearcher();
     } catch (IOException ioE) {
       log.error(ioE.getLocalizedMessage(), ioE);
     }
