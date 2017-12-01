@@ -1,7 +1,10 @@
 package org.aksw.sessa.main;
 
+import java.io.IOException;
 import java.util.Set;
 
+import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
+import org.aksw.sessa.helper.files.handler.TsvFileHandler;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,13 +12,14 @@ import org.junit.Test;
 public class SESSATest {
 
 	public static final String TSV_FILE = "src/test/resources/en_surface_forms_small.tsv";
-	SESSA sessa = new SESSA();
-	String question;
-	Set<String> answer;
+	private SESSA sessa = new SESSA();
+	private String question;
+	private Set<String> answer;
 
 	@Before
-	public void initialize() {
-		sessa.loadFileToDictionaryTSV(TSV_FILE);
+	public void initialize() throws IOException{
+		FileHandlerInterface handler = new TsvFileHandler(TSV_FILE);
+		sessa.loadFileToHashMapDictionary(handler);
 	}
 
 	@Test
@@ -35,10 +39,6 @@ public class SESSATest {
 
 	@Test
 	public void testAnswer_onObamaExample() {
-		String TSV_FILE = "src/test/resources/en_surface_forms_small.tsv";
-		SESSA sessa = new SESSA();
-		sessa.loadFileToDictionaryTSV(TSV_FILE);
-
 		question = "birthplace barack obama wife";
 		answer = sessa.answer(question);
 		System.out.println(answer);

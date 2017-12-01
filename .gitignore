@@ -1,5 +1,6 @@
-src/main/resources/labels_en.ttl
-src/main/resources/dbpedia_2016-10.nt
+src/main/resources/
+/resources/
+src/test/resources/index
 
 log.out*
 
@@ -11,3 +12,4 @@ log.out*
 *.ttl
 *.iml
 .idea/
+*.tsv

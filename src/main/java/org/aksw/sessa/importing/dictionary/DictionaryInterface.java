@@ -1,7 +1,5 @@
 package org.aksw.sessa.importing.dictionary;
 
-//import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -11,13 +9,13 @@ import java.util.Set;
  *
  * @author Simon Bordewisch
  */
-public interface DictionaryImportInterface {
+public interface DictionaryInterface {
 
   /**
-   * Given a file name, returns a dictionary of n-gram to set of URIs.
-   * The file has to be a mapping of URIs to a list of n-grams.
-   * @param fileName name (and location) of a file with a mapping of URI's to a list/set of n-grams
+   * Given a n-gram, returns a set of URIs related to it or null if this map contains
+   * no mapping for the key.
+   * @param nGram n-gram whose associated value is to be returned
    * @return mapping of n-grams to set of URIs
    */
-  Map<String, Set<String>> getDictionary(String fileName);
+  Set<String> get(String nGram);
 }
