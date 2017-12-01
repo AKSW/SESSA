@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.aksw.qa.commons.datastructure.IQuestion;
@@ -76,9 +77,9 @@ public class SESSAMeasurement {
     Dataset qald7TrainMultilingual = Dataset.QALD7_Train_Multilingual;
     List<IQuestion> questions = LoaderController.load(qald7TrainMultilingual);
     double avgFMeasure = 0;
-    int numberOfUsableAnswers = 0;
     int numberOfQuestions = 0;
-    double answer_fmeasure = 0;
+    double answerFMeasure = 0;
+    Set<String> questionsAnswered = new HashSet<>();
     for (IQuestion q : questions) {
       if (q.getAnswerType().matches("resource")) {
         List<String> x = q.getLanguageToKeywords().get("en");
@@ -92,8 +93,8 @@ public class SESSAMeasurement {
         avgFMeasure += fMeasure;
         numberOfQuestions++;
         if (fMeasure > 0) {
-          numberOfUsableAnswers++;
-          answer_fmeasure += fMeasure;
+          questionsAnswered.add(keyphrase);
+          answerFMeasure += fMeasure;
         }
       }
     }
@@ -101,9 +102,10 @@ public class SESSAMeasurement {
     log.info("Finished questioning (in {}sec).", (endTime - startTime) / (1000 * 1000 * 1000));
     log.info("Number of questions asked: {}.", numberOfQuestions);
     log.info("Final average F-measure: {}", avgFMeasure / numberOfQuestions);
-    log.info("Number of partially right answered questions: {}.", numberOfUsableAnswers);
-    log.info("Final F-measure for questions which where at least partially answered correct: {}",
-        answer_fmeasure / numberOfUsableAnswers);
+    log.debug("Number of partially right answered questions: {}.", questionsAnswered.size());
+    log.debug("The questions are: {}", questionsAnswered);
+    log.debug("Final F-measure for questions which where at least partially answered correct: {}",
+        answerFMeasure / questionsAnswered.size());
   }
 
 }
