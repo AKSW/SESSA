@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.aksw.sessa.importing.dictionary.implementation.SimpleMap;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 import org.junit.Assert;
@@ -52,7 +53,7 @@ public class CandidateGeneratorTest {
 
     candidateEntities.put("birthplace", birthPlace);
 
-    candidateGenerator = new CandidateGenerator(candidateEntities);
+    candidateGenerator = new CandidateGenerator(new SimpleMap(candidateEntities));
 
     NGramHierarchy runningExample = new NGramHierarchy("birthplace bill gates wife");
     candidateMapping = candidateGenerator.getCandidateMapping(runningExample);
