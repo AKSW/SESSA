@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import org.aksw.sessa.importing.rdf.SparqlGraphFiller;
 
 /**
@@ -242,12 +241,14 @@ public class SelfBuildingGraph implements GraphInterface {
     StringBuilder sb = new StringBuilder();
     sb.append("Nodes:\n");
     for (Node node : nodes) {
+      sb.append("\t");
       sb.append(node.toString());
       sb.append("\n");
     }
     sb.append("Edges:\n");
     for (Entry<Node, Set<Node>> entry : edgeMap.entrySet()) {
       for (Node node : entry.getValue()) {
+        sb.append("\t");
         sb.append(entry.getKey().getContent().toString());
         sb.append("->");
         sb.append(node.getContent().toString());
