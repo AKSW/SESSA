@@ -8,11 +8,11 @@ import org.aksw.sessa.importing.dictionary.DictionaryInterface;
  * This class provides an easy implementation of dictionaries.
  * It essentially just wraps the  given Map<String, Set<String>>.
  */
-public class SimpleMap implements DictionaryInterface {
+public class SimpleMapDictionary implements DictionaryInterface {
 
   private Map<String, Set<String>> dictionary;
 
-  public SimpleMap(Map<String, Set<String>> dictionary){
+  public SimpleMapDictionary(Map<String, Set<String>> dictionary) {
     this.dictionary = dictionary;
   }
 
