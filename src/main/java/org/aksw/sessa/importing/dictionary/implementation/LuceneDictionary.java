@@ -12,6 +12,7 @@ import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
+import org.aksw.sessa.importing.dictionary.util.DictionaryEntrySimilarity;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
@@ -25,6 +26,7 @@ import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.search.spans.SpanMultiTermQueryWrapper;
 import org.apache.lucene.search.spans.SpanNearQuery;
 import org.apache.lucene.search.spans.SpanQuery;
@@ -75,6 +77,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
 
 
   private Directory directory;
+  private Similarity similarity;
   private IndexSearcher iSearcher;
   private DirectoryReader iReader;
   private IndexWriter iWriter;
@@ -114,6 +117,8 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       directory = MMapDirectory.open(path.toFile());
       //directory = new RAMDirectory(); // alternative to file based Lucene
       IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, analyzer);
+      similarity = new DictionaryEntrySimilarity();
+      config.setSimilarity(similarity);
       iWriter = new IndexWriter(directory, config);
       if (!filesExists && handler != null) {
         putAll(handler);
@@ -220,6 +225,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     iWriter.commit();
     iReader = DirectoryReader.open(directory);
     iSearcher = new IndexSearcher(iReader);
+    iSearcher.setSimilarity(similarity);
   }
 }
 
