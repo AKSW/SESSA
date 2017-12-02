@@ -18,18 +18,17 @@ public class ReversedTsvDictionarySaver {
 
   private static FileBasedDictionary dictionary;
 
-  public static void saveDictionary(String target, String... sources) {
+  public static void saveDictionary(String target, FileHandlerInterface... sources) {
 
-    for(String source : sources )
-    {
+    for (FileHandlerInterface source : sources) {
       loadFileToHashMap(source);
     }
     saveDictionary(target);
   }
 
 
-  private static void loadFileToHashMap(String file) {
-    try (FileHandlerInterface handler = new RdfFileHandler(file)) {
+  private static void loadFileToHashMap(FileHandlerInterface fileHandler) {
+    try (FileHandlerInterface handler = fileHandler) {
       if (dictionary == null) {
         dictionary = new HashMapDictionary(handler);
       } else {
@@ -42,7 +41,7 @@ public class ReversedTsvDictionarySaver {
 
 
   private static void saveDictionary(String file) {
-    try( PrintWriter writer = new PrintWriter(file)) {
+    try (PrintWriter writer = new PrintWriter(file)) {
       for (Entry<String, Set<String>> entry : dictionary.entrySet()) {
         writer.print(entry.getKey());
         for (String value : entry.getValue()) {

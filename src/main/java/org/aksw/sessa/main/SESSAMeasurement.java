@@ -12,6 +12,7 @@ import org.aksw.qa.commons.datastructure.IQuestion;
 import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
 import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
+import org.aksw.sessa.helper.files.handler.RdfFileHandler;
 import org.aksw.sessa.helper.files.handler.ReverseTsvFileHandler;
 import org.aksw.sessa.helper.files.saver.ReversedTsvDictionarySaver;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
@@ -61,8 +62,13 @@ public class SESSAMeasurement {
       log.info("Reverse tsv dictionary not found!");
       log.info("Building Dictionary. This could take some time!");
       long startTime = System.nanoTime();
-      ReversedTsvDictionarySaver.saveDictionary(REVERSE_TSV_FILE,
-          RDF_labels, RDF_ontology);
+      try {
+        ReversedTsvDictionarySaver.saveDictionary(REVERSE_TSV_FILE,
+            new RdfFileHandler(RDF_labels),
+            new RdfFileHandler(RDF_ontology));
+      } catch (IOException e) {
+        log.error(e.getLocalizedMessage(), e);
+      }
       long endTime = System.nanoTime();
       log.info("Finished building Dictionary (in {}sec).",
           (endTime - startTime) / (1000 * 1000 * 1000));
