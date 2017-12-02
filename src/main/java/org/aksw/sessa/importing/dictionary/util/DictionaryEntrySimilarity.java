@@ -18,4 +18,9 @@ public class DictionaryEntrySimilarity extends DefaultSimilarity {
   public float tf(float freq) {
     return 1;
   }
+
+  @Override
+  public float idf(long docFreq, long numDocs) {
+    return 1;
+  }
 }
