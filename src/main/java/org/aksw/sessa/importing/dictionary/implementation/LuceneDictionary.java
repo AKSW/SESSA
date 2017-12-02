@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionaryInterface;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Simon Bordewisch
  */
-public class LuceneDictionary extends FileBasedDictionary implements AutoCloseable {
+public class LuceneDictionary implements FileBasedDictionaryInterface, AutoCloseable {
 
   private static final Version LUCENE_VERSION = Version.LUCENE_46;
   private org.slf4j.Logger log = LoggerFactory.getLogger(DictionaryInterface.class);
@@ -190,6 +190,11 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     }
   }
 
+  /**
+   * Adds the entries in the give handler to the dictionary.
+   *
+   * @param handler handler with file information
+   */
   public void putAll(FileHandlerInterface handler) {
     try {
       log.debug("Starting indexing for  file '{}'", handler.getFileName());

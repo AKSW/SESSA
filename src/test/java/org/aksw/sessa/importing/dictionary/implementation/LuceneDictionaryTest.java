@@ -11,7 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class LuceneDictionaryTest extends FileBasedDictionaryTest {
+public class LuceneDictionaryTest extends FileBasedDictionaryInterfaceTest {
 
   private final String TEST_INDEX_LOCATION = "src/test/resources/index";
 

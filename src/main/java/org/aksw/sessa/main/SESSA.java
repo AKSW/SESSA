@@ -9,7 +9,7 @@ import org.aksw.sessa.colorspreading.ColorSpreader;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionaryInterface;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.aksw.sessa.query.models.NGramEntryPosition;
@@ -40,7 +40,7 @@ public class SESSA {
     if (dictionary == null) {
       dictionary = new HashMapDictionary(handler);
     } else if (dictionary instanceof HashMapDictionary) {
-      ((FileBasedDictionary) dictionary).putAll(handler);
+      ((FileBasedDictionaryInterface) dictionary).putAll(handler);
     }
   }
 

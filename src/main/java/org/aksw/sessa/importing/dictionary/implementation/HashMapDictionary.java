@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionaryInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,11 +18,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author Simon Bordewisch
  */
-public class HashMapDictionary extends FileBasedDictionary {
+public class HashMapDictionary implements FileBasedDictionaryInterface {
 
-  private static final Logger log = LoggerFactory.getLogger(FileBasedDictionary.class);
+  private static final Logger log = LoggerFactory.getLogger(FileBasedDictionaryInterface.class);
   private Map<String, Set<String>> dictionary;
 
+  /**
+   * Initializes the dictionary with given file handler.
+   * The file will be parsed into the dictionary.
+   * @param handler handler to be used for filling the dictionary
+   */
   public HashMapDictionary(FileHandlerInterface handler) {
       dictionary = createDictionary(handler);
   }
@@ -51,6 +56,12 @@ public class HashMapDictionary extends FileBasedDictionary {
     return dictionary;
   }
 
+  /**
+   * Given a n-gram, returns a set of URIs related to it or null if this map contains
+   * no mapping for the key.
+   * @param nGram n-gram whose associated value is to be returned
+   * @return mapping of n-grams to set of URIs
+   */
   @Override
   public Set<String> get(String nGram) {
     return dictionary.get(nGram);

@@ -4,19 +4,14 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
 
 import java.io.IOException;
-import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
-import org.aksw.sessa.helper.files.handler.ReverseTsvFileHandler;
 import org.aksw.sessa.helper.files.handler.TsvFileHandler;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Created by Simon Bordewisch on 21.06.17.
  */
-public class HashMapDictionaryTest extends FileBasedDictionaryTest {
+public class HashMapDictionaryTest extends FileBasedDictionaryInterfaceTest {
 
   @Before
   public void init() throws IOException{
