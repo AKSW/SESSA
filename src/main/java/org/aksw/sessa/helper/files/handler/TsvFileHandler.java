@@ -5,14 +5,30 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 
 /**
- * Created by Simon Bordewisch on 17.11.17.
+ * This class is an implementation of the abstract class {@link AbstractTsvFileHandler}. and is capable
+ * of handling tsv-files (tab separated values). This class expects a
+ * tsv-file which has a mapping of URIs to a list of n-grams.
+ *
+ * @author Simon Bordewisch
  */
 public class TsvFileHandler extends AbstractTsvFileHandler {
 
+  /**
+   * Initializes reader with given file and stack as empty stack.
+   *
+   * @param file file name that should be read
+   * @throws IOException If an I/O error occurs
+   */
   public TsvFileHandler(String file) throws IOException {
     super(file);
   }
 
+  /**
+   * Provides next entry, i.e. next key and value pair.
+   *
+   * @return next key and value pair
+   * @throws IOException If an I/O error occurs
+   */
   @Override
   public Entry<String, String> nextEntry() throws IOException {
     String key;

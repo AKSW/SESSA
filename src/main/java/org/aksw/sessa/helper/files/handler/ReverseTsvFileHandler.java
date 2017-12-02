@@ -3,22 +3,32 @@ package org.aksw.sessa.helper.files.handler;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 
 /**
- * This class is an implementation of the abstract class {@link FileBasedDictionary}. and is capable
- * of importing tsv-files (tab seperated values). Unlike {@link TsvFileHandler}, this class uses a
- * tsv-file which has a mapping of n-grams to a list of URIs. Therefore, this class is mainly used
- * for debugging, as it performs faster than the other file-import implementations.
+ * This class is an implementation of the abstract class {@link AbstractTsvFileHandler}. and is capable
+ * of handling tsv-files (tab separated values). Unlike {@link TsvFileHandler}, this class expects a
+ * tsv-file which has a mapping of n-grams to a list of URIs.
  *
  * @author Simon Bordewisch
  */
 public class ReverseTsvFileHandler extends AbstractTsvFileHandler {
 
+  /**
+   * Initializes reader with given file and stack as empty stack.
+   *
+   * @param file file name that should be read
+   * @throws IOException If an I/O error occurs
+   */
   public ReverseTsvFileHandler(String file) throws IOException {
     super(file);
   }
 
+  /**
+   * Provides next entry, i.e. next key and value pair.
+   *
+   * @return next key and value pair
+   * @throws IOException If an I/O error occurs
+   */
   @Override
   public Entry<String, String> nextEntry() throws IOException {
     if (otherEntries.isEmpty()) {

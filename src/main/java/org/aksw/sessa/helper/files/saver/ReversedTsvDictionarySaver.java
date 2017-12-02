@@ -5,19 +5,28 @@ import java.io.PrintWriter;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
-import org.aksw.sessa.helper.files.handler.RdfFileHandler;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class is used to collect various dictionaries using file handlers and parse them into one
+ * file of the type "reversed tsv", i.e. it constructs a mapping of n-grams to URIs. Therefore each
+ * line in the final tsv-file looks like this: n-gram;uri1;uri2;uri3;...
+ */
 public class ReversedTsvDictionarySaver {
 
 
   private static final Logger log = LoggerFactory.getLogger(ReversedTsvDictionarySaver.class);
 
-  private static FileBasedDictionary dictionary;
+  private static HashMapDictionary dictionary;
 
+  /**
+   * Saves all given dictionaries (via file handlers) and saves them into the given target.
+   *
+   * @param target file name (and location) for the new dictionary
+   * @param sources dictionaries which should be stored into the new dictionary
+   */
   public static void saveDictionary(String target, FileHandlerInterface... sources) {
 
     for (FileHandlerInterface source : sources) {

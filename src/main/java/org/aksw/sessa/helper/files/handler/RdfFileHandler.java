@@ -85,6 +85,11 @@ public class RdfFileHandler implements FileHandlerInterface {
     return file;
   }
 
+  /**
+   * Closes the used readers and releases any system resources associated with it.
+   *
+   * @throws IOException If an I/O error occurs
+   */
   @Override
   public void close() throws IOException {
     stmtIterator.close();

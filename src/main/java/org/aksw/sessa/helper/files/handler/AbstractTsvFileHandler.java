@@ -18,12 +18,23 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
   Stack<String> otherEntries;
   protected String file;
 
+  /**
+   * Initializes reader with given file and stack as empty stack.
+   *
+   * @param file file name that should be read
+   * @throws IOException If an I/O error occurs
+   */
   AbstractTsvFileHandler(String file) throws IOException {
     this.file = file;
     reader = new BufferedReader((new FileReader(file)));
     otherEntries = new Stack<>();
   }
 
+  /**
+   * Reads next line of file and therefore the next pair of key => set of values.
+   * @return next pair of key => set of values
+   * @throws IOException If an I/O error occurs
+   */
   boolean getNextPair() throws IOException {
     String line = reader.readLine();
     if (line != null) {
@@ -38,7 +49,11 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
     }
   }
 
-
+  /**
+   * Returns name of the file that is processed by the handler.
+   *
+   * @return name of the file that is processed by the handler
+   */
   @Override
   public String getFileName() {
     return file;
