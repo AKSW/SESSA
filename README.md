@@ -5,14 +5,16 @@ Keyword Search is a scalable search engine on structured resources provided by D
 ```
 mvn clean package 
 ```
+## How to run SESSA
+* Load at least one of the FileHandlers (under org.aksw.sessa.helper.files.handler) with a dictionary-file (i.e. for RDF-files, load the RdfFileHandler)
+* Load a SESSA object and load the dictionary by using .loadFileToLuceneDictionary(fileHandler) or .loadFileToHashMapDictionary(fileHandler) with the file handler
+  * HashMaps can take quite a lot memory, depending on your imported dictionary
+  * Lucene-dictionaries donot need a lot of memory, but the internal Lucene-scoring provides non-optimal candidates
+* Ask questions by using .answer(question)
 
-* test_1.nt is very tiny part of the original one "dbpedia_2016-10.nt"
-* test_2.ttl is very very tiny part of the original one "labels_en.ttl"  
-* please note that "dbpedia_2016-10.nt" and "labels_en.ttl" are parts of DBpedia datasets and they are available online
-* test_1.nt and test_2.ttl are used to test RdfDictionaryImport.java that loads RDF to SESSA
 
 
-Needed files:
+Recommended files to run SESSA:
 ```
 cd src/main
 mkdir resources
