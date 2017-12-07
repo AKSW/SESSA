@@ -14,7 +14,7 @@ mvn clean package
 
 
 
-Recommended files to run SESSA:
+Recommended files to run SESSA (and needed files to run SESSAMeasurement):
 ```
 cd src/main
 mkdir resources
