@@ -45,14 +45,15 @@ public class DbpediaSparqlQuery {
       qef = new QueryExecutionFactoryPaginated(qef, 900);
       QueryExecution qe = qef.createQueryExecution(queryString);
       rs = qe.execSelect();
+      String varName = rs.getResultVars().get(0);
       while (rs.hasNext()) {
         QuerySolution qs = rs.next();
-        finalSet.add(qs.get("?o").toString());
-        //  System.out.println("Before result set4");
+        finalSet.add(qs.get(varName).toString());
       }
 
     } catch (Exception e) {
-      log.error(e.getMessage(), e);
+      log.error("Error with query {}", queryString);
+      log.error(e.getLocalizedMessage(), e);
     }
     log.trace("Query: '{}'. Found: {}", queryString, finalSet);
     return finalSet;
