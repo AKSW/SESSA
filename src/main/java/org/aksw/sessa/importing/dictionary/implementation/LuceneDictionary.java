@@ -81,6 +81,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   private IndexSearcher iSearcher;
   private DirectoryReader iReader;
   private IndexWriter iWriter;
+  private int maxResultSize;
 
   /**
    * Calls {@link #LuceneDictionary(FileHandlerInterface, String) LuceneDictionary(null,
@@ -111,6 +112,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    */
   public LuceneDictionary(FileHandlerInterface handler, String indexLocation) {
     try {
+      maxResultSize = NUMBER_OF_DOCS_RECEIVED_FROM_INDEX;
       SimpleAnalyzer analyzer = new SimpleAnalyzer(LUCENE_VERSION);
       Path path = FileSystems.getDefault().getPath(indexLocation);
       boolean filesExists = Files.exists(path);
@@ -153,7 +155,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       SpanNearQuery wholeQuery = new SpanNearQuery(queryTerms, 0, true);
 
       TopScoreDocCollector collector = TopScoreDocCollector
-          .create(NUMBER_OF_DOCS_RECEIVED_FROM_INDEX, true);
+          .create(maxResultSize, true);
 
       //log.debug("Searching for term {}", nGram);
       iSearcher.search(wholeQuery, collector);
@@ -168,6 +170,15 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       log.error(e.getLocalizedMessage() + " -> " + nGram, e);
     }
     return uris;
+  }
+
+  /**
+   * Set a new maximum size for the result set.
+   *
+   * @param maxResultSize new maximum for the result set
+   */
+  public void setMaxResultSize(int maxResultSize) {
+    this.maxResultSize = maxResultSize;
   }
 
   /**
