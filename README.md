@@ -9,7 +9,7 @@ mvn clean package
 * Load at least one of the FileHandlers (under org.aksw.sessa.helper.files.handler) with a dictionary-file (i.e. for RDF-files, load the RdfFileHandler)
 * Load a SESSA object and load the dictionary by using .loadFileToLuceneDictionary(fileHandler) or .loadFileToHashMapDictionary(fileHandler) with the file handler
   * HashMaps can take quite a lot memory, depending on your imported dictionary
-  * Lucene-dictionaries donot need a lot of memory, but the internal Lucene-scoring provides non-optimal candidates
+  * Lucene-dictionaries do not need a lot of memory, but the internal Lucene-scoring provides non-optimal candidates
 * Ask questions by using .answer(question)
 
 
