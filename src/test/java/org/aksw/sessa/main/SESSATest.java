@@ -7,6 +7,7 @@ import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.files.handler.TsvFileHandler;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SESSATest {
@@ -43,6 +44,17 @@ public class SESSATest {
 		answer = sessa.answer(question);
 		System.out.println(answer);
 		Assert.assertTrue(answer.contains("http://dbpedia.org/resource/Chicago"));
+	}
+
+	@Test
+	@Ignore
+	// This test is for testing interlinking between nodes. As of now, this is not possible
+	// Therefore, this will be ignored
+	public void testAnswer_typeQuestion() {
+		question = "music by elton john type musical";
+		answer = sessa.answer(question);
+		System.out.println(answer);
+		Assert.assertTrue(answer.contains("http://dbpedia.org/resource/The_Lion_King_(musical)"));
 	}
 
 	// TODO: create tests for other questions
