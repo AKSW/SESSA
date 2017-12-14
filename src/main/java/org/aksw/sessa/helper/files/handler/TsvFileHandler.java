@@ -31,13 +31,12 @@ public class TsvFileHandler extends AbstractTsvFileHandler {
    */
   @Override
   public Entry<String, String> nextEntry() throws IOException {
-    String key;
     if (otherEntries.isEmpty()) {
       if (!super.getNextPair()) {
         return null;
       }
     }
-    key = otherEntries.pop();
+    String key = otherEntries.pop();
     return new SimpleEntry<>(key.toLowerCase(), firstEntry);
   }
 }
