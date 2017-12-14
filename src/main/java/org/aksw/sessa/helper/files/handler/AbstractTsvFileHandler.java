@@ -39,6 +39,9 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
     String line = reader.readLine();
     if (line != null) {
       String[] entryArray = line.split("\t");
+      if (entryArray.length < 2) {
+        throw new IOException("Malformed TSV-format in following line: " + line);
+      }
       for (int i = 1; i < entryArray.length; i++) {
         otherEntries.add(entryArray[i]);
       }
