@@ -13,3 +13,4 @@ log.out*
 *.iml
 .idea/
 *.tsv
+*.jar
