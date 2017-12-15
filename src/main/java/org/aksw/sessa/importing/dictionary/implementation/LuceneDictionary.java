@@ -1,10 +1,13 @@
 package org.aksw.sessa.importing.dictionary.implementation;
 
+import static java.util.Collections.addAll;
+
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
@@ -12,6 +15,7 @@ import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
+import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
 import org.aksw.sessa.importing.dictionary.util.DictionaryEntrySimilarity;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
@@ -67,7 +71,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   /**
    * Defines how many documents will be retrieved from the index for each query.
    */
-  public static final int NUMBER_OF_DOCS_RECEIVED_FROM_INDEX = 5;
+  public static final int NUMBER_OF_DOCS_RECEIVED_FROM_INDEX = 100;
 
   /**
    * Contains the stop words, for which the search will be omitted.
@@ -144,7 +148,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     if (STOP_WORDS.contains(nGram.toLowerCase())) {
       return new HashSet<>();
     }
-    Set<String> uris = new HashSet<>();
+    Set<Entry<String, String>> foundEntrySet = new HashSet<>();
     try {
       String[] uniGrams = nGram.split(" ");
       SpanQuery[] queryTerms = new SpanQuery[uniGrams.length];
@@ -160,25 +164,33 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       //log.debug("Searching for term {}", nGram);
       iSearcher.search(wholeQuery, collector);
       ScoreDoc[] hits = collector.topDocs().scoreDocs;
-
       for (ScoreDoc hit : hits) {
         Document hitDoc = iSearcher.doc(hit.doc);
-        uris.add(hitDoc.get(FIELD_NAME_VALUE));
-        //log.debug("\tFound {} with score {}. Keyword: {}", hitDoc.get(FIELD_NAME_VALUE), hit.score, hitDoc.get(FIELD_NAME_KEY));
+        String key = hitDoc.get(FIELD_NAME_KEY);
+        String value = hitDoc.get(FIELD_NAME_VALUE);
+        Entry<String, String> entry = new SimpleEntry<>(key, value);
+        foundEntrySet.add(entry);
       }
     } catch (Exception e) {
       log.error(e.getLocalizedMessage() + " -> " + nGram, e);
     }
+    Set<String> uris = filter(nGram, foundEntrySet);
     return uris;
   }
 
-  /**
-   * Set a new maximum size for the result set.
-   *
-   * @param maxResultSize new maximum for the result set
-   */
-  public void setMaxResultSize(int maxResultSize) {
-    this.maxResultSize = maxResultSize;
+  private Set<String> filter(String nGram, Set<Entry<String, String>> foundEntrySet){
+    Set<String> uriSet = new HashSet<>();
+    Set<Entry<String, String>> filteredEntrySet = new HashSet<>();
+    filteredEntrySet.addAll(foundEntrySet);
+    for(AbstractFilter filter : filterList){
+      filteredEntrySet = filter.filter(nGram, filteredEntrySet);
+      log.debug("Used filter {} with result limit of {}. Got list: {}",
+          filter.getClass().getSimpleName(), filter.getNumberOfResults(), filteredEntrySet);
+    }
+    for(Entry<String, String> entry : filteredEntrySet){
+      uriSet.add(entry.getValue());
+    }
+    return uriSet;
   }
 
   /**

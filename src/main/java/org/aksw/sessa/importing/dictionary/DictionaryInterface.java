@@ -1,6 +1,7 @@
 package org.aksw.sessa.importing.dictionary;
 
 import java.util.Set;
+import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
 
 /**
  * This interface provides the skeleton for classes which should
@@ -18,4 +19,6 @@ public interface DictionaryInterface {
    * @return mapping of n-grams to set of URIs
    */
   Set<String> get(String nGram);
+
+  void addFilter(AbstractFilter filter);
 }
