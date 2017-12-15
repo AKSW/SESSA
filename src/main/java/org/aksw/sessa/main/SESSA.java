@@ -1,6 +1,8 @@
 package org.aksw.sessa.main;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -10,6 +12,7 @@ import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
+import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.aksw.sessa.query.models.NGramEntryPosition;
@@ -26,6 +29,7 @@ public class SESSA {
 
   private DictionaryInterface dictionary;
   private QueryProcessingInterface queryProcess;
+  private List<AbstractFilter> filterList;
   private static final Logger log = LoggerFactory.getLogger(SESSA.class);
 
   /**
@@ -34,6 +38,7 @@ public class SESSA {
 
   public SESSA() {
     queryProcess = new SimpleQueryProcessing();
+    filterList = new LinkedList<>();
   }
 
   public void loadFileToHashMapDictionary(FileHandlerInterface handler){
@@ -50,6 +55,10 @@ public class SESSA {
     } else if (dictionary instanceof LuceneDictionary) {
       ((LuceneDictionary) dictionary).putAll(handler);
     }
+  }
+
+  public void addFilter(AbstractFilter filter){
+    dictionary.addFilter(filter);
   }
 
   /**
