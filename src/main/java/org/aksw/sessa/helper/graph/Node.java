@@ -201,21 +201,21 @@ public class Node<T extends Object> {
 		return !otherColors.isEmpty();
 	}
 
-//	@Override
-//	public boolean equals(Object other) {
-//		if (other instanceof Node<?>) {
-//			if (((Node<?>) other).getContent().equals(this.nodeContent)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//
-//	@Override
-//	public int hashCode() {
-//		return nodeContent.hashCode();
-//	}
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Node<?>) {
+			if (((Node<?>) other).getContent().equals(this.nodeContent)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return nodeContent.hashCode();
+	}
 
 	/**
 	 * Returns a string representation of this node. It has the following scheme
