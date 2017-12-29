@@ -28,8 +28,7 @@ public class NodeTest {
     Node<String> node1 = new Node<>("test");
     Node<String> node2 = new Node<>("test");
 
-    node2.addColor(new NGramEntryPosition(1,2));
-    node2.setExplanation(2);
+    node2.addColor(new NGramEntryPosition(2,2));
     node2.setEnergy(2);
     Assert.assertEquals(null,node1, node2);
   }
@@ -42,8 +41,7 @@ public class NodeTest {
     Node<String> node1 = new Node<>("test");
     Node<String> node2 = new Node<>("test");
 
-    node2.addColor(new NGramEntryPosition(1,2));
-    node2.setExplanation(2);
+    node2.addColor(new NGramEntryPosition(2,2));
     node2.setEnergy(2);
     nodes.add(node1);
     Assert.assertFalse(nodes.add(node2));
