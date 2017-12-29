@@ -277,3 +277,7 @@ http://dbpedia.org/resource/Spousal_privilege	Spousal testimonial privilege	Husb
 http://dbpedia.org/resource/General_Israel_Putnam_House	Israel Putnam House	Gen. Israel Putnam House	Putnam House	General Israel Putnam House	Thomas Putnam House	Israel Putnam's birthplace
 http://dbpedia.org/ontology/birthPlace	birthplace	place of birth
 http://dbpedia.org/ontology/spouse	wife	spouse	fiance
+http://dbpedia.org/ontology/musicBy	music by
+http://dbpedia.org/resource/Elton_John	elton john
+http://dbpedia.org/ontology/currentProduction	current production
+http://dbpedia.org/resource/Minskoff_Theatre	minskoff theatre

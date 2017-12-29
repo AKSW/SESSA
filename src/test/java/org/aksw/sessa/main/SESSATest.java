@@ -1,5 +1,7 @@
 package org.aksw.sessa.main;
 
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
+
 import java.io.IOException;
 import java.util.Set;
 
@@ -45,6 +47,16 @@ public class SESSATest {
 		Assert.assertTrue(answer.contains("http://dbpedia.org/resource/Chicago"));
 	}
 
+  /**
+   * This tests on issue #11.
+   */
+	@Test
+  public void testAnswer_onInterlinkingProblem(){
+	  question = "music by elton john current production minskoff theatre";
+    answer = sessa.answer(question);
+    System.out.println(answer);
+    Assert.assertThat(answer,hasItem("http://dbpedia.org/resource/The_Lion_King_(musical)"));
+  }
 	// TODO: create tests for other questions
 
 	// TODO: create tests for accessibility to QueryProcessing & Co.
