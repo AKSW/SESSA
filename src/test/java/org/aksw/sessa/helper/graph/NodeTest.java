@@ -1,10 +1,11 @@
 package org.aksw.sessa.helper.graph;
 
-import java.util.HashSet;
+import static org.hamcrest.CoreMatchers.is;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -13,17 +14,31 @@ import org.junit.Test;
 public class NodeTest {
 
   @Test
-  @Ignore
-  //FIXME @Simon fix this test, explain why nodes having the same content are not treated as equal nodes.RU
+  public void testGetExplanation_returnsCorrectAfterAddingNewColor() {
+    Node<String> node = new Node<>("test");
+    node.addColor(new NGramEntryPosition(2, 2));
+    node.addColor(new NGramEntryPosition(4, 8));
+    Assert.assertThat(node.getExplanation(), is(2 + 4));
+  }
+
+  @Test
+  public void testGetExplanation_returnsCorrectAfterAddingNewColors() {
+    Node<String> node = new Node<>("test");
+    Set<NGramEntryPosition> colors = new HashSet<>();
+    colors.add(new NGramEntryPosition(2, 2));
+    colors.add(new NGramEntryPosition(4, 8));
+    node.addColors(colors);
+    Assert.assertThat(node.getExplanation(), is(2 + 4));
+  }
+
+  @Test
   public void testEquals_simpleComparison(){
     Node<String> node1 = new Node<>("test");
     Node<String> node2 = new Node<>("test");
     Assert.assertEquals(null,node1, node2);
   }
 
-  @Test 
-  @Ignore
-  //FIXME @Simon fix this test, explain why nodes having the same content are not treated as equal nodes.RU 
+  @Test
   public void testEquals_changeScores(){
     Node<String> node1 = new Node<>("test");
     Node<String> node2 = new Node<>("test");
@@ -34,8 +49,6 @@ public class NodeTest {
   }
 
   @Test
-  @Ignore
-  //FIXME @Simon fix this test, explain why nodes having the same content are not treated as equal nodes.RU
   public void testEquals_onHashSet(){
     HashSet<Node> nodes = new HashSet<>();
     Node<String> node1 = new Node<>("test");
