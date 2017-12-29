@@ -214,16 +214,14 @@ public class SelfBuildingGraph implements GraphInterface {
    * @param newNode new node found by using the other two nodes
    */
   private void integrateNewNode(Node node1, Node node2, Node newNode) {
-    if (!nodes.contains(newNode)) {
-      Node<Integer> factNode = new Node<>(factIterator);
-      factIterator++;
-      factNode.setNodeType(true);
-      addNode(factNode);
-      addNode(newNode);
-      addEdge(factNode, node1);
-      addEdge(factNode, node2);
-      addEdge(factNode, newNode);
-    }
+    Node<Integer> factNode = new Node<>(factIterator);
+    factIterator++;
+    factNode.setNodeType(true);
+    addNode(factNode);
+    addNode(newNode);
+    addEdge(factNode, node1);
+    addEdge(factNode, node2);
+    addEdge(factNode, newNode);
   }
 
   /**
