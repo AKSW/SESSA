@@ -35,7 +35,7 @@ public class NodeTest {
   public void testEquals_simpleComparison(){
     Node<String> node1 = new Node<>("test");
     Node<String> node2 = new Node<>("test");
-    Assert.assertEquals(null,node1, node2);
+    Assert.assertEquals(node1, node2);
   }
 
   @Test
@@ -45,7 +45,7 @@ public class NodeTest {
 
     node2.addColor(new NGramEntryPosition(2,2));
     node2.setEnergy(2);
-    Assert.assertEquals(null,node1, node2);
+    Assert.assertEquals(node1, node2);
   }
 
   @Test
