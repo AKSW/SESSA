@@ -15,6 +15,7 @@ import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SESSATest {
@@ -51,13 +52,14 @@ public class SESSATest {
 		Assert.assertThat(answer,hasItem("http://dbpedia.org/resource/Chicago"));
 	}
 
-// For now this doesn't work
-//	@Test
-//	public void testAnswer_SelfReferencing(){
-//		question = "elton john spouse spouse";
-//		answer = sessa.answer(question);
-//		Assert.assertThat(answer,hasItem("http://dbpedia.org/resource/Elton_John"));
-//	}
+	@Test
+	@Ignore
+	public void testAnswer_SelfReferencing(){
+		// spouse of elton john's spouse
+		question = "elton john spouse spouse";
+		answer = sessa.answer(question);
+		Assert.assertThat(answer,hasItem("http://dbpedia.org/resource/Elton_John"));
+	}
 
   /**
    * This tests on issue #11.
