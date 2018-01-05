@@ -52,8 +52,6 @@ public class ColorSpreader {
       for (String value : entry.getValue()) {
         Node<String> node = new Node<>(value);
         node.addColor(entry.getKey());
-        int explanationScore = entry.getKey().getLength();
-        node.setExplanation(explanationScore);
         node.setEnergy(1); // TODO: set actual energy with some metric
         lastActivatedNodes.add(node);
         graph.addNode(node);
@@ -102,15 +100,12 @@ public class ColorSpreader {
    */
   private void updateNode(Node node) {
     int energy = 0;
-    int explanation = 0;
     Set<NGramEntryPosition> colors = new HashSet<>();
     for (Node neighbor : graph.getAllNeighbors(node)) {
-      explanation += neighbor.getExplanation();
       energy += neighbor.getEnergy();
       colors.addAll(neighbor.getColors()); // TODO: Get rid of the warning
     }
     node.setEnergy(energy);
-    node.setExplanation(explanation);
     node.addColors(colors);
   }
 

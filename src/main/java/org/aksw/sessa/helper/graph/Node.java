@@ -39,21 +39,19 @@ public class Node<T extends Object> {
 	 *
 	 * @param nodeContent
 	 *            content to be stored in the node.
-	 * @param explanation
-	 *            explanation score of the node (see
-	 *            {@link #setExplanation(int)})
 	 * @param energy
 	 *            energy score of the node
-	 * @param color
+	 * @param colors
 	 *            represents colors for the node
 	 * @param isFactNode
 	 *            is the given node a fact-node?
 	 */
-	public Node(T nodeContent, int explanation, float energy, Set<NGramEntryPosition> color, boolean isFactNode) {
+	public Node(T nodeContent, float energy, Set<NGramEntryPosition> colors, boolean isFactNode) {
 		this.nodeContent = nodeContent;
-		this.explanation = explanation;
 		this.energy = energy;
-		this.colors = color;
+		this.colors = colors;
+		this.explanation = 0;
+		updateExplanation(colors);
 		this.isFactNode = isFactNode;
 	}
 
@@ -66,24 +64,36 @@ public class Node<T extends Object> {
 
 	/**
 	 * Returns the explanation score of this node. For explanation of this score
-	 * see {@link #setExplanation(int)}.
+	 * see {@link #updateExplanation(NGramEntryPosition)}}.
 	 */
 	public int getExplanation() {
 		return explanation;
 	}
 
 	/**
-	 * Sets the explanation score for this node. The explanation score provides
-	 * information on how many unigrams this node is build on. E.g. this node
-	 * might hold content about Bill Gates and is explained by the unigrams
-	 * "bill" & "gates" and thefore has an explanation score of 2.
+	 * Updates the explanation score for this node.
+   * @see #updateExplanation(NGramEntryPosition)
 	 *
-	 * @param explanation
-	 *            explanation score of this node
+	 * @param colors newly added colors, with which the explanation will be updated
 	 */
-	public void setExplanation(int explanation) {
-		this.explanation = explanation;
+	public void updateExplanation(Set<NGramEntryPosition> colors) {
+    for(NGramEntryPosition color : colors){
+      updateExplanation(color);
+    }
 	}
+
+  /**
+   * Updates the explanation score for this node. The explanation score provides
+   * information on how many uni-grams this node is build on. E.g. this node
+   * might hold content about Bill Gates and is explained by the uni-grams
+   * "bill" & "gates" and therefore has an explanation score of 2.
+   *
+   * @param color newly added color, with which the explanation will be updated
+   */
+	public void updateExplanation(NGramEntryPosition color) {
+    // length of a colors equals number of represented n-grams
+    this.explanation += color.getLength();
+  }
 
 	/**
 	 * Returns the energy score of this node.
@@ -113,7 +123,7 @@ public class Node<T extends Object> {
 	}
 
 	/**
-	 * Adds a color to this node. Colors are repsentated by ngram-positions in
+	 * Adds a color to this node. Colors are represented by n-gram-positions in
 	 * the n-gram hierarchy. They show which n-grams were used to explain the
 	 * content of this node.
 	 *
@@ -123,6 +133,7 @@ public class Node<T extends Object> {
 	 */
 	public void addColor(NGramEntryPosition color) {
 		this.colors.add(color);
+		updateExplanation(color);
 	}
 
 	/**
@@ -134,6 +145,7 @@ public class Node<T extends Object> {
 	 */
 	public void addColors(Set<NGramEntryPosition> colors) {
 		this.colors.addAll(colors);
+		updateExplanation(colors);
 	}
 
 	/**
@@ -201,21 +213,21 @@ public class Node<T extends Object> {
 		return !otherColors.isEmpty();
 	}
 
-//	@Override
-//	public boolean equals(Object other) {
-//		if (other instanceof Node<?>) {
-//			if (((Node<?>) other).getContent().equals(this.nodeContent)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//
-//	@Override
-//	public int hashCode() {
-//		return nodeContent.hashCode();
-//	}
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Node<?>) {
+			if (((Node<?>) other).getContent().equals(this.nodeContent)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return nodeContent.hashCode();
+	}
 
 	/**
 	 * Returns a string representation of this node. It has the following scheme
@@ -223,7 +235,7 @@ public class Node<T extends Object> {
 	 * explanation=#explanation, energy=#energy, colors=#colors,
 	 * isFactNode=#isFactNode}
 	 * 
-	 * @return string reprensetation of this node
+	 * @return string representation of this node
 	 */
 	@Override
 	public String toString() {
