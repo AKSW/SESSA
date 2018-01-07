@@ -21,11 +21,14 @@ public class LevenshteinDistanceFilter extends AbstractFilter {
   }
 
   /**
-   * Calculates the levenshtein distance based on the initial keyword and the n-gram in the entry.
+   * Calculates are score between 0 and 1 based on the levenshtein distance based on the initial
+   * keyword and the n-gram in the entry. Returning a value of 1 means the specified strings are
+   * identical and 0 means the string are maximally different.
    *
    * @param keyword keyword with which the entries where found
    * @param entry entry of one n-gram and uri
    * @return levenshtein distance
+   * @see org.apache.lucene.search.spell.LuceneLevenshteinDistance
    */
   @Override
   protected float getRank(String keyword, Entry<String, String> entry) {
