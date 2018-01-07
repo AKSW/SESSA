@@ -14,15 +14,33 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Provides a filter which is based on the PageRank score of Wikipedia-pages. This class is an
+ * implementation of the abstract class {@link AbstractFilter}.
+ *
+ * @author Simon Bordewisch
+ * @see <a href="http://people.aifb.kit.edu/ath/">PageRank on Wikipedia</a>
+ */
 public class PageRankFilter extends AbstractFilter {
 
   private org.slf4j.Logger log = LoggerFactory.getLogger(AbstractFilter.class);
 
-
-  public PageRankFilter(int numberOfResults){
+  /**
+   * Constructs the filter which filters the given URIs down to the given number.
+   *
+   * @param numberOfResults specifies the number of returned results
+   */
+  public PageRankFilter(int numberOfResults) {
     super(numberOfResults);
   }
 
+  /**
+   * Returns the wikipedia page rank of given URI (in the entry).
+   *
+   * @param keyword keyword with which the entries where found
+   * @param entry entry of one n-gram and uri
+   * @return wikipedia page rank of given URI (in the entry)
+   */
   @Override
   protected float getRank(String keyword, Entry<String, String> entry) {
     String rankQuery = constructQuery(entry.getValue());
