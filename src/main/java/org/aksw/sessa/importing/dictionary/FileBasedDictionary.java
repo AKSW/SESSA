@@ -1,9 +1,12 @@
 package org.aksw.sessa.importing.dictionary;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.PriorityQueue;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
@@ -11,10 +14,11 @@ import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
 public abstract class FileBasedDictionary implements DictionaryInterface {
 
   protected Map<String, Set<String>> dictionary;
-  protected List<AbstractFilter> filterList;
+  protected PriorityQueue<AbstractFilter> filterList;
 
   public FileBasedDictionary(){
-    filterList = new LinkedList<>();
+    filterList = new PriorityQueue<>(10,
+        Collections.reverseOrder(Comparator.comparing(AbstractFilter::getNumberOfResults)));
   }
   /**
    * Adds the entries in the give handler to the dictionary.
