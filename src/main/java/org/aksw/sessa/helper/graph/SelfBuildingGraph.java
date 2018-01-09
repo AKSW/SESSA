@@ -160,7 +160,7 @@ public class SelfBuildingGraph implements GraphInterface {
 
             if (!node.getColors().isEmpty() &&
                 !lastNewNode.getColors().isEmpty() &&
-                !node.isRelatedTo(lastNewNode)) {
+                !node.isOverlappingWith(lastNewNode)) {
               Set<String> newContent = sgf.findMissingTripleElement(
                   node.getContent().toString(),
                   lastNewNode.getContent().toString());

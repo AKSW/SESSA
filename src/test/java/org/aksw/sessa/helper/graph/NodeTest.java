@@ -66,7 +66,7 @@ public class NodeTest {
     node1.addColor(new NGramEntryPosition(1, 5));
     Node<Integer> node2 = new Node<>(2);
     node2.addColor(new NGramEntryPosition(1, 3));
-    Assert.assertFalse(node1.isRelatedTo(node2));
+    Assert.assertFalse(node1.isOverlappingWith(node2));
   }
 
   @Test
@@ -75,7 +75,7 @@ public class NodeTest {
     node1.addColor(new NGramEntryPosition(1, 5));
     Node<Integer> node2 = new Node<>(2);
     node2.addColor(new NGramEntryPosition(1, 3));
-    Assert.assertFalse(node1.isRelatedTo(node2));
+    Assert.assertFalse(node1.isOverlappingWith(node2));
     Assert.assertFalse(node1.getColors().isEmpty());
     Assert.assertFalse(node2.getColors().isEmpty());
   }
@@ -89,7 +89,19 @@ public class NodeTest {
     node1.addColor(new NGramEntryPosition(1, 0));
     node2.addColor(new NGramEntryPosition(2, 0));
 
-    Assert.assertTrue(node1.isRelatedTo(node2));
+    Assert.assertTrue(node1.isOverlappingWith(node2));
+  }
+
+  @Test
+  public void testColorsOfNodeAreRelated_AllPossibilities() {
+    // taken from QALD tests (question "How many seats, stadium of FC Porto")
+    Node<Integer> node1 = new Node<>(1);
+    Node<Integer> node2 = new Node<>(2);
+
+    node1.addColor(new NGramEntryPosition(1, 0));
+    node2.addColor(new NGramEntryPosition(2, 0));
+
+    Assert.assertTrue(node1.isOverlappingWith(node2));
   }
 
   @Test
@@ -100,7 +112,7 @@ public class NodeTest {
     node1.addColor(new NGramEntryPosition(4, 3));
     node2.addColor(new NGramEntryPosition(4, 2));
 
-    Assert.assertTrue(node1.isRelatedTo(node2));
+    Assert.assertTrue(node1.isOverlappingWith(node2));
   }
 
 }

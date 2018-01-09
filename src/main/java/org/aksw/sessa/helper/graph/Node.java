@@ -157,43 +157,22 @@ public class Node<T extends Object> {
   }
 
   /**
-   * Checks if the color of this node and the other are related. I.e. if they share a color or if
-   * they share a decendant of a color.
+   * Checks if the color of this node and the other are overlapping. I.e. if they share a color or if
+   * they share a descendant of a color.
    *
    * @param other Node to be tested for related colors
    * @return true if they are related
    *
-   * BUG https://stackoverflow.com/questions/16500240/exception-in- thread-main-java-util-concurrentmodificationexception
-   * FIXME @Simon if more than a level one descendant should be checked, rewrite this to recursion
-   * For now this method only checks level one descendants
-   *
-   * Set<NGramEntryPosition> otherColors = new HashSet<>(other.getColors()); for (NGramEntryPosition
-   * color : otherColors) { otherColors.addAll(color.getAllDescendants()); } Set<NGramEntryPosition>
-   * colors = new HashSet<>(this.getColors()); for (NGramEntryPosition color : colors) {
-   * colors.addAll(color.getAllDescendants()); }
    */
-  public boolean isRelatedTo(Node other) {
-    if (this == other) {
-      return true;
+  public boolean isOverlappingWith(Node<?> other) {
+    for (NGramEntryPosition thisColor : this.getColors()) {
+      for (NGramEntryPosition otherColor : other.getColors()) {
+        if (thisColor.isOverlappingWith(otherColor)) {
+          return true;
+        }
+      }
     }
-
-    // Get all descendants of colors of the other node
-    Set<NGramEntryPosition> otherColors = new HashSet<>();
-    for (NGramEntryPosition color : new HashSet<NGramEntryPosition>(other.getColors())) {
-      otherColors.addAll(color.getAllDescendants());
-    }
-    otherColors.addAll(other.getColors());
-
-    // Get all decendants of colors of this node
-    Set<NGramEntryPosition> colors = new HashSet<>();
-    for (NGramEntryPosition color : new HashSet<>(this.getColors())) {
-      colors.addAll(color.getAllDescendants());
-    }
-    colors.addAll(this.getColors());
-
-    // Get intersection, if empty, they are not related
-    otherColors.retainAll(colors);
-    return !otherColors.isEmpty();
+    return false;
   }
 
   @Override
