@@ -13,7 +13,6 @@ import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
-import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
 import org.aksw.sessa.importing.dictionary.util.DictionaryEntrySimilarity;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
@@ -35,7 +34,6 @@ import org.apache.lucene.search.spans.SpanQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.Version;
-import org.slf4j.LoggerFactory;
 
 //import org.apache.lucene.store.RAMDirectory;
 
@@ -49,7 +47,6 @@ import org.slf4j.LoggerFactory;
 public class LuceneDictionary extends FileBasedDictionary implements AutoCloseable {
 
   private static final Version LUCENE_VERSION = Version.LUCENE_46;
-  private org.slf4j.Logger log = LoggerFactory.getLogger(DictionaryInterface.class);
 
   /**
    * Contains the path to the index.
@@ -176,20 +173,6 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     return uris;
   }
 
-  private Set<String> filter(String nGram, Set<Entry<String, String>> foundEntrySet){
-    Set<String> uriSet = new HashSet<>();
-    Set<Entry<String, String>> filteredEntrySet = new HashSet<>();
-    filteredEntrySet.addAll(foundEntrySet);
-    for(AbstractFilter filter : filterQue){
-      filteredEntrySet = filter.filter(nGram, filteredEntrySet);
-      log.debug("Used filter {} with result limit of {}. Got list: {}",
-          filter.getClass().getSimpleName(), filter.getNumberOfResults(), filteredEntrySet);
-    }
-    for(Entry<String, String> entry : filteredEntrySet){
-      uriSet.add(entry.getValue());
-    }
-    return uriSet;
-  }
 
   /**
    * Closes all files handled, i.e. the index-files.
