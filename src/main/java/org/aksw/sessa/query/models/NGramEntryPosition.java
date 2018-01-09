@@ -63,15 +63,15 @@ public class NGramEntryPosition {
     if (pos.getLength() == 1) {
       return new HashSet<>();
     } else {
-      Set<NGramEntryPosition> decendants = new HashSet<>();
+      Set<NGramEntryPosition> descendants = new HashSet<>();
       NGramEntryPosition child1 = new NGramEntryPosition(pos.getLength() - 1, pos.getPosition());
       NGramEntryPosition child2 = new NGramEntryPosition(pos.getLength() - 1,
           pos.getPosition() + 1);
-      decendants.add(child1);
-      decendants.add(child2);
-      decendants.addAll(getAllDescendants(child1));
-      decendants.addAll(getAllDescendants(child2));
-      return decendants;
+      descendants.add(child1);
+      descendants.add(child2);
+      descendants.addAll(getAllDescendants(child1));
+      descendants.addAll(getAllDescendants(child2));
+      return descendants;
     }
   }
 
@@ -131,4 +131,36 @@ public class NGramEntryPosition {
   }
 
 
+  public boolean isRelatedTo(NGramEntryPosition otherColor) {
+    if (this.equals(otherColor)) {
+      return true;
+    }
+
+    if (this.isAncestorOf(otherColor)) {
+      return true;
+    }
+
+    if (otherColor.isAncestorOf(this)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public boolean isAncestorOf(NGramEntryPosition otherColor) {
+    return this.getAllDescendants().contains(otherColor);
+  }
+
+  public boolean isOverlappingWith(NGramEntryPosition otherColor){
+    if(this.getPosition() <= otherColor.getPosition() &&
+        otherColor.getPosition() <= this.getPosition() + this.getLength() - 1){
+      return true;
+    }
+
+    if(otherColor.getPosition() <= this.getPosition() &&
+        this.getPosition() <= otherColor.getPosition() + otherColor.getLength() - 1 ){
+      return true;
+    }
+    return false;
+  }
 }
