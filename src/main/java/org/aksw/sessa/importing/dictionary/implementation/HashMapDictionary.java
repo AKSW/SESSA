@@ -1,6 +1,7 @@
 package org.aksw.sessa.importing.dictionary.implementation;
 
 import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -64,7 +65,13 @@ public class HashMapDictionary extends FileBasedDictionary {
    */
   @Override
   public Set<String> get(String nGram) {
-    return dictionary.get(nGram);
+    Set<String> foundUris = dictionary.get(nGram);
+    Set<Entry<String,String>> entrySet = new HashSet<>();
+    for(String uri : foundUris){
+      Entry<String, String> entry = new SimpleEntry<>(nGram, uri);
+      entrySet.add(entry);
+    }
+    return filter(nGram, entrySet);
   }
 
   /**
