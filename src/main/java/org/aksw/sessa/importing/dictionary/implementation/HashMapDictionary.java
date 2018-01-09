@@ -67,9 +67,11 @@ public class HashMapDictionary extends FileBasedDictionary {
   public Set<String> get(String nGram) {
     Set<String> foundUris = dictionary.get(nGram);
     Set<Entry<String,String>> entrySet = new HashSet<>();
-    for(String uri : foundUris){
-      Entry<String, String> entry = new SimpleEntry<>(nGram, uri);
-      entrySet.add(entry);
+    if(foundUris != null) {
+      for (String uri : foundUris) {
+        Entry<String, String> entry = new SimpleEntry<>(nGram, uri);
+        entrySet.add(entry);
+      }
     }
     return filter(nGram, entrySet);
   }
