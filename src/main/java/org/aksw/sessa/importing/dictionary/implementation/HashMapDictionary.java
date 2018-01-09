@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionaryInterface;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Simon Bordewisch
  */
-public class HashMapDictionary implements FileBasedDictionaryInterface {
+public class HashMapDictionary extends FileBasedDictionary {
 
-  private static final Logger log = LoggerFactory.getLogger(FileBasedDictionaryInterface.class);
+  private static final Logger log = LoggerFactory.getLogger(FileBasedDictionary.class);
   private Map<String, Set<String>> dictionary;
 
   /**

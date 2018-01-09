@@ -15,6 +15,9 @@ import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
 import org.aksw.sessa.helper.files.handler.RdfFileHandler;
 import org.aksw.sessa.helper.files.handler.ReverseTsvFileHandler;
 import org.aksw.sessa.helper.files.saver.ReversedTsvDictionarySaver;
+import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
+import org.aksw.sessa.importing.dictionary.filter.LevenshteinDistanceFilter;
+import org.aksw.sessa.importing.dictionary.filter.PageRankFilter;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.apache.jena.ext.com.google.common.base.Joiner;
 import org.slf4j.Logger;
@@ -52,6 +55,7 @@ public class SESSAMeasurement {
     long endTime = System.nanoTime();
     log.info("Finished importing Dictionary (in {}sec).",
         (endTime - startTime) / (1000 * 1000 * 1000));
+    addFilters();
   }
 
   private void checkDictionary() {
@@ -74,6 +78,17 @@ public class SESSAMeasurement {
           (endTime - startTime) / (1000 * 1000 * 1000));
       System.gc();
     }
+  }
+
+  /**
+   * Use this method for adding filters to SESSA
+   */
+  private void addFilters(){
+    AbstractFilter lFilter = new LevenshteinDistanceFilter(5);
+   // AbstractFilter pRFilter = new PageRankFilter(5);
+    sessa.addFilter(lFilter);
+    //sessa.addFilter(pRFilter);
+
   }
 
   public static void main(String[] args) {

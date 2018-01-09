@@ -10,7 +10,8 @@ import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionaryInterface;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
+import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.aksw.sessa.query.models.NGramEntryPosition;
@@ -41,7 +42,7 @@ public class SESSA {
     if (dictionary == null) {
       dictionary = new HashMapDictionary(handler);
     } else if (dictionary instanceof HashMapDictionary) {
-      ((FileBasedDictionaryInterface) dictionary).putAll(handler);
+      ((FileBasedDictionary) dictionary).putAll(handler);
     }
   }
 
@@ -51,6 +52,10 @@ public class SESSA {
     } else if (dictionary instanceof LuceneDictionary) {
       ((LuceneDictionary) dictionary).putAll(handler);
     }
+  }
+
+  public void addFilter(AbstractFilter filter) {
+    dictionary.addFilter(filter);
   }
 
   /**

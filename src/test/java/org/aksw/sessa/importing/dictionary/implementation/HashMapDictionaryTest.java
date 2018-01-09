@@ -11,7 +11,7 @@ import org.junit.Before;
 /**
  * Created by Simon Bordewisch on 21.06.17.
  */
-public class HashMapDictionaryTest extends FileBasedDictionaryInterfaceTest {
+public class HashMapDictionaryTest extends FileBasedDictionaryTest {
 
   @Before
   public void init() throws IOException{

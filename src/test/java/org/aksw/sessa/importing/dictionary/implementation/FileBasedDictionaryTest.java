@@ -6,13 +6,13 @@ import static org.hamcrest.CoreMatchers.not;
 import java.io.IOException;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.files.handler.ReverseTsvFileHandler;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionaryInterface;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.junit.Assert;
 import org.junit.Test;
 
-public abstract class FileBasedDictionaryInterfaceTest {
+public abstract class FileBasedDictionaryTest {
 
-  FileBasedDictionaryInterface dictionary;
+  FileBasedDictionary dictionary;
   final String TEST_FILE1 = "src/test/resources/en_surface_forms_small.tsv";
   final String TEST_FILE2 = "src/test/resources/small_reverse_dictionary.tsv";
 

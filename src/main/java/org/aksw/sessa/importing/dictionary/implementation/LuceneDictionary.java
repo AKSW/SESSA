@@ -5,13 +5,16 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
-import org.aksw.sessa.importing.dictionary.FileBasedDictionaryInterface;
+import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
+import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
+import org.aksw.sessa.importing.dictionary.util.DictionaryEntrySimilarity;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
@@ -25,6 +28,7 @@ import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.search.spans.SpanMultiTermQueryWrapper;
 import org.apache.lucene.search.spans.SpanNearQuery;
 import org.apache.lucene.search.spans.SpanQuery;
@@ -42,7 +46,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Simon Bordewisch
  */
-public class LuceneDictionary implements FileBasedDictionaryInterface, AutoCloseable {
+public class LuceneDictionary extends FileBasedDictionary implements AutoCloseable {
 
   private static final Version LUCENE_VERSION = Version.LUCENE_46;
   private org.slf4j.Logger log = LoggerFactory.getLogger(DictionaryInterface.class);
@@ -65,7 +69,7 @@ public class LuceneDictionary implements FileBasedDictionaryInterface, AutoClose
   /**
    * Defines how many documents will be retrieved from the index for each query.
    */
-  public static final int NUMBER_OF_DOCS_RECEIVED_FROM_INDEX = 5;
+  public static final int NUMBER_OF_DOCS_RECEIVED_FROM_INDEX = 100;
 
   /**
    * Contains the stop words, for which the search will be omitted.
@@ -75,9 +79,11 @@ public class LuceneDictionary implements FileBasedDictionaryInterface, AutoClose
 
 
   private Directory directory;
+  private Similarity similarity;
   private IndexSearcher iSearcher;
   private DirectoryReader iReader;
   private IndexWriter iWriter;
+  private int maxResultSize;
 
   /**
    * Calls {@link #LuceneDictionary(FileHandlerInterface, String) LuceneDictionary(null,
@@ -108,12 +114,15 @@ public class LuceneDictionary implements FileBasedDictionaryInterface, AutoClose
    */
   public LuceneDictionary(FileHandlerInterface handler, String indexLocation) {
     try {
+      maxResultSize = NUMBER_OF_DOCS_RECEIVED_FROM_INDEX;
       SimpleAnalyzer analyzer = new SimpleAnalyzer(LUCENE_VERSION);
       Path path = FileSystems.getDefault().getPath(indexLocation);
       boolean filesExists = Files.exists(path);
       directory = MMapDirectory.open(path.toFile());
       //directory = new RAMDirectory(); // alternative to file based Lucene
       IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, analyzer);
+      similarity = new DictionaryEntrySimilarity();
+      config.setSimilarity(similarity);
       iWriter = new IndexWriter(directory, config);
       if (!filesExists && handler != null) {
         putAll(handler);
@@ -137,32 +146,49 @@ public class LuceneDictionary implements FileBasedDictionaryInterface, AutoClose
     if (STOP_WORDS.contains(nGram.toLowerCase())) {
       return new HashSet<>();
     }
-    Set<String> uris = new HashSet<>();
+    Set<Entry<String, String>> foundEntrySet = new HashSet<>();
     try {
       String[] uniGrams = nGram.split(" ");
       SpanQuery[] queryTerms = new SpanQuery[uniGrams.length];
       for (int i = 0; i < uniGrams.length; i++) {
-        FuzzyQuery fq = new FuzzyQuery(new Term(FIELD_NAME_KEY, uniGrams[i]));
+        FuzzyQuery fq = new FuzzyQuery(new Term(FIELD_NAME_KEY, uniGrams[i]), 1);
         queryTerms[i] = new SpanMultiTermQueryWrapper<>(fq);
       }
       SpanNearQuery wholeQuery = new SpanNearQuery(queryTerms, 0, true);
 
       TopScoreDocCollector collector = TopScoreDocCollector
-          .create(NUMBER_OF_DOCS_RECEIVED_FROM_INDEX, true);
+          .create(maxResultSize, true);
 
       //log.debug("Searching for term {}", nGram);
       iSearcher.search(wholeQuery, collector);
       ScoreDoc[] hits = collector.topDocs().scoreDocs;
-
       for (ScoreDoc hit : hits) {
         Document hitDoc = iSearcher.doc(hit.doc);
-        uris.add(hitDoc.get(FIELD_NAME_VALUE));
-        //log.debug("\tFound {} with score {}. Keyword: {}", hitDoc.get(FIELD_NAME_VALUE), hit.score, hitDoc.get(FIELD_NAME_KEY));
+        String key = hitDoc.get(FIELD_NAME_KEY);
+        String value = hitDoc.get(FIELD_NAME_VALUE);
+        Entry<String, String> entry = new SimpleEntry<>(key, value);
+        foundEntrySet.add(entry);
       }
     } catch (Exception e) {
       log.error(e.getLocalizedMessage() + " -> " + nGram, e);
     }
+    Set<String> uris = filter(nGram, foundEntrySet);
     return uris;
+  }
+
+  private Set<String> filter(String nGram, Set<Entry<String, String>> foundEntrySet){
+    Set<String> uriSet = new HashSet<>();
+    Set<Entry<String, String>> filteredEntrySet = new HashSet<>();
+    filteredEntrySet.addAll(foundEntrySet);
+    for(AbstractFilter filter : filterQue){
+      filteredEntrySet = filter.filter(nGram, filteredEntrySet);
+      log.debug("Used filter {} with result limit of {}. Got list: {}",
+          filter.getClass().getSimpleName(), filter.getNumberOfResults(), filteredEntrySet);
+    }
+    for(Entry<String, String> entry : filteredEntrySet){
+      uriSet.add(entry.getValue());
+    }
+    return uriSet;
   }
 
   /**
@@ -225,6 +251,7 @@ public class LuceneDictionary implements FileBasedDictionaryInterface, AutoClose
     iWriter.commit();
     iReader = DirectoryReader.open(directory);
     iSearcher = new IndexSearcher(iReader);
+    iSearcher.setSimilarity(similarity);
   }
 }
 

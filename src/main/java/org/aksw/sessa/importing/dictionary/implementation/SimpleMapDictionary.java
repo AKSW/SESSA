@@ -1,8 +1,11 @@
 package org.aksw.sessa.importing.dictionary.implementation;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
+import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
 
 /**
  * This class provides an easy implementation of dictionaries. It essentially just wraps the  given
@@ -11,6 +14,7 @@ import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 public class SimpleMapDictionary implements DictionaryInterface {
 
   private Map<String, Set<String>> dictionary;
+  protected List<AbstractFilter> filterList;
 
   /**
    * Initializes dictionary with given map
@@ -19,6 +23,7 @@ public class SimpleMapDictionary implements DictionaryInterface {
    */
   public SimpleMapDictionary(Map<String, Set<String>> dictionary) {
     this.dictionary = dictionary;
+    filterList = new LinkedList<>();
   }
 
   /**
@@ -33,5 +38,8 @@ public class SimpleMapDictionary implements DictionaryInterface {
     return dictionary.get(nGram);
   }
 
-
+  @Override
+  public void addFilter(AbstractFilter filter) {
+    filterList.add(filter);
+  }
 }
