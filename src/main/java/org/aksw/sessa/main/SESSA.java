@@ -7,6 +7,7 @@ import java.util.Set;
 import org.aksw.sessa.candidate.CandidateGenerator;
 import org.aksw.sessa.colorspreading.ColorSpreader;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
+import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionaryInterface;
@@ -36,7 +37,7 @@ public class SESSA {
     queryProcess = new SimpleQueryProcessing();
   }
 
-  public void loadFileToHashMapDictionary(FileHandlerInterface handler){
+  public void loadFileToHashMapDictionary(FileHandlerInterface handler) {
     if (dictionary == null) {
       dictionary = new HashMapDictionary(handler);
     } else if (dictionary instanceof HashMapDictionary) {
@@ -87,5 +88,28 @@ public class SESSA {
       }
       return stringResults;
     }
+  }
+
+  /**
+   * This method is mainly for testing purposes. It returns the graph for a given question
+   *
+   * @param question question for which a graph should be returned
+   * @return fully colored graph
+   */
+  GraphInterface getGraphFor(String question) {
+    NGramHierarchy nGramHierarchy = queryProcess.processQuery(question);
+    CandidateGenerator canGen = new CandidateGenerator(dictionary);
+    Map<NGramEntryPosition, Set<String>> canMap = canGen.getCandidateMapping(nGramHierarchy);
+    log.debug("Candidate map content:");
+    for (Entry<NGramEntryPosition, Set<String>> entry : canMap.entrySet()) {
+      NGramEntryPosition pos = entry.getKey();
+      log.debug("\t{}='{}'=>{}",
+          pos,
+          nGramHierarchy.getNGram(pos.getLength(), pos.getPosition()),
+          entry.getValue());
+    }
+    ColorSpreader colorSpreader = new ColorSpreader(canMap);
+    colorSpreader.spreadColors();
+    return colorSpreader.getGraph();
   }
 }

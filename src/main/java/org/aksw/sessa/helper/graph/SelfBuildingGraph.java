@@ -8,25 +8,25 @@ import java.util.Set;
 import org.aksw.sessa.importing.rdf.SparqlGraphFiller;
 
 /**
- * This class implements a graph, that builds itself using
- * its node-contents to find new nodes.
- * This is currently realized using {@link org.aksw.sessa.importing.rdf.SparqlGraphFiller}.
- * The class only searches for new nodes if every node has an explanation score.
+ * This class implements a graph, that builds itself using its node-contents to find new nodes. This
+ * is currently realized using {@link org.aksw.sessa.importing.rdf.SparqlGraphFiller}. The class
+ * only searches for new nodes if every node has an explanation score.
+ *
  * @author Simon Bordewisch
  */
 public class SelfBuildingGraph implements GraphInterface {
 
   /**
-   * This variable is used to define how many expansions can be made before
-   * the graph should not be further expanded.
+   * This variable is used to define how many expansions can be made before the graph should not be
+   * further expanded.
    */
   public static final int MAX_EXPANSIONS = 3;
   private int currentExpansion;
   private Set<Node> nodes;
 
   /**
-   * We only want to update the graph with new information.
-   * Therefore we store the nodes that got added after the last update
+   * We only want to update the graph with new information. Therefore we store the nodes that got
+   * added after the last update
    */
   private Set<Node> lastNewNodes;
   private Map<Node, Set<Node>> edgeMap;
@@ -118,8 +118,8 @@ public class SelfBuildingGraph implements GraphInterface {
   }
 
   /**
-   * Searches the graph to find a node that that has no colors.
-   * If it finds one, it returns false, else true.
+   * Searches the graph to find a node that that has no colors. If it finds one, it returns false,
+   * else true.
    *
    * @return true if all nodes have colors.
    */
@@ -135,9 +135,9 @@ public class SelfBuildingGraph implements GraphInterface {
   }
 
   /**
-   * This method tries to expand the graph by finding new nodes.
-   * It tries to find a pair of nodes whose content will be used in a SPARQL-query
-   * to find a complementing content, which will be used to construct the new node.
+   * This method tries to expand the graph by finding new nodes. It tries to find a pair of nodes
+   * whose content will be used in a SPARQL-query to find a complementing content, which will be
+   * used to construct the new node.
    *
    * @see SparqlGraphFiller
    */
@@ -180,8 +180,8 @@ public class SelfBuildingGraph implements GraphInterface {
   }
 
   /**
-   * Keeps track on which pair nodes where already used to find new nodes.
-   * These pairs shouldn't be used again.
+   * Keeps track on which pair nodes where already used to find new nodes. These pairs shouldn't be
+   * used again.
    *
    * @param newCompared1 first node used to find a new node
    * @param newCompared2 second node used to find a new node
@@ -204,36 +204,32 @@ public class SelfBuildingGraph implements GraphInterface {
   }
 
   /**
-   * This method integrates a new node based on the refied graph.
-   * For each new node and the two corresponding nodes, which were used,
-   * to find the new node, a fact node is created and edges between the fact node
-   * and the three other nodes are drawn.
+   * This method integrates a new node based on the refied graph. For each new node and the two
+   * corresponding nodes, which were used, to find the new node, a fact node is created and edges
+   * between the fact node and the three other nodes are drawn.
    *
    * @param node1 first node used to find the new node
    * @param node2 second node used to find the new node
    * @param newNode new node found by using the other two nodes
    */
   private void integrateNewNode(Node node1, Node node2, Node newNode) {
-    if (!nodes.contains(newNode)) {
-      Node<Integer> factNode = new Node<>(factIterator);
-      factIterator++;
-      factNode.setNodeType(true);
-      addNode(factNode);
-      addNode(newNode);
-      addEdge(factNode, node1);
-      addEdge(factNode, node2);
-      addEdge(factNode, newNode);
-    }
+    Node<Integer> factNode = new Node<>(factIterator);
+    factIterator++;
+    factNode.setNodeType(true);
+    addNode(factNode);
+    addNode(newNode);
+    addEdge(factNode, node1);
+    addEdge(factNode, node2);
+    addEdge(factNode, newNode);
   }
 
   /**
-   * Returns a string representation of this class.
-   * The string representation consists of a list of nodes and edges.
-   * Nodes are lead by the word 'Nodes:' followed by one node per line.
-   * The nodes are represented by their string representation.
-   * The edges are introduced by 'Edges:' followed by one edge per line.
-   * One edge consists of the content of the first node, followed by an
-   * arrow '->' followed by the content of the second node.
+   * Returns a string representation of this class. The string representation consists of a list of
+   * nodes and edges. Nodes are lead by the word 'Nodes:' followed by one node per line. The nodes
+   * are represented by their string representation. The edges are introduced by 'Edges:' followed
+   * by one edge per line. One edge consists of the content of the first node, followed by an arrow
+   * '->' followed by the content of the second node.
+   *
    * @return a string representation of this graph class
    */
   @Override

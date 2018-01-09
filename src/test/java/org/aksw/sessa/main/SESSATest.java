@@ -60,17 +60,6 @@ public class SESSATest {
     Assert.assertThat(answer, hasItem("http://dbpedia.org/resource/Elton_John"));
   }
 
-  @Test
-  @Ignore
-  // This test is for testing interlinking between nodes. As of now, this is not possible
-  // Therefore, this will be ignored
-  public void testAnswer_typeQuestion() {
-    question = "music by elton john type musical";
-    answer = sessa.answer(question);
-    System.out.println(answer);
-    Assert.assertTrue(answer.contains("http://dbpedia.org/resource/The_Lion_King_(musical)"));
-  }
-
   /**
    * This tests on issue #11.
    */
@@ -93,7 +82,6 @@ public class SESSATest {
     Node answerNode = nodes.get(answer);
     Assert.assertThat(answerNode.getExplanation(), equalTo(question.split(" ").length));
   }
-
   // TODO: create tests for other questions
 
   // TODO: create tests for accessibility to QueryProcessing & Co.

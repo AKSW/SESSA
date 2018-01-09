@@ -15,28 +15,20 @@ import org.junit.Test;
  */
 public class ColorSpreaderTest {
 
-  private ColorSpreader colorspread;
+  private ColorSpreader colorSpread;
   private Map<NGramEntryPosition, Set<String>> nodeMapping;
-
-  private String bp;
-  private String pob;
-
-  private String bg;
-  private String spouse;
-  private String wife;
-  private String theWife;
 
 
   @Before
   public void init() {
-    bp = "http://dbpedia.org/ontology/birthPlace";
-    pob = "http://dbpedia.org/resource/Place_of_birth";
+    String bp = "http://dbpedia.org/ontology/birthPlace";
+    String pob = "http://dbpedia.org/resource/Place_of_birth";
 
-    spouse = "http://dbpedia.org/ontology/spouse";
-    wife = "http://dbpedia.org/resource/Wife";
-    theWife = "http://dbpedia.org/resource/The_Wife";
+    String spouse = "http://dbpedia.org/ontology/spouse";
+    String wife = "http://dbpedia.org/resource/Wife";
+    String theWife = "http://dbpedia.org/resource/The_Wife";
 
-    bg = "http://dbpedia.org/resource/Bill_Gates";
+    String bg = "http://dbpedia.org/resource/Bill_Gates";
 
     // init mapping ngram -> uri
     nodeMapping = new HashMap<>();
@@ -58,15 +50,19 @@ public class ColorSpreaderTest {
     wifeSet.add(theWife);
     nodeMapping.put(wifeEntry, wifeSet);
 
-    colorspread = new ColorSpreader(nodeMapping);
+    colorSpread = new ColorSpreader(nodeMapping);
+  }
+
+  @Before
+  public void before() {
+
   }
 
   @Test
   public void testSpreadColors_billGatesTestCase() {
-    Set<Node> results = colorspread.spreadColors();
+    Set<Node> results = colorSpread.spreadColors();
     for (Node result : results) {
       Assert.assertTrue(((String) result.getContent()).contains("Dallas"));
     }
-    //System.out.println(colorspread.getGraph());
   }
 }

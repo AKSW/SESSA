@@ -1,9 +1,9 @@
 package org.aksw.sessa.colorspreading;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Map;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.helper.graph.SelfBuildingGraph;
@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class's main purpose is to color the given reified graph and
- * calculate the explanation and energy scores for each node.
+ * This class's main purpose is to color the given reified graph and calculate the explanation and
+ * energy scores for each node.
  *
  * @author Simon Bordewisch
  */
@@ -42,8 +42,7 @@ public class ColorSpreader {
   }
 
   /**
-   * First step in color-spreading process.
-   * Sets the initial explanation scores of the mapped nodes
+   * First step in color-spreading process. Sets the initial explanation scores of the mapped nodes
    *
    * @param nGramMapping provides the mapping (reverse dictionary) of n-grams to candidates
    */
@@ -52,8 +51,6 @@ public class ColorSpreader {
       for (String value : entry.getValue()) {
         Node<String> node = new Node<>(value);
         node.addColor(entry.getKey());
-        int explanationScore = entry.getKey().getLength();
-        node.setExplanation(explanationScore);
         node.setEnergy(1); // TODO: set actual energy with some metric
         lastActivatedNodes.add(node);
         graph.addNode(node);
@@ -102,22 +99,19 @@ public class ColorSpreader {
    */
   private void updateNode(Node node) {
     int energy = 0;
-    int explanation = 0;
     Set<NGramEntryPosition> colors = new HashSet<>();
     for (Node neighbor : graph.getAllNeighbors(node)) {
-      explanation += neighbor.getExplanation();
       energy += neighbor.getEnergy();
       colors.addAll(neighbor.getColors()); // TODO: Get rid of the warning
     }
     node.setEnergy(energy);
-    node.setExplanation(explanation);
     node.addColors(colors);
   }
 
   /**
-   * Makes one step of the spreading activation algorithm.
-   * Mainly checks neighbors of nodes which where activated in the last step for the
-   * activation criteria and updates their scores if they fulfill those.
+   * Makes one step of the spreading activation algorithm. Mainly checks neighbors of nodes which
+   * where activated in the last step for the activation criteria and updates their scores if they
+   * fulfill those.
    *
    * @return true if at least one node was updated (i.e. it got a new color)
    */
@@ -166,7 +160,7 @@ public class ColorSpreader {
    * @return true if the colors can be combined
    */
   @SuppressWarnings("unchecked")
-private boolean colorsCanBeCombined(Node node) {
+  private boolean colorsCanBeCombined(Node node) {
     Set<NGramEntryPosition> colors = new HashSet<>();
     for (Node neighbor : graph.getAllNeighbors(node)) {
       colors.addAll(neighbor.getColors());
@@ -182,8 +176,8 @@ private boolean colorsCanBeCombined(Node node) {
   }
 
   /**
-   * Spreads colors until there are no changes, i.e.
-   * it repeats the activation step until no node was updated.
+   * Spreads colors until there are no changes, i.e. it repeats the activation step until no node
+   * was updated.
    *
    * @return the nodes with the highest explanation score
    */
