@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
-import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
+import org.aksw.sessa.importing.dictionary.util.Filter;
 
 /**
  * This class provides an easy implementation of dictionaries. It essentially just wraps the  given
@@ -14,7 +14,7 @@ import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
 public class SimpleMapDictionary implements DictionaryInterface {
 
   private Map<String, Set<String>> dictionary;
-  protected List<AbstractFilter> filterList;
+  protected List<Filter> filterList;
 
   /**
    * Initializes dictionary with given map
@@ -39,7 +39,7 @@ public class SimpleMapDictionary implements DictionaryInterface {
   }
 
   @Override
-  public void addFilter(AbstractFilter filter) {
+  public void addFilter(Filter filter) {
     filterList.add(filter);
   }
 }

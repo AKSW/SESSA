@@ -11,7 +11,7 @@ import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
-import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
+import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.aksw.sessa.query.models.NGramEntryPosition;
@@ -54,7 +54,7 @@ public class SESSA {
     }
   }
 
-  public void addFilter(AbstractFilter filter) {
+  public void addFilter(Filter filter) {
     dictionary.addFilter(filter);
   }
 

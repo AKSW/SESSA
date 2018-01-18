@@ -1,7 +1,7 @@
 package org.aksw.sessa.importing.dictionary;
 
 import java.util.Set;
-import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
+import org.aksw.sessa.importing.dictionary.util.Filter;
 
 /**
  * This interface provides the skeleton for classes which should
@@ -13,12 +13,19 @@ import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
 public interface DictionaryInterface {
 
   /**
-   * Given a n-gram, returns a set of URIs related to it or null if this map contains
-   * no mapping for the key.
+   * Given a n-gram, returns a set of URIs related to it or null if this map contains no mapping for
+   * the key.
+   *
    * @param nGram n-gram whose associated value is to be returned
    * @return mapping of n-grams to set of URIs
    */
   Set<String> get(String nGram);
 
-  void addFilter(AbstractFilter filter);
+  /**
+   * Adds filter to the results in the {@link #get(String) get}-method.
+   *
+   * @param filter filter which should be applied to the results
+   */
+  void addFilter(Filter filter);
 }
+

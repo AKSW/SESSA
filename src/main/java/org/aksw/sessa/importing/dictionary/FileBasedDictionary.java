@@ -8,18 +8,18 @@ import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
-import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
+import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.slf4j.LoggerFactory;
 
 public abstract class FileBasedDictionary implements DictionaryInterface {
 
   protected Map<String, Set<String>> dictionary;
-  protected PriorityQueue<AbstractFilter> filterQue;
+  protected PriorityQueue<Filter> filterQue;
   protected org.slf4j.Logger log = LoggerFactory.getLogger(DictionaryInterface.class);
 
   public FileBasedDictionary(){
     filterQue = new PriorityQueue<>(10,
-        Collections.reverseOrder(Comparator.comparing(AbstractFilter::getNumberOfResults)));
+        Collections.reverseOrder(Comparator.comparing(Filter::getNumberOfResults)));
   }
   /**
    * Adds the entries in the give handler to the dictionary.
@@ -33,7 +33,7 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
    * @param filter filter to be added to the queue
    */
   @Override
-  public void addFilter(AbstractFilter filter) {
+  public void addFilter(Filter filter) {
     filterQue.add(filter);
   }
 
@@ -47,7 +47,7 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
     Set<String> uriSet = new HashSet<>();
     Set<Entry<String, String>> filteredEntrySet = new HashSet<>();
     filteredEntrySet.addAll(foundEntrySet);
-    for(AbstractFilter filter : filterQue){
+    for(Filter filter : filterQue){
       filteredEntrySet = filter.filter(keyword, filteredEntrySet);
       log.debug("Used filter {} with result limit of {}. Got list: {}",
           filter.getClass().getSimpleName(), filter.getNumberOfResults(), filteredEntrySet);
