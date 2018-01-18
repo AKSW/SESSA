@@ -4,22 +4,29 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
-import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
+import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
+import org.aksw.sessa.importing.dictionary.util.Filter;
+import org.aksw.sessa.query.models.Candidate;
 import org.slf4j.LoggerFactory;
 
 public abstract class FileBasedDictionary implements DictionaryInterface {
 
   protected Map<String, Set<String>> dictionary;
-  protected PriorityQueue<AbstractFilter> filterQue;
+  protected PriorityQueue<Filter> filterQue;
+  protected EnergyFunctionInterface energyFunction;
+
   protected org.slf4j.Logger log = LoggerFactory.getLogger(DictionaryInterface.class);
 
+  /**
+   * Constructs the dictionary with the given energy function.
+   */
   public FileBasedDictionary() {
     filterQue = new PriorityQueue<>(10,
-        Collections.reverseOrder(Comparator.comparing(AbstractFilter::getNumberOfResults)));
+        Collections.reverseOrder(Comparator.comparing(Filter::getNumberOfResults)));
+    energyFunction = null;
   }
 
   /**
@@ -36,7 +43,7 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
    * @param filter filter to be added to the queue
    */
   @Override
-  public void addFilter(AbstractFilter filter) {
+  public void addFilter(Filter filter) {
     filterQue.add(filter);
   }
 
@@ -44,20 +51,34 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
    * Allows the dictionary to filter based on the added filters.
    *
    * @param keyword the initial keyword for the search in the dictionary
-   * @param foundEntrySet found set of URIs for the keyword
+   * @param candidateSet found set of candidates for the keyword
+   * @return filtered set of candidates
    */
-  protected Set<String> filter(String keyword, Set<Entry<String, String>> foundEntrySet) {
-    Set<String> uriSet = new HashSet<>();
-    Set<Entry<String, String>> filteredEntrySet = new HashSet<>();
-    filteredEntrySet.addAll(foundEntrySet);
-    for (AbstractFilter filter : filterQue) {
-      filteredEntrySet = filter.filter(keyword, filteredEntrySet);
+  protected Set<Candidate> filter(String keyword, Set<Candidate> candidateSet) {
+    Set<Candidate> filteredCandidateSet = new HashSet<>();
+    filteredCandidateSet.addAll(candidateSet);
+    for (Filter filter : filterQue) {
+      filteredCandidateSet = filter.filter(keyword, filteredCandidateSet);
       log.debug("Used filter {} with result limit of {}. Got list: {}",
-          filter.getClass().getSimpleName(), filter.getNumberOfResults(), filteredEntrySet);
+          filter.getClass().getSimpleName(), filter.getNumberOfResults(), filteredCandidateSet);
     }
-    for (Entry<String, String> entry : filteredEntrySet) {
-      uriSet.add(entry.getValue());
-    }
-    return uriSet;
+    return filteredCandidateSet;
+  }
+
+  /**
+   * Sets the energy function for the results.
+   *
+   * @param energyFunction energy function used to calculate the energy score for the nodes
+   */
+  @Override
+  public void setEnergyFunction(EnergyFunctionInterface energyFunction) {
+    this.energyFunction = energyFunction;
+  }
+
+  @Override
+  public String toString() {
+    return "FileBasedDictionary{" +
+        "dictionary=" + dictionary +
+        '}';
   }
 }

@@ -12,8 +12,9 @@ import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
 import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
 import org.aksw.sessa.helper.files.handler.RdfFileHandler;
-import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
-import org.aksw.sessa.importing.dictionary.filter.LevenshteinDistanceFilter;
+import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
+import org.aksw.sessa.importing.dictionary.energy.LevenshteinDistanceFunction;
+import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.apache.jena.ext.com.google.common.base.Joiner;
 import org.slf4j.Logger;
@@ -52,16 +53,19 @@ public class SESSAMeasurement {
     } catch (IOException e) {
       log.error(e.getLocalizedMessage(), e);
     }
-    addFilters();
+    addFiltersAndEnergyFunction();
   }
 
   /**
-   * Use this method for adding filters to SESSA
+   * Use this method for adding filters and manipulate the energy score.
    */
-  private void addFilters() {
-    AbstractFilter lFilter = new LevenshteinDistanceFilter(5);
-    // AbstractFilter pRFilter = new PageRankFilter(5);
+  private void addFiltersAndEnergyFunction() {
+    Filter lFilter = new Filter(new LevenshteinDistanceFunction(), 5);
+    //Filter pFilter = new Filter(new PagerRankFunction(), 3);
+
+    EnergyFunctionInterface lFunction = new LevenshteinDistanceFunction();
     sessa.addFilter(lFilter);
+    sessa.setEnergyFunction(lFunction);
     //sessa.addFilter(pRFilter);
 
   }

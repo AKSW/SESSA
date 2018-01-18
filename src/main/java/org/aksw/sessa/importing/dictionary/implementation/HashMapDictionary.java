@@ -1,7 +1,6 @@
 package org.aksw.sessa.importing.dictionary.implementation;
 
 import java.io.IOException;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,6 +9,7 @@ import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
+import org.aksw.sessa.query.models.Candidate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 public class HashMapDictionary extends FileBasedDictionary {
 
   private static final Logger log = LoggerFactory.getLogger(FileBasedDictionary.class);
-  private Map<String, Set<String>> dictionary;
 
   /**
    * Initializes the dictionary with given file handler.
@@ -30,7 +29,7 @@ public class HashMapDictionary extends FileBasedDictionary {
    * @param handler handler to be used for filling the dictionary
    */
   public HashMapDictionary(FileHandlerInterface handler) {
-      dictionary = createDictionary(handler);
+    dictionary = createDictionary(handler);
   }
 
 
@@ -64,16 +63,20 @@ public class HashMapDictionary extends FileBasedDictionary {
    * @return mapping of n-grams to set of URIs
    */
   @Override
-  public Set<String> get(String nGram) {
+  public Set<Candidate> get(String nGram) {
     Set<String> foundUris = dictionary.get(nGram);
-    Set<Entry<String,String>> entrySet = new HashSet<>();
+    Set<Candidate> candidateSet = new HashSet<>();
     if(foundUris != null) {
       for (String uri : foundUris) {
-        Entry<String, String> entry = new SimpleEntry<>(nGram, uri);
-        entrySet.add(entry);
+        Candidate candidate = new Candidate(uri, nGram);
+        candidateSet.add(candidate);
       }
     }
-    return filter(nGram, entrySet);
+    Set<Candidate> filteredCandidateSet = this.filter(nGram, candidateSet);
+    if(energyFunction != null) {
+      this.calculateEnergy(filteredCandidateSet, nGram);
+    }
+    return filteredCandidateSet;
   }
 
   /**
@@ -90,5 +93,12 @@ public class HashMapDictionary extends FileBasedDictionary {
    */
   public Set<Entry<String, Set<String>>> entrySet() {
     return dictionary.entrySet();
+  }
+
+  private void calculateEnergy(Set<Candidate> candidateSet, String nGram){
+    for(Candidate candidate : candidateSet){
+      float energy = energyFunction.calculateEnergyScore(nGram, candidate.getUri(), candidate.getKey());
+      candidate.setEnergy(energy);
+    }
   }
 }

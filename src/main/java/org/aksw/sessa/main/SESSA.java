@@ -11,9 +11,11 @@ import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
-import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
+import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
+import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
+import org.aksw.sessa.query.models.Candidate;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 import org.aksw.sessa.query.processing.QueryProcessingInterface;
@@ -54,8 +56,12 @@ public class SESSA {
     }
   }
 
-  public void addFilter(AbstractFilter filter) {
+  public void addFilter(Filter filter) {
     dictionary.addFilter(filter);
+  }
+
+  public void setEnergyFunction(EnergyFunctionInterface function){
+    dictionary.setEnergyFunction(function);
   }
 
   /**
@@ -74,9 +80,9 @@ public class SESSA {
     } else {
       NGramHierarchy nGramHierarchy = queryProcess.processQuery(question);
       CandidateGenerator canGen = new CandidateGenerator(dictionary);
-      Map<NGramEntryPosition, Set<String>> canMap = canGen.getCandidateMapping(nGramHierarchy);
+      Map<NGramEntryPosition, Set<Candidate>> canMap = canGen.getCandidateMapping(nGramHierarchy);
       log.debug("Candidate map content:");
-      for (Entry<NGramEntryPosition, Set<String>> entry : canMap.entrySet()) {
+      for (Entry<NGramEntryPosition, Set<Candidate>> entry : canMap.entrySet()) {
         NGramEntryPosition pos = entry.getKey();
         log.debug("\t{}='{}'=>{}",
             pos,
@@ -104,9 +110,9 @@ public class SESSA {
   GraphInterface getGraphFor(String question) {
     NGramHierarchy nGramHierarchy = queryProcess.processQuery(question);
     CandidateGenerator canGen = new CandidateGenerator(dictionary);
-    Map<NGramEntryPosition, Set<String>> canMap = canGen.getCandidateMapping(nGramHierarchy);
+    Map<NGramEntryPosition, Set<Candidate>> canMap = canGen.getCandidateMapping(nGramHierarchy);
     log.debug("Candidate map content:");
-    for (Entry<NGramEntryPosition, Set<String>> entry : canMap.entrySet()) {
+    for (Entry<NGramEntryPosition, Set<Candidate>> entry : canMap.entrySet()) {
       NGramEntryPosition pos = entry.getKey();
       log.debug("\t{}='{}'=>{}",
           pos,

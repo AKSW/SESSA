@@ -1,9 +1,8 @@
-package org.aksw.sessa.importing.dictionary.filter;
+package org.aksw.sessa.importing.dictionary.energy;
 
 import java.util.Formatter;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map.Entry;
 import java.util.Set;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -15,35 +14,24 @@ import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides a filter which is based on the PageRank score of Wikipedia-pages. This class is an
- * implementation of the abstract class {@link AbstractFilter}.
- *
- * @author Simon Bordewisch
- * @see <a href="http://people.aifb.kit.edu/ath/">PageRank on Wikipedia</a>
+ * Provides function to calculate the energy score based on wikipedia page rank of given URI. This
+ * class is an implementation of the interface {@link EnergyFunctionInterface}.
  */
-public class PageRankFilter extends AbstractFilter {
+public class PagerRankFunction implements EnergyFunctionInterface {
 
-  private org.slf4j.Logger log = LoggerFactory.getLogger(AbstractFilter.class);
-
-  /**
-   * Constructs the filter which filters the given URIs down to the given number.
-   *
-   * @param numberOfResults specifies the number of returned results
-   */
-  public PageRankFilter(int numberOfResults) {
-    super(numberOfResults);
-  }
+  private org.slf4j.Logger log = LoggerFactory.getLogger(EnergyFunctionInterface.class);
 
   /**
-   * Returns the wikipedia page rank of given URI (in the entry).
+   * Returns the wikipedia page rank of given URI.
    *
-   * @param keyword keyword with which the entries where found
-   * @param entry entry of one n-gram and uri
-   * @return wikipedia page rank of given URI (in the entry)
+   * @param nGram original n-gram with which the uri was found
+   * @param foundURI found URI for which the energy score should be calculated
+   * @param foundKey key of the dictionary for which the URI is the value
+   * @return the energy score of an URI with the given data
    */
   @Override
-  protected float getRank(String keyword, Entry<String, String> entry) {
-    String rankQuery = constructQuery(entry.getValue());
+  public float calculateEnergyScore(String nGram, String foundURI, String foundKey) {
+    String rankQuery = constructQuery(foundURI);
     Set<Float> rankQueryResults = executeQuery(rankQuery);
     Iterator<Float> it = rankQueryResults.iterator();
     float rank;

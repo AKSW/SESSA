@@ -1,10 +1,14 @@
 package org.aksw.sessa.candidate;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.core.IsNot.not;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.aksw.sessa.importing.dictionary.implementation.SimpleMapDictionary;
+import org.aksw.sessa.query.models.Candidate;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 import org.junit.Assert;
@@ -17,7 +21,7 @@ import org.junit.Test;
 public class CandidateGeneratorTest {
 
   CandidateGenerator candidateGenerator;
-  Map<NGramEntryPosition, Set<String>> candidateMapping;
+  Map<NGramEntryPosition, Set<Candidate>> candidateMapping;
 
   HashSet<String> billGates;
   HashSet<String> wife;
@@ -56,23 +60,27 @@ public class CandidateGeneratorTest {
     candidateGenerator = new CandidateGenerator(new SimpleMapDictionary(candidateEntities));
 
     NGramHierarchy runningExample = new NGramHierarchy("birthplace bill gates wife");
+
+
     candidateMapping = candidateGenerator.getCandidateMapping(runningExample);
 
   }
 
   @Test
   public void testGet_BillGatesContent() {
-
-    Assert.assertEquals(billGates, candidateMapping.get(new NGramEntryPosition(2,1)));
-
+    Set<Candidate> candidates = candidateMapping.get(new NGramEntryPosition(2,1));
+    Candidate billGates = new Candidate("dbr:Bill_Gates", "bill gates");
+    Assert.assertThat(candidates, hasItem(billGates));
   }
 
   @Test
   public void testGet_PrunedGatesContent() {
     // dbr:Bill_Gates pruned, because "bill gates" is father of "gates"
-    HashSet<String> noBillGates = new HashSet<>();
-    noBillGates.add("dbpedia:The_Gates");
-    Assert.assertEquals(noBillGates, candidateMapping.get(new NGramEntryPosition(1,2)));
+    Set<Candidate> candidates = candidateMapping.get(new NGramEntryPosition(1,2));
+    Candidate billGates = new Candidate("dbr:Bill_Gates", "bill gates");
+    Candidate noBillGates = new Candidate("dbpedia:The_Gates", "gates");
+    Assert.assertThat(candidates, hasItem(noBillGates));
+    Assert.assertThat(candidates, not(hasItem(billGates)));
   }
 
 }

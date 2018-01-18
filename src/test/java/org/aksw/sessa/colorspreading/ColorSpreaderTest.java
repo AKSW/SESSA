@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.aksw.sessa.helper.graph.Node;
+import org.aksw.sessa.query.models.Candidate;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +17,7 @@ import org.junit.Test;
 public class ColorSpreaderTest {
 
   private ColorSpreader colorSpread;
-  private Map<NGramEntryPosition, Set<String>> nodeMapping;
+  private Map<NGramEntryPosition, Set<Candidate>> nodeMapping;
 
 
   @Before
@@ -33,21 +34,21 @@ public class ColorSpreaderTest {
     // init mapping ngram -> uri
     nodeMapping = new HashMap<>();
     NGramEntryPosition bpEntry = new NGramEntryPosition(1, 0);
-    Set<String> bpSet = new HashSet<>();
-    bpSet.add(bp);
-    bpSet.add(pob);
+    Set<Candidate> bpSet = new HashSet<>();
+    bpSet.add(new Candidate(bp));
+    bpSet.add(new Candidate(pob));
     nodeMapping.put(bpEntry, bpSet);
 
     NGramEntryPosition bgEntry = new NGramEntryPosition(2, 1);
-    Set<String> bgSet = new HashSet<>();
-    bgSet.add(bg);
+    Set<Candidate> bgSet = new HashSet<>();
+    bgSet.add(new Candidate(bg));
     nodeMapping.put(bgEntry, bgSet);
 
     NGramEntryPosition wifeEntry = new NGramEntryPosition(1, 3);
-    Set<String> wifeSet = new HashSet<>();
-    wifeSet.add(spouse);
-    wifeSet.add(wife);
-    wifeSet.add(theWife);
+    Set<Candidate> wifeSet = new HashSet<>();
+    wifeSet.add(new Candidate(spouse));
+    wifeSet.add(new Candidate(wife));
+    wifeSet.add(new Candidate(theWife));
     nodeMapping.put(wifeEntry, wifeSet);
 
     colorSpread = new ColorSpreader(nodeMapping);
