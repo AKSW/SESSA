@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.aksw.sessa.helper.graph.GraphInterface;
-import org.aksw.sessa.helper.graph.Node;
 
 /**
  * This class represents a graph with nodes and edges.
@@ -44,10 +42,12 @@ public class Graph implements GraphInterface {
     }
   }
 
+  @Override
   public void addNode(Node node) {
     nodes.add(node);
   }
 
+  @Override
   public void addEdge(Node from, Node to) {
     //TODO: Make sure the nodes are in the graph.
     addEdge(from, to, edgeMap);
@@ -66,11 +66,12 @@ public class Graph implements GraphInterface {
     }
   }
 
-
+  @Override
   public Set<Node> getNodes() {
     return nodes;
   }
 
+  @Override
   public Set<Node> getNeighborsLeadingFrom(Node neighborsOf) {
     Set<Node> neighbors = edgeMap.get(neighborsOf);
     if (neighbors != null) {
@@ -80,6 +81,7 @@ public class Graph implements GraphInterface {
     }
   }
 
+  @Override
   public Set<Node> getNeighborsLeadingTo(Node neighborsOf) {
     Set<Node> neighbors = reversedEdgeMap.get(neighborsOf);
     if (neighbors != null) {
@@ -89,6 +91,7 @@ public class Graph implements GraphInterface {
     }
   }
 
+  @Override
   public Set<Node> getAllNeighbors(Node neighborsOf) {
     Set<Node> allNeighbors = getNeighborsLeadingFrom(neighborsOf);
     allNeighbors.addAll(getNeighborsLeadingTo(neighborsOf));
