@@ -57,16 +57,18 @@ public class SelfBuildingGraph implements GraphInterface {
   }
 
 
+  @Override
   public void addNode(Node node) {
     nodes.add(node);
     lastNewNodes.add(node);
   }
 
-
+  @Override
   public Set<Node> getNodes() {
     return nodes;
   }
 
+  @Override
   public void addEdge(Node from, Node to) {
     //TODO: Make sure the nodes are in the graph.
     addEdge(from, to, edgeMap);
@@ -85,7 +87,7 @@ public class SelfBuildingGraph implements GraphInterface {
     }
   }
 
-
+  @Override
   public Set<Node> getNeighborsLeadingFrom(Node neighborsOf) {
     Set<Node> neighbors = edgeMap.get(neighborsOf);
     if (neighbors != null) {
@@ -95,7 +97,7 @@ public class SelfBuildingGraph implements GraphInterface {
     }
   }
 
-
+  @Override
   public Set<Node> getNeighborsLeadingTo(Node neighborsOf) {
     Set<Node> neighbors = reversedEdgeMap.get(neighborsOf);
     if (neighbors != null) {
@@ -105,7 +107,7 @@ public class SelfBuildingGraph implements GraphInterface {
     }
   }
 
-
+  @Override
   public Set<Node> getAllNeighbors(Node neighborsOf) {
     //TODO: For now expanding graph in here should be enough, but maybe search for better solution
     if (everyNodeHasColor()) {
