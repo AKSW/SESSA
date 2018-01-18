@@ -20,5 +20,10 @@ public interface DictionaryInterface {
    */
   Set<String> get(String nGram);
 
+  /**
+   * Add a filter to the dictionary.
+   *
+   * @param filter filter which should be applied after the dictionary found candidates
+   */
   void addFilter(AbstractFilter filter);
 }
