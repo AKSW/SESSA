@@ -7,6 +7,7 @@ import java.util.Set;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.helper.graph.SelfBuildingGraph;
+import org.aksw.sessa.query.models.Candidate;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ public class ColorSpreader {
    *
    * @param nGramMapping provides the mapping (reverse dictionary) of n-grams to candidates
    */
-  public ColorSpreader(Map<NGramEntryPosition, Set<String>> nGramMapping) {
+  public ColorSpreader(Map<NGramEntryPosition, Set<Candidate>> nGramMapping) {
     lastActivatedNodes = new HashSet<>();
     activatedNodes = new HashSet<>(lastActivatedNodes);
     resultNodes = new HashSet<>();
@@ -46,12 +47,12 @@ public class ColorSpreader {
    *
    * @param nGramMapping provides the mapping (reverse dictionary) of n-grams to candidates
    */
-  private void initializeWithEmptyGraph(Map<NGramEntryPosition, Set<String>> nGramMapping) {
-    for (Entry<NGramEntryPosition, Set<String>> entry : nGramMapping.entrySet()) {
-      for (String value : entry.getValue()) {
-        Node<String> node = new Node<>(value);
+  private void initializeWithEmptyGraph(Map<NGramEntryPosition, Set<Candidate>> nGramMapping) {
+    for (Entry<NGramEntryPosition, Set<Candidate>> entry : nGramMapping.entrySet()) {
+      for (Candidate candidate : entry.getValue()) {
+        Node<String> node = new Node<>(candidate.getUri());
         node.addColor(entry.getKey());
-        node.setEnergy(1); // TODO: set actual energy with some metric
+        node.setEnergy(candidate.getEnergy());
         lastActivatedNodes.add(node);
         graph.addNode(node);
       }

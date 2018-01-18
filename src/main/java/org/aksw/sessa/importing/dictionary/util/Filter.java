@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Set;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
+import org.aksw.sessa.query.models.Candidate;
 
 /**
  * This abstract class is the foundation for making filters for the dictionary classes. Filters
@@ -54,14 +55,12 @@ public class Filter {
    * implementation).
    *
    * @param keyword keyword with which the entries where found
-   * @param toBeFiltered entry set of n-grams and uris
+   * @param candidateSet entry set of n-grams and uris (candidates)
+   * @return filtered set of candidates
    */
-  public Set<Entry<String, String>> filter(
-      String keyword, // e.g. "mark twains" (notice the 's')
-      Set<Entry<String, String>> toBeFiltered //e.g. for entry: <"mark twain", dbr:Mark_Twain">
-  ) {
+  public Set<Candidate> filter(String keyword, Set<Candidate> candidateSet) {
 
-    PriorityQueue<Entry<Entry<String, String>, Float>> sortedResults;
+    PriorityQueue<Entry<Candidate, Float>> sortedResults;
     if (descendingOrder) {
       sortedResults = new PriorityQueue<>(100,
           Collections.reverseOrder(Comparator.comparing(Entry::getValue)));
@@ -69,11 +68,11 @@ public class Filter {
       sortedResults = new PriorityQueue<>(100, Comparator.comparing(Entry::getValue));
     }
 
-    for (Entry<String, String> entry : toBeFiltered) {
-      float rank = getRank(keyword, entry.getValue(), entry.getKey());
-      sortedResults.add(new SimpleEntry<>(entry, rank));
+    for (Candidate candidate : candidateSet) {
+      float rank = getRank(keyword, candidate.getUri(), candidate.getKey());
+      sortedResults.add(new SimpleEntry<>(candidate, rank));
     }
-    Set<Entry<String, String>> finalResultSet = new HashSet<>();
+    Set<Candidate> finalResultSet = new HashSet<>();
     for (int resultSize = 0;
         resultSize < numberOfResults && !sortedResults.isEmpty();
         resultSize++) {
@@ -89,6 +88,8 @@ public class Filter {
    * @param keyword original n-gram with which the uri was found
    * @param foundURI found URI for which the energy score should be calculated
    * @param foundKey key of the dictionary for which the URI is the value
+   *
+   * @return rank for given entry and keyword
    */
   protected float getRank(String keyword, String foundURI, String foundKey) {
     return energyFunction.calculateEnergyScore(keyword, foundURI, foundKey);

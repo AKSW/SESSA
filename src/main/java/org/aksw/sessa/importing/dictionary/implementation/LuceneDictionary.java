@@ -14,6 +14,7 @@ import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.util.DictionaryEntrySimilarity;
+import org.aksw.sessa.query.models.Candidate;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
@@ -139,11 +140,11 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    * @param nGram n-gram whose associated value is to be returned
    * @return mapping of n-grams to set of URIs
    */
-  public Set<String> get(final String nGram) {
+  public Set<Candidate> get(final String nGram) {
     if (STOP_WORDS.contains(nGram.toLowerCase())) {
       return new HashSet<>();
     }
-    Set<Entry<String, String>> foundEntrySet = new HashSet<>();
+    Set<Candidate> foundCandidateSet = new HashSet<>();
     try {
       String[] uniGrams = nGram.split(" ");
       SpanQuery[] queryTerms = new SpanQuery[uniGrams.length];
@@ -155,22 +156,19 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
 
       TopScoreDocCollector collector = TopScoreDocCollector
           .create(maxResultSize, true);
-
-      //log.debug("Searching for term {}", nGram);
       iSearcher.search(wholeQuery, collector);
       ScoreDoc[] hits = collector.topDocs().scoreDocs;
       for (ScoreDoc hit : hits) {
         Document hitDoc = iSearcher.doc(hit.doc);
         String key = hitDoc.get(FIELD_NAME_KEY);
-        String value = hitDoc.get(FIELD_NAME_VALUE);
-        Entry<String, String> entry = new SimpleEntry<>(key, value);
-        foundEntrySet.add(entry);
+        String uri = hitDoc.get(FIELD_NAME_VALUE);
+        Candidate candidate = new Candidate(uri, key);
+        foundCandidateSet.add(candidate);
       }
     } catch (Exception e) {
       log.error(e.getLocalizedMessage() + " -> " + nGram, e);
     }
-    Set<String> uris = filter(nGram, foundEntrySet);
-    return uris;
+    return this.filter(nGram, foundCandidateSet);
   }
 
 

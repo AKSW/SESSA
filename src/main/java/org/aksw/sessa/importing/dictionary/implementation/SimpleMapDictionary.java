@@ -1,11 +1,14 @@
 package org.aksw.sessa.importing.dictionary.implementation;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
+import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.util.Filter;
+import org.aksw.sessa.query.models.Candidate;
 
 /**
  * This class provides an easy implementation of dictionaries. It essentially just wraps the  given
@@ -14,7 +17,8 @@ import org.aksw.sessa.importing.dictionary.util.Filter;
 public class SimpleMapDictionary implements DictionaryInterface {
 
   private Map<String, Set<String>> dictionary;
-  protected List<Filter> filterList;
+  private List<Filter> filterList;
+  private EnergyFunctionInterface energyFunction;
 
   /**
    * Initializes dictionary with given map
@@ -24,6 +28,7 @@ public class SimpleMapDictionary implements DictionaryInterface {
   public SimpleMapDictionary(Map<String, Set<String>> dictionary) {
     this.dictionary = dictionary;
     filterList = new LinkedList<>();
+    energyFunction = null;
   }
 
   /**
@@ -34,12 +39,34 @@ public class SimpleMapDictionary implements DictionaryInterface {
    * @return mapping of n-grams to set of URIs
    */
   @Override
-  public Set<String> get(String nGram) {
-    return dictionary.get(nGram);
+  public Set<Candidate> get(String nGram) {
+    Set<String> uriSet = dictionary.get(nGram);
+    Set<Candidate> candidateSet = new HashSet<>();
+    if(uriSet != null) {
+      for (String uri : uriSet) {
+        Candidate candidate = new Candidate(uri, nGram);
+        if (energyFunction != null) {
+          float energy = energyFunction.calculateEnergyScore(nGram, uri, nGram);
+          candidate.setEnergy(energy);
+        }
+        candidateSet.add(candidate);
+      }
+    }
+    return candidateSet;
   }
 
   @Override
   public void addFilter(Filter filter) {
     filterList.add(filter);
+  }
+
+  /**
+   * Sets the energy function for the results.
+   *
+   * @param function energy function which should be applied to the results.
+   */
+  @Override
+  public void setEnergyFunction(EnergyFunctionInterface function) {
+    energyFunction = function;
   }
 }
