@@ -1,6 +1,5 @@
 package org.aksw.sessa.main;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -13,11 +12,8 @@ import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
 import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
 import org.aksw.sessa.helper.files.handler.RdfFileHandler;
-import org.aksw.sessa.helper.files.handler.ReverseTsvFileHandler;
-import org.aksw.sessa.helper.files.saver.ReversedTsvDictionarySaver;
 import org.aksw.sessa.importing.dictionary.filter.AbstractFilter;
 import org.aksw.sessa.importing.dictionary.filter.LevenshteinDistanceFilter;
-import org.aksw.sessa.importing.dictionary.filter.PageRankFilter;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.apache.jena.ext.com.google.common.base.Joiner;
 import org.slf4j.Logger;
@@ -29,7 +25,6 @@ import org.slf4j.LoggerFactory;
 public class SESSAMeasurement {
 
   private SESSA sessa;
-  public final String REVERSE_TSV_FILE = "src/main/resources/dictionary.tsv";
   private static final Logger log = LoggerFactory.getLogger(SESSAMeasurement.class);
 
   private String RDF_labels = "src/main/resources/dbpedia_3Eng_class.ttl";
@@ -37,55 +32,35 @@ public class SESSAMeasurement {
 
   public SESSAMeasurement() {
     sessa = new SESSA();
-    checkDictionary();
-    log.info("Importing dictionary. This could take some time!");
     long startTime = System.nanoTime();
     try {
       Path path = FileSystems.getDefault().getPath(LuceneDictionary.DEFAULT_PATH_TO_INDEX);
       if (!Files.exists(path)) {
+        log.info("No Lucene Dictionary found.");
+        log.info("Building Lucene Dictionary from RDF files. This could take some time!");
         //Change the handler and the file to be handled here
-        sessa.loadFileToLuceneDictionary(new ReverseTsvFileHandler(REVERSE_TSV_FILE));
+        sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_labels));
+        sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_ontology));
+        long endTime = System.nanoTime();
+        log.info("Finished importing Lucene Dictionary (in {}sec).",
+            (endTime - startTime) / (1000 * 1000 * 1000));
       } else {
+        log.info(
+            "Found existing Lucene Dictionary. If you want to build a new one, delete the dictionary!");
         sessa.loadFileToLuceneDictionary(null);
       }
-    }catch (IOException e){
+    } catch (IOException e) {
       log.error(e.getLocalizedMessage(), e);
     }
-    System.gc();
-    long endTime = System.nanoTime();
-    log.info("Finished importing Dictionary (in {}sec).",
-        (endTime - startTime) / (1000 * 1000 * 1000));
     addFilters();
-  }
-
-  private void checkDictionary() {
-    File f = new File(REVERSE_TSV_FILE);
-    if (f.exists() && !f.isDirectory()) {
-      log.info("Found reverse tsv dictionary.");
-    } else {
-      log.info("Reverse tsv dictionary not found!");
-      log.info("Building Dictionary. This could take some time!");
-      long startTime = System.nanoTime();
-      try {
-        ReversedTsvDictionarySaver.saveDictionary(REVERSE_TSV_FILE,
-            new RdfFileHandler(RDF_labels),
-            new RdfFileHandler(RDF_ontology));
-      } catch (IOException e) {
-        log.error(e.getLocalizedMessage(), e);
-      }
-      long endTime = System.nanoTime();
-      log.info("Finished building Dictionary (in {}sec).",
-          (endTime - startTime) / (1000 * 1000 * 1000));
-      System.gc();
-    }
   }
 
   /**
    * Use this method for adding filters to SESSA
    */
-  private void addFilters(){
+  private void addFilters() {
     AbstractFilter lFilter = new LevenshteinDistanceFilter(5);
-   // AbstractFilter pRFilter = new PageRankFilter(5);
+    // AbstractFilter pRFilter = new PageRankFilter(5);
     sessa.addFilter(lFilter);
     //sessa.addFilter(pRFilter);
 
@@ -94,7 +69,6 @@ public class SESSAMeasurement {
   public static void main(String[] args) {
     SESSAMeasurement myMess = new SESSAMeasurement();
     long startTime = System.nanoTime();
-    // for (Dataset d : Dataset.values()) {
     Dataset qald7TrainMultilingual = Dataset.QALD7_Train_Multilingual;
     List<IQuestion> questions = LoaderController.load(qald7TrainMultilingual);
     double avgFMeasure = 0;
