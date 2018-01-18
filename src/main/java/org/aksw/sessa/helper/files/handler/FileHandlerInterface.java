@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 public interface FileHandlerInterface extends AutoCloseable {
 
   /**
-   * Provides next entry, i.e. next key and value pair.
+   * Provides next entry, i.e. next key (n-gram) and value (URI) pair.
    *
    * @return next key and value pair
    * @throws IOException If an I/O error occurs

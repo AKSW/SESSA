@@ -28,6 +28,7 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
         Collections.reverseOrder(Comparator.comparing(Filter::getNumberOfResults)));
     energyFunction = null;
   }
+
   /**
    * Adds the entries in the give handler to the dictionary.
    *
@@ -36,7 +37,9 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
   public abstract void putAll(FileHandlerInterface handler);
 
   /**
-   * Adds filter to the filter-queue.
+   * Adds filter to the filter-queue. The filters added here are applied, order depending on their
+   * given number of results (descending), after the dictionary found all candidates.
+   *
    * @param filter filter to be added to the queue
    */
   @Override
@@ -46,6 +49,7 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
 
   /**
    * Allows the dictionary to filter based on the added filters.
+   *
    * @param keyword the initial keyword for the search in the dictionary
    * @param candidateSet found set of candidates for the keyword
    * @return filtered set of candidates
