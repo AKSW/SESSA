@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.not;
 import java.io.IOException;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.files.handler.TsvFileHandler;
+import org.aksw.sessa.query.models.Candidate;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,9 +34,11 @@ public class LuceneDictionaryTest extends FileBasedDictionaryTest {
   public void clearIndex_ClearsEntries() throws IOException {
     String nGram = "birthplace";
     String uri = "http://dbpedia.org/ontology/birthPlace";
-    Assert.assertThat(dictionary.get(nGram), hasItem(uri));
+    Candidate candidate = new Candidate(uri, nGram);
+    Assert.assertThat(dictionary.get(nGram), hasItem(candidate));
     ((LuceneDictionary) dictionary).clearIndex();
-    Assert.assertThat(dictionary.get(nGram), not(hasItem(uri)));
+    candidate = new Candidate(uri, nGram);
+    Assert.assertThat(dictionary.get(nGram), not(hasItem(candidate)));
   }
 
 }
