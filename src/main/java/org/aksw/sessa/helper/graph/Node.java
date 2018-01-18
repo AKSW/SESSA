@@ -8,7 +8,7 @@ import org.aksw.sessa.query.models.NGramEntryPosition;
  * This class represents a node in graph with given information of class T. Furthermore it holds the
  * scores and the colors, which are needed for the colors-spreading algorithm.
  */
-public class Node<T extends Object> {
+public class Node<T> {
 
   private T nodeContent;
 
@@ -69,7 +69,7 @@ public class Node<T extends Object> {
    * @param colors newly added colors, with which the explanation will be updated
    * @see #updateExplanation(NGramEntryPosition)
    */
-  public void updateExplanation(Set<NGramEntryPosition> colors) {
+  private void updateExplanation(Set<NGramEntryPosition> colors) {
     for (NGramEntryPosition color : colors) {
       updateExplanation(color);
     }
@@ -82,7 +82,7 @@ public class Node<T extends Object> {
    *
    * @param color newly added color, with which the explanation will be updated
    */
-  public void updateExplanation(NGramEntryPosition color) {
+  private void updateExplanation(NGramEntryPosition color) {
     // length of a colors equals number of represented n-grams
     this.explanation += color.getLength();
   }
@@ -157,12 +157,11 @@ public class Node<T extends Object> {
   }
 
   /**
-   * Checks if the color of this node and the other are overlapping. I.e. if they share a color or if
-   * they share a descendant of a color.
+   * Checks if the color of this node and the other are overlapping. I.e. if they share a color or
+   * if they share a descendant of a color.
    *
    * @param other Node to be tested for related colors
    * @return true if they are related
-   *
    */
   public boolean isOverlappingWith(Node<?> other) {
     for (NGramEntryPosition thisColor : this.getColors()) {
@@ -175,6 +174,13 @@ public class Node<T extends Object> {
     return false;
   }
 
+  /**
+   * Compares the specified object with this node for equality. Returns true if the given object is
+   * also a Node and has the same content.
+   *
+   * @param other object to be compared for equality with this node
+   * @return true if the specified object is equal to this node
+   */
   @Override
   public boolean equals(Object other) {
     if (other instanceof Node<?>) {
@@ -185,7 +191,11 @@ public class Node<T extends Object> {
     return false;
   }
 
-
+  /**
+   * Returns the hash code of this node. The hash code of this node is the hashcode of its content.
+   *
+   * @return the hash code value for this node
+   */
   @Override
   public int hashCode() {
     return nodeContent.hashCode();
