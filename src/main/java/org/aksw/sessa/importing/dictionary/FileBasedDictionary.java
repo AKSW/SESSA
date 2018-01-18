@@ -23,7 +23,7 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
   /**
    * Constructs the dictionary with the given energy function.
    */
-  public FileBasedDictionary(){
+  public FileBasedDictionary() {
     filterQue = new PriorityQueue<>(10,
         Collections.reverseOrder(Comparator.comparing(Filter::getNumberOfResults)));
     energyFunction = null;
@@ -54,10 +54,10 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
    * @param candidateSet found set of candidates for the keyword
    * @return filtered set of candidates
    */
-  protected Set<Candidate> filter(String keyword, Set<Candidate> candidateSet){
+  protected Set<Candidate> filter(String keyword, Set<Candidate> candidateSet) {
     Set<Candidate> filteredCandidateSet = new HashSet<>();
     filteredCandidateSet.addAll(candidateSet);
-    for(Filter filter : filterQue){
+    for (Filter filter : filterQue) {
       filteredCandidateSet = filter.filter(keyword, filteredCandidateSet);
       log.debug("Used filter {} with result limit of {}. Got list: {}",
           filter.getClass().getSimpleName(), filter.getNumberOfResults(), filteredCandidateSet);
