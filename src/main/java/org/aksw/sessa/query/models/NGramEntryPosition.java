@@ -175,7 +175,7 @@ public class NGramEntryPosition {
   }
 
   public boolean isMergeable(NGramEntryPosition otherColor){
-    if(this.getLength() != otherColor.getLength()) {
+    if (this.isRelatedTo(otherColor)) {
       return true;
     }
     return !this.isOverlappingWith(otherColor);
