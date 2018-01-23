@@ -14,7 +14,6 @@ public class Node<T> {
   private T nodeContent;
   private long id;
 
-  private int explanation;
   private float energy;
   private Set<NGramEntryPosition> colors;
   private boolean isFactNode;
@@ -27,7 +26,6 @@ public class Node<T> {
    */
   public Node(T nodeContent) {
     this.nodeContent = nodeContent;
-    this.explanation = 0;
     this.energy = 0;
     this.colors = new HashSet<>();
     this.isFactNode = false;
@@ -45,8 +43,6 @@ public class Node<T> {
     this.nodeContent = nodeContent;
     this.energy = energy;
     this.colors = colors;
-    this.explanation = 0;
-    updateExplanation(colors);
     this.isFactNode = isFactNode;
   }
 
@@ -59,35 +55,15 @@ public class Node<T> {
 
   /**
    * Returns the explanation score of this node. For explanation of this score see {@link
-   * #updateExplanation(NGramEntryPosition)}}.
    */
   public int getExplanation() {
+    int explanation = 0;
+    for (NGramEntryPosition color : colors) {
+      explanation += color.getLength();
+    }
     return explanation;
   }
 
-  /**
-   * Updates the explanation score for this node.
-   *
-   * @param colors newly added colors, with which the explanation will be updated
-   * @see #updateExplanation(NGramEntryPosition)
-   */
-  private void updateExplanation(Set<NGramEntryPosition> colors) {
-    for (NGramEntryPosition color : colors) {
-      updateExplanation(color);
-    }
-  }
-
-  /**
-   * Updates the explanation score for this node. The explanation score provides information on how
-   * many uni-grams this node is build on. E.g. this node might hold content about Bill Gates and is
-   * explained by the uni-grams "bill" & "gates" and therefore has an explanation score of 2.
-   *
-   * @param color newly added color, with which the explanation will be updated
-   */
-  private void updateExplanation(NGramEntryPosition color) {
-    // length of a colors equals number of represented n-grams
-    this.explanation += color.getLength();
-  }
 
   /**
    * Returns the energy score of this node.
@@ -239,7 +215,8 @@ public class Node<T> {
    */
   @Override
   public String toString() {
-    return "Node{" + "nodeContent=" + nodeContent + ", explanation=" + explanation + ", energy="
+    return "Node{" + "nodeContent=" + nodeContent + ", explanation=" + getExplanation()
+        + ", energy="
         + energy + ", colors=" + colors + ", isFactNode=" + isFactNode + '}';
   }
 }
