@@ -163,4 +163,21 @@ public class NGramEntryPosition {
     }
     return false;
   }
+
+  public boolean isMergeable(Set<NGramEntryPosition> otherColors){
+    boolean isMergeable = true;
+    for(NGramEntryPosition otherColor : otherColors){
+      if(!isMergeable(otherColor)){
+        isMergeable =  false;
+      }
+    }
+    return isMergeable;
+  }
+
+  public boolean isMergeable(NGramEntryPosition otherColor){
+    if(this.getLength() != otherColor.getLength()) {
+      return true;
+    }
+    return !this.isOverlappingWith(otherColor);
+  }
 }
