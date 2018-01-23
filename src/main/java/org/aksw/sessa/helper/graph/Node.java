@@ -184,6 +184,15 @@ public class Node<T> {
     return false;
   }
 
+  public boolean colorsAreMergeable(Set<NGramEntryPosition> otherColors) {
+    for (NGramEntryPosition color : this.colors) {
+      if (!color.isMergeable(otherColors)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /**
    * Compares the specified object with this node for equality. Returns true if the given object is
    * also a Node and has the same content and the same id.
