@@ -54,7 +54,7 @@ public class Node<T> {
   }
 
   /**
-   * Returns the explanation score of this node. For explanation of this score see {@link
+   * Returns the explanation score of this node.
    */
   public int getExplanation() {
     int explanation = 0;
@@ -76,8 +76,8 @@ public class Node<T> {
 
   /**
    * Sets the energy score for this node. The energy score is another score that tries to explain
-   * how good trustworthy the n-gram mapping to the content is. E.g. this can be realized via
-   * Levenshtein distance.
+   * how trustworthy the n-gram mapping to the content is. E.g. this can be realized via Levenshtein
+   * distance.
    */
   public void setEnergy(float newEnergy) {
     energy = newEnergy;
@@ -143,10 +143,16 @@ public class Node<T> {
     return isFactNode;
   }
 
+  /**
+   * Returns ID of this node
+   */
   long getId() {
     return id;
   }
 
+  /**
+   * Generates a random new ID for this node.
+   */
   public void newId() {
     id = new Random().nextLong();
   }
@@ -169,6 +175,13 @@ public class Node<T> {
     return false;
   }
 
+  /**
+   * Checks if colors of this node are mergeable with the given colors. Colors are mergeable if they
+   * either don't overlap or are related.
+   *
+   * @param otherColors colors which should be check for mergeablity
+   * @return true if colors are mergeable, false if they aren't
+   */
   public boolean colorsAreMergeable(Set<NGramEntryPosition> otherColors) {
     for (NGramEntryPosition color : this.colors) {
       if (!color.isMergeable(otherColors)) {
@@ -215,7 +228,8 @@ public class Node<T> {
    */
   @Override
   public String toString() {
-    return "Node{" + "nodeContent=" + nodeContent + ", explanation=" + getExplanation()
+    return "Node{" + "nodeContent=" + nodeContent + ", id=" + getId() + ", explanation="
+        + getExplanation()
         + ", energy="
         + energy + ", colors=" + colors + ", isFactNode=" + isFactNode + '}';
   }
