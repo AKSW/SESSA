@@ -120,12 +120,20 @@ public class Node<T> {
    * Adds a color to this node. Colors are represented by n-gram-positions in the n-gram hierarchy.
    * They show which n-grams were used to explain the content of this node.
    *
-   * @param color position of the n-gram in the n-gram hierarchy
+   * @param otherColor position of the n-gram in the n-gram hierarchy
    * @see NGramEntryPosition
    */
-  public void addColor(NGramEntryPosition color) {
-    this.colors.add(color);
-    updateExplanation(color);
+  public void addColor(NGramEntryPosition otherColor) {
+    Set<NGramEntryPosition> removeColors = new HashSet<>();
+    for (NGramEntryPosition color : colors) {
+      if (color.isOverlappingWith(otherColor)) {
+        if (otherColor.getLength() > color.getLength()) {
+          removeColors.add(color);
+        }
+      }
+    }
+    colors.removeAll(removeColors);
+    this.colors.add(otherColor);
   }
 
   /**
@@ -135,8 +143,9 @@ public class Node<T> {
    * @see #addColor(NGramEntryPosition)
    */
   public void addColors(Set<NGramEntryPosition> colors) {
-    this.colors.addAll(colors);
-    updateExplanation(colors);
+    for (NGramEntryPosition color : colors) {
+      addColor(color);
+    }
   }
 
   /**
