@@ -1,6 +1,7 @@
 package org.aksw.sessa.helper.graph;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 
@@ -11,6 +12,7 @@ import org.aksw.sessa.query.models.NGramEntryPosition;
 public class Node<T> {
 
   private T nodeContent;
+  private long id;
 
   private int explanation;
   private float energy;
@@ -156,6 +158,14 @@ public class Node<T> {
     return isFactNode;
   }
 
+  long getId() {
+    return id;
+  }
+
+  public void newId() {
+    id = new Random().nextLong();
+  }
+
   /**
    * Checks if the color of this node and the other are overlapping. I.e. if they share a color or
    * if they share a descendant of a color.
@@ -176,7 +186,7 @@ public class Node<T> {
 
   /**
    * Compares the specified object with this node for equality. Returns true if the given object is
-   * also a Node and has the same content.
+   * also a Node and has the same content and the same id.
    *
    * @param other object to be compared for equality with this node
    * @return true if the specified object is equal to this node
@@ -184,7 +194,8 @@ public class Node<T> {
   @Override
   public boolean equals(Object other) {
     if (other instanceof Node<?>) {
-      if (((Node<?>) other).getContent().equals(this.nodeContent)) {
+      if (((Node<?>) other).getContent().equals(this.nodeContent) &&
+          ((Node<?>) other).getId() == this.getId()) {
         return true;
       }
     }
