@@ -56,7 +56,7 @@ public class SelfBuildingGraph implements GraphInterface {
     this.lastNewNodes = new HashMap<>();
     this.edgeMap = new HashMap<>();
     this.reversedEdgeMap = new HashMap<>();
-    for(Node node : nodes){
+    for (Node node : nodes) {
       this.nodes.put(node, node);
       this.lastNewNodes.put(node, node);
     }
@@ -178,26 +178,26 @@ public class SelfBuildingGraph implements GraphInterface {
               for (String content : newContent) {
                 Node<String> foundNode = new Node<>(content);
                 log.debug("SPARQL found new node {}", foundNode.getContent());
-                if(newNodes.containsKey(foundNode)){
-                  foundNode = newNodes.get(foundNode);
-                  log.debug("Node was already found this round.");
+                if (newNodes.containsKey(foundNode) || nodes.containsKey(foundNode)) {
+                  if (newNodes.containsKey(foundNode)) {
+                    foundNode = newNodes.get(foundNode);
+                    log.debug("Node was already found this round.");
+                  }
+                  if (nodes.containsKey(foundNode)) {
+                    foundNode = nodes.get(foundNode);
+                    log.debug("Its already in the node set.");
+                  }
+                  if (foundNode.colorsAreMergeable(lastNewNode.getColors()) &&
+                      foundNode.colorsAreMergeable(node.getColors())) {
+                    log.debug("Colors are mergeable.");
+                  } else {
+                    log.debug("Colors are not mergeable. Creating new node in graph");
+                    foundNode = new Node<>(content);
+                    foundNode.newId();
+                  }
                 }
-                if(nodes.containsKey(foundNode)){
-                  foundNode = nodes.get(foundNode);
-                  log.debug("Its already in the node set.");
-                }
-                if(foundNode.colorsAreMergeable(lastNewNode.getColors()) &&
-                  foundNode.colorsAreMergeable(node.getColors())){
-                  log.debug("Colors are mergeable. Will merge colors now.");
-                  foundNode.addColors(lastNewNode.getColors());
-                  foundNode.addColors(node.getColors());
-                } else{
-                  log.debug("Colors are not mergeable. Creating new node in graph");
-                  foundNode = new Node<>(content);
-                  foundNode.newId();
-                  foundNode.addColors(lastNewNode.getColors());
-                  foundNode.addColors(node.getColors());
-                }
+                foundNode.addColors(lastNewNode.getColors());
+                foundNode.addColors(node.getColors());
                 newNodes.put(foundNode, foundNode);
                 integrateNewNode(node, lastNewNode, foundNode);
               }
