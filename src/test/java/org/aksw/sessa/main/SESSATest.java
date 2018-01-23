@@ -1,12 +1,15 @@
 package org.aksw.sessa.main;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.hamcrest.core.IsNull.nullValue;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.files.handler.TsvFileHandler;
@@ -71,6 +74,18 @@ public class SESSATest {
   }
 
   @Test
+  /**
+   * This test on issue #18.
+   */
+  public void testAnswer_onColorUpdateProblem() {
+    question = "offical language suriname";
+    answer = sessa.answer(question);
+    HashSet<String> answerSet = new HashSet<>();
+    answerSet.add("http://dbpedia.org/resource/Dutch_language");
+    Assert.assertThat(answer, equalTo(answerSet));
+  }
+
+  @Test
   public void testGetGraphFor_TestColors() {
     question = "music by elton john current production minskoff theatre";
     GraphInterface graph = sessa.getGraphFor(question);
@@ -80,6 +95,7 @@ public class SESSATest {
     }
     String answer = "http://dbpedia.org/resource/The_Lion_King_(musical)";
     Node answerNode = nodes.get(answer);
+    System.out.println(graph);
     Assert.assertThat(answerNode.getExplanation(), equalTo(question.split(" ").length));
   }
   // TODO: create tests for other questions
