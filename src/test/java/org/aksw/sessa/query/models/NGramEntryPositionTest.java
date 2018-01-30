@@ -1,6 +1,8 @@
 package org.aksw.sessa.query.models;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +13,20 @@ import org.junit.Test;
  * Created by Simon Bordewisch on 16.06.17.
  */
 public class NGramEntryPositionTest {
+
+
+  @Test
+  public void TestEquals_Equal() {
+    NGramEntryPosition pos1 = new NGramEntryPosition(3, 1);
+    Assert.assertThat(pos1, equalTo(pos1));
+  }
+
+  @Test
+  public void TestEquals_Different() {
+    NGramEntryPosition pos1 = new NGramEntryPosition(3, 1);
+    NGramEntryPosition pos2 = new NGramEntryPosition(3, 2);
+    Assert.assertThat(pos1, not(equalTo(pos2)));
+  }
 
 
   @Test
@@ -151,6 +167,56 @@ public class NGramEntryPositionTest {
     NGramEntryPosition pos2 = new NGramEntryPosition(1, 4);
     Assert.assertThat(pos2.isOverlappingWith(pos1), is(false));
     Assert.assertThat(pos1.isOverlappingWith(pos2), is(false));
+  }
+
+  @Test
+  public void TestIsMergeable_True1() {
+    NGramEntryPosition pos1 = new NGramEntryPosition(1, 2);
+    NGramEntryPosition pos2 = new NGramEntryPosition(1, 4);
+    Assert.assertThat(pos2.isMergeable(pos1), is(true));
+  }
+
+  @Test
+  public void TestIsMergeable_True2() {
+    NGramEntryPosition pos1 = new NGramEntryPosition(2, 1);
+    NGramEntryPosition pos2 = new NGramEntryPosition(1, 2);
+    Assert.assertThat(pos2.isMergeable(pos1), is(true));
+  }
+
+  @Test
+  public void TestIsMergeable_False1() {
+    NGramEntryPosition pos1 = new NGramEntryPosition(2, 1);
+    NGramEntryPosition pos2 = new NGramEntryPosition(2, 2);
+    Assert.assertThat(pos2.isMergeable(pos1), is(false));
+  }
+
+  @Test
+  public void TestIsMergeable_False3() {
+    NGramEntryPosition pos1 = new NGramEntryPosition(3, 1);
+    NGramEntryPosition pos2 = new NGramEntryPosition(2, 3);
+    Assert.assertThat(pos2.isMergeable(pos1), is(false));
+  }
+
+  @Test
+  public void TestIsMergeable_ForSet_True1() {
+    NGramEntryPosition pos1 = new NGramEntryPosition(3, 0);
+    NGramEntryPosition pos2 = new NGramEntryPosition(2, 3);
+    NGramEntryPosition pos3 = new NGramEntryPosition(2, 5);
+    HashSet<NGramEntryPosition> set = new HashSet<>();
+    set.add(pos2);
+    set.add(pos3);
+    Assert.assertThat(pos1.isMergeable(set), is(true));
+  }
+
+  @Test
+  public void TestIsMergeable_ForSet_False1() {
+    NGramEntryPosition pos1 = new NGramEntryPosition(3, 0);
+    NGramEntryPosition pos2 = new NGramEntryPosition(2, 2);
+    NGramEntryPosition pos3 = new NGramEntryPosition(2, 5);
+    HashSet<NGramEntryPosition> set = new HashSet<>();
+    set.add(pos2);
+    set.add(pos3);
+    Assert.assertThat(pos1.isMergeable(set), is(false));
   }
 
 }
