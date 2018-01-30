@@ -25,10 +25,7 @@ public class Node<T> {
    * @param nodeContent content to be stored in the node
    */
   public Node(T nodeContent) {
-    this.nodeContent = nodeContent;
-    this.energy = 0;
-    this.colors = new HashSet<>();
-    this.isFactNode = false;
+    this(nodeContent, 0, new HashSet<>(), false);
   }
 
   /**
