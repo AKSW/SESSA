@@ -11,7 +11,8 @@ import org.junit.Test;
 public class NGramHierarchyTest {
 
   NGramHierarchy hierarchy;
-  String ngramBill = "birthplace bill gates wife";;
+  String ngramBill = "birthplace bill gates wife";
+  ;
 
 
   @Test
@@ -19,6 +20,7 @@ public class NGramHierarchyTest {
     hierarchy = new NGramHierarchy(ngramBill);
     Assert.assertNull(hierarchy.getParents(4, 0));
   }
+
   @Test
   public void testGetNgram_first1Gram() {
     hierarchy = new NGramHierarchy(ngramBill);
@@ -90,29 +92,29 @@ public class NGramHierarchyTest {
   public void testToStringArray() {
     hierarchy = new NGramHierarchy(ngramBill);
     String[] hierarchyArray = {"birthplace bill gates wife",
-                               "birthplace bill gates", "bill gates wife",
-                               "birthplace bill", "bill gates", "gates wife",
-                               "birthplace", "bill", "gates", "wife"};
+        "birthplace bill gates", "bill gates wife",
+        "birthplace bill", "bill gates", "gates wife",
+        "birthplace", "bill", "gates", "wife"};
     Assert.assertArrayEquals(hierarchyArray, hierarchy.toStringArray());
   }
 
   @Test
-  public void testGetAllPositions(){
+  public void testGetAllPositions() {
     hierarchy = new NGramHierarchy(ngramBill);
     Set<NGramEntryPosition> hierarchyPositions = new HashSet<>();
-    hierarchyPositions.add(new NGramEntryPosition(4,0));
+    hierarchyPositions.add(new NGramEntryPosition(4, 0));
 
-    hierarchyPositions.add(new NGramEntryPosition(3,0));
-    hierarchyPositions.add(new NGramEntryPosition(3,1));
+    hierarchyPositions.add(new NGramEntryPosition(3, 0));
+    hierarchyPositions.add(new NGramEntryPosition(3, 1));
 
-    hierarchyPositions.add(new NGramEntryPosition(2,0));
-    hierarchyPositions.add(new NGramEntryPosition(2,1));
-    hierarchyPositions.add(new NGramEntryPosition(2,2));
+    hierarchyPositions.add(new NGramEntryPosition(2, 0));
+    hierarchyPositions.add(new NGramEntryPosition(2, 1));
+    hierarchyPositions.add(new NGramEntryPosition(2, 2));
 
-    hierarchyPositions.add(new NGramEntryPosition(1,0));
-    hierarchyPositions.add(new NGramEntryPosition(1,1));
-    hierarchyPositions.add(new NGramEntryPosition(1,2));
-    hierarchyPositions.add(new NGramEntryPosition(1,3));
+    hierarchyPositions.add(new NGramEntryPosition(1, 0));
+    hierarchyPositions.add(new NGramEntryPosition(1, 1));
+    hierarchyPositions.add(new NGramEntryPosition(1, 2));
+    hierarchyPositions.add(new NGramEntryPosition(1, 3));
 
     Assert.assertEquals(hierarchyPositions, hierarchy.getAllPositions());
   }

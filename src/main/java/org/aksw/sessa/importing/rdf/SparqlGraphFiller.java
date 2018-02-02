@@ -8,12 +8,13 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This class uses the DBPedia-SPARQL interface to provide
- * information about the missing triple elements.
+ * This class uses the DBPedia-SPARQL interface to provide information about the missing triple
+ * elements.
  */
 //FIXME hard coded DBpedia
 public class SparqlGraphFiller {
 
+  private static final Logger log = LoggerFactory.getLogger(SparqlGraphFiller.class);
   private final String QUERY_STRING =
       "SELECT DISTINCT ?o WHERE {" +
           "{ <%1$s> <%2$s> ?o. } UNION" +
@@ -23,11 +24,8 @@ public class SparqlGraphFiller {
           "{ <%2$s> ?o <%1$s>. } UNION" +
           "{ ?o <%2$s> <%1$s>. }" +
           "} LIMIT 100";
-
   // one day for now
   private final long TIME_TO_LIVE = 24L * 60L * 60L * 1000L;
-  private static final Logger log = LoggerFactory.getLogger(SparqlGraphFiller.class);
-
 
   /**
    * Builds query with given URIs to find the missing triple.
@@ -41,11 +39,9 @@ public class SparqlGraphFiller {
   }
 
   /**
-   * Given two URIs, it tries to find the missing triple element.
-   * Example (URIs shortened):
-   * Given dbr:Bill_Gates and dbo:birthPlace this method should at least
-   * provide dbr:Seattle, because 'dbr:Bill_Gates dbo:birthPlace dbr:Seattle.'
-   * is a valid triple in the DBpedia-database.
+   * Given two URIs, it tries to find the missing triple element. Example (URIs shortened): Given
+   * dbr:Bill_Gates and dbo:birthPlace this method should at least provide dbr:Seattle, because
+   * 'dbr:Bill_Gates dbo:birthPlace dbr:Seattle.' is a valid triple in the DBpedia-database.
    *
    * @param uri1 first URI to be used for the SPARQL-query
    * @param uri2 second URI to be used for the SPARQL-query

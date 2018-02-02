@@ -30,7 +30,7 @@ public class CandidateGeneratorTest {
   HashSet<String> gates;
 
   @Before
-  public void initialize(){
+  public void initialize() {
     Map<String, Set<String>> candidateEntities = new HashMap<>();
     spouse = new HashSet<>();
     spouse.add("dbo:spouse");
@@ -61,14 +61,13 @@ public class CandidateGeneratorTest {
 
     NGramHierarchy runningExample = new NGramHierarchy("birthplace bill gates wife");
 
-
     candidateMapping = candidateGenerator.getCandidateMapping(runningExample);
 
   }
 
   @Test
   public void testGet_BillGatesContent() {
-    Set<Candidate> candidates = candidateMapping.get(new NGramEntryPosition(2,1));
+    Set<Candidate> candidates = candidateMapping.get(new NGramEntryPosition(2, 1));
     Candidate billGates = new Candidate("dbr:Bill_Gates", "bill gates");
     Assert.assertThat(candidates, hasItem(billGates));
   }
@@ -76,7 +75,7 @@ public class CandidateGeneratorTest {
   @Test
   public void testGet_PrunedGatesContent() {
     // dbr:Bill_Gates pruned, because "bill gates" is father of "gates"
-    Set<Candidate> candidates = candidateMapping.get(new NGramEntryPosition(1,2));
+    Set<Candidate> candidates = candidateMapping.get(new NGramEntryPosition(1, 2));
     Candidate billGates = new Candidate("dbr:Bill_Gates", "bill gates");
     Candidate noBillGates = new Candidate("dbpedia:The_Gates", "gates");
     Assert.assertThat(candidates, hasItem(noBillGates));

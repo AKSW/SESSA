@@ -20,10 +20,11 @@ public class TsvFileHandlerTest {
   private Set<Entry<String, String>> entrySet;
 
   @Before
-  public void init() throws Exception{
+  public void init() throws Exception {
     entrySet = new HashSet<>();
     FileHandlerInterface handler = new TsvFileHandler(FILE);
-    for(Entry<String,String> entry = handler.nextEntry(); entry != null;entry = handler.nextEntry()) {
+    for (Entry<String, String> entry = handler.nextEntry(); entry != null;
+        entry = handler.nextEntry()) {
       entrySet.add(entry);
     }
     handler.close();

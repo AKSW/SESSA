@@ -23,9 +23,10 @@ public class SelfBuildingGraph implements GraphInterface {
    * further expanded.
    */
   public static final int MAX_EXPANSIONS = 3;
+  private static final Logger log = LoggerFactory.getLogger(GraphInterface.class);
+  private static int factIterator = 0;
   private int currentExpansion;
   private Map<Node, Node> nodes;
-
   /**
    * We only want to update the graph with new information. Therefore we store the nodes that got
    * added after the last update
@@ -33,12 +34,8 @@ public class SelfBuildingGraph implements GraphInterface {
   private Map<Node, Node> lastNewNodes;
   private Map<Node, Set<Node>> edgeMap;
   private Map<Node, Set<Node>> reversedEdgeMap; // we need both ways (except for fact-nodes)
-  private static int factIterator = 0;
-
   // Stores already compared key pairs so they don't get compared again
   private Map<Node, Set<Node>> comparedNodes;
-
-  private static final Logger log = LoggerFactory.getLogger(GraphInterface.class);
 
 
   /**

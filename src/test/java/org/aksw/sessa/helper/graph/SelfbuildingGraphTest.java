@@ -1,6 +1,5 @@
 package org.aksw.sessa.helper.graph;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +20,7 @@ public class SelfbuildingGraphTest {
   }
 
   @Test
-  public void testUpdateGraph(){
+  public void testUpdateGraph() {
     //FIXME: Tests for this probably would not differ from ColorSpreaderTest and GraphTest
   }
 }

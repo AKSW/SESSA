@@ -13,10 +13,10 @@ import java.util.Stack;
  */
 public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
 
-  private BufferedReader reader;
+  protected String file;
   String firstEntry;
   Stack<String> otherEntries;
-  protected String file;
+  private BufferedReader reader;
 
   /**
    * Initializes reader with given file and stack as empty stack.
@@ -32,6 +32,7 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
 
   /**
    * Reads next line of file and therefore the next pair of key => set of values.
+   *
    * @return next pair of key => set of values
    * @throws IOException If an I/O error occurs
    */

@@ -14,8 +14,8 @@ import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
 import org.aksw.sessa.helper.files.handler.RdfFileHandler;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.energy.LevenshteinDistanceFunction;
-import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
+import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.apache.jena.ext.com.google.common.base.Joiner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +25,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SESSAMeasurement {
 
-  private SESSA sessa;
   private static final Logger log = LoggerFactory.getLogger(SESSAMeasurement.class);
-
+  private SESSA sessa;
   private String RDF_labels = "src/main/resources/dbpedia_3Eng_class.ttl";
   private String RDF_ontology = "src/main/resources/dbpedia_3Eng_property.ttl";
 
@@ -54,20 +53,6 @@ public class SESSAMeasurement {
       log.error(e.getLocalizedMessage(), e);
     }
     addFiltersAndEnergyFunction();
-  }
-
-  /**
-   * Use this method for adding filters and manipulate the energy score.
-   */
-  private void addFiltersAndEnergyFunction() {
-    Filter lFilter = new Filter(new LevenshteinDistanceFunction(), 5);
-    //Filter pFilter = new Filter(new PagerRankFunction(), 3);
-
-    EnergyFunctionInterface lFunction = new LevenshteinDistanceFunction();
-    sessa.addFilter(lFilter);
-    sessa.setEnergyFunction(lFunction);
-    //sessa.addFilter(pRFilter);
-
   }
 
   public static void main(String[] args) {
@@ -105,6 +90,20 @@ public class SESSAMeasurement {
     log.debug("The questions are: {}", questionsAnswered);
     log.debug("Final F-measure for questions which where at least partially answered correct: {}",
         answerFMeasure / questionsAnswered.size());
+  }
+
+  /**
+   * Use this method for adding filters and manipulate the energy score.
+   */
+  private void addFiltersAndEnergyFunction() {
+    Filter lFilter = new Filter(new LevenshteinDistanceFunction(), 5);
+    //Filter pFilter = new Filter(new PagerRankFunction(), 3);
+
+    EnergyFunctionInterface lFunction = new LevenshteinDistanceFunction();
+    sessa.addFilter(lFilter);
+    sessa.setEnergyFunction(lFunction);
+    //sessa.addFilter(pRFilter);
+
   }
 
 }

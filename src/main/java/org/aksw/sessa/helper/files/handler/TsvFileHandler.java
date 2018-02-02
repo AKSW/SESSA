@@ -5,9 +5,9 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 
 /**
- * This class is an implementation of the abstract class {@link AbstractTsvFileHandler}. and is capable
- * of handling tsv-files (tab separated values). This class expects a
- * tsv-file which has a mapping of URIs to a list of n-grams.
+ * This class is an implementation of the abstract class {@link AbstractTsvFileHandler} and is
+ * capable of handling tsv-files (tab separated values). This class expects a tsv-file which has a
+ * mapping of URIs to a list of n-grams.
  *
  * @author Simon Bordewisch
  */

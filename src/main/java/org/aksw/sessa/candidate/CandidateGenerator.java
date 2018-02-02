@@ -10,8 +10,7 @@ import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 
 /**
- * Created by Simon Bordewisch on 08.06.17.
- * Given a mapping of n-grams to URIs, provides a mapping
+ * Created by Simon Bordewisch on 08.06.17. Given a mapping of n-grams to URIs, provides a mapping
  * of URI-candidates for given n-gram hierarchy.
  */
 public class CandidateGenerator {
@@ -33,7 +32,8 @@ public class CandidateGenerator {
    *
    * @param nGramHierarchy n-gram hierarchy, for which the candidates should be found
    */
-  public Map<NGramEntryPosition, Set<Candidate>> getCandidateMapping(NGramHierarchy nGramHierarchy) {
+  public Map<NGramEntryPosition, Set<Candidate>> getCandidateMapping(
+      NGramHierarchy nGramHierarchy) {
     Map<NGramEntryPosition, Set<Candidate>> candidateMap = new HashMap<>();
 
     // first iteration: only add to candidateMap

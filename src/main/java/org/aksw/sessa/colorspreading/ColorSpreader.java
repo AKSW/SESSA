@@ -21,12 +21,12 @@ import org.slf4j.LoggerFactory;
 public class ColorSpreader {
 
 
+  private static final Logger log = LoggerFactory.getLogger(ColorSpreader.class);
   private GraphInterface graph;
   private Set<Node> lastActivatedNodes;
   private Set<Node> activatedNodes;
   private Set<Node> resultNodes;
   private int bestExplanation;
-  private static final Logger log = LoggerFactory.getLogger(ColorSpreader.class);
 
   /**
    * Constructs the initial graph in colorspreader with the given candidate mapping.

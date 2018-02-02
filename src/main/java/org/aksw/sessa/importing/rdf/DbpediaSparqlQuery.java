@@ -19,12 +19,10 @@ import org.slf4j.LoggerFactory;
  */
 public class DbpediaSparqlQuery {
 
+  private static final Logger log = LoggerFactory.getLogger(DbpediaSparqlQuery.class);
   public final String DBPEDIA_URI = "http://dbpedia.org/sparql";
-
   // one day for now
   private final long TIME_TO_LIVE = 24L * 60L * 60L * 1000L;
-  private static final Logger log = LoggerFactory.getLogger(DbpediaSparqlQuery.class);
-
 
   /**
    * Returns a set of results for the given query.

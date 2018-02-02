@@ -42,7 +42,7 @@ public class SimpleMapDictionary implements DictionaryInterface {
   public Set<Candidate> get(String nGram) {
     Set<String> uriSet = dictionary.get(nGram);
     Set<Candidate> candidateSet = new HashSet<>();
-    if(uriSet != null) {
+    if (uriSet != null) {
       for (String uri : uriSet) {
         Candidate candidate = new Candidate(uri, nGram);
         if (energyFunction != null) {

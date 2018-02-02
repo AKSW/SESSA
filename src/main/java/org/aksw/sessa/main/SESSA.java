@@ -12,9 +12,9 @@ import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
-import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
+import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.aksw.sessa.query.models.Candidate;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
  */
 public class SESSA {
 
+  private static final Logger log = LoggerFactory.getLogger(SESSA.class);
   private DictionaryInterface dictionary;
   private QueryProcessingInterface queryProcess;
-  private static final Logger log = LoggerFactory.getLogger(SESSA.class);
 
   /**
    *
@@ -60,7 +60,7 @@ public class SESSA {
     dictionary.addFilter(filter);
   }
 
-  public void setEnergyFunction(EnergyFunctionInterface function){
+  public void setEnergyFunction(EnergyFunctionInterface function) {
     dictionary.setEnergyFunction(function);
   }
 

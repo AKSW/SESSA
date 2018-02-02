@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
@@ -47,35 +46,28 @@ import org.apache.lucene.util.Version;
  */
 public class LuceneDictionary extends FileBasedDictionary implements AutoCloseable {
 
-  private static final Version LUCENE_VERSION = Version.LUCENE_46;
-
   /**
    * Contains the path to the index.
    */
   public static final String DEFAULT_PATH_TO_INDEX = "resources/index";
-
   /**
    * Contains the field name for the keys in Lucene.
    */
   public static final String FIELD_NAME_KEY = "N-GRAM";
-
   /**
    * Contains the field name for the values in Lucene.
    */
   public static final String FIELD_NAME_VALUE = "URI";
-
   /**
    * Defines how many documents will be retrieved from the index for each query.
    */
   public static final int NUMBER_OF_DOCS_RECEIVED_FROM_INDEX = 100;
-
   /**
    * Contains the stop words, for which the search will be omitted.
    */
   public static final List<String> STOP_WORDS = ImmutableList
       .of("the", "of", "on", "in", "for", "at", "to");
-
-
+  private static final Version LUCENE_VERSION = Version.LUCENE_46;
   private Directory directory;
   private Similarity similarity;
   private IndexSearcher iSearcher;

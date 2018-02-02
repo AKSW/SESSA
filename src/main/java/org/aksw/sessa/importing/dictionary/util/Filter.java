@@ -88,7 +88,6 @@ public class Filter {
    * @param keyword original n-gram with which the uri was found
    * @param foundURI found URI for which the energy score should be calculated
    * @param foundKey key of the dictionary for which the URI is the value
-   *
    * @return rank for given entry and keyword
    */
   protected float getRank(String keyword, String foundURI, String foundKey) {

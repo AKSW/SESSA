@@ -4,12 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class represents the n-gram hierarchy.
- * For a given n-gram it represents a tree.
- * The root of the tree is the n-gram itself.
- * The children of each node are the different 'n-1-grams'.
- * E.g. the children of the trigram "bill gates wife" are
- * bigrams "bill gates" and "gates wife".
+ * This class represents the n-gram hierarchy. For a given n-gram it represents a tree. The root of
+ * the tree is the n-gram itself. The children of each node are the different 'n-1-grams'. E.g. the
+ * children of the trigram "bill gates wife" are bigrams "bill gates" and "gates wife".
  *
  * @author Simon Bordewisch
  */
@@ -18,10 +15,8 @@ public class NGramHierarchy {
   private String[] ngram;
 
   /**
-   * Initializes with already splitted n-gram.
-   * The split has to be between the words.
-   * E.g. the orginal n-gram "birthplace bill gates" has to be given as
-   * '["birthplace", "bill", "gates"]'.
+   * Initializes with already splitted n-gram. The split has to be between the words. E.g. the
+   * orginal n-gram "birthplace bill gates" has to be given as '["birthplace", "bill", "gates"]'.
    *
    * @param ngram already split n-gram
    */
@@ -30,8 +25,8 @@ public class NGramHierarchy {
   }
 
   /**
-   * Initializes with n-gram sentences in normal String-representation.
-   * Unigram has to be split by one single space.
+   * Initializes with n-gram sentences in normal String-representation. Unigram has to be split by
+   * one single space.
    *
    * @param ngram n-gram in String-representation
    */
@@ -103,8 +98,8 @@ public class NGramHierarchy {
 
 
   /**
-   * Given the position and length for a n-gram, returns direct children,
-   * i.e. the children directly connected to the n-gram within the n-gram hierarchy.
+   * Given the position and length for a n-gram, returns direct children, i.e. the children directly
+   * connected to the n-gram within the n-gram hierarchy.
    *
    * @param length represents the length of the n-gram, e.g. length=2 is a bigram
    * @param index represents the position within the n-gram of given length
@@ -122,9 +117,9 @@ public class NGramHierarchy {
   }
 
   /**
-   * Returns the whole n-gram hierarchy sorted by length, then by position.
-   * E.g. "birthplace bill gates" would return
-   * ["birthplace bill gates", "birthplace bill", "bill gates", "birthplace", "bill", "gates"]
+   * Returns the whole n-gram hierarchy sorted by length, then by position. E.g. "birthplace bill
+   * gates" would return ["birthplace bill gates", "birthplace bill", "bill gates", "birthplace",
+   * "bill", "gates"]
    *
    * @return n-gram hierarchy represented as array
    */
@@ -141,9 +136,9 @@ public class NGramHierarchy {
   }
 
   /**
-   * Generates all possible NGramEntryPositions for this n-gram hierarchy.
-   * I.e. if the n-gram has a length of 3, it would generate the NGramEntryPositions for
-   * the trigram, for the 2 possible bigrams and for the 3 unigrams.
+   * Generates all possible NGramEntryPositions for this n-gram hierarchy. I.e. if the n-gram has a
+   * length of 3, it would generate the NGramEntryPositions for the trigram, for the 2 possible
+   * bigrams and for the 3 unigrams.
    *
    * @return all possible NgramEntryPositions as set
    * @see NGramEntryPosition
@@ -159,8 +154,7 @@ public class NGramHierarchy {
   }
 
   /**
-   * Returns length of initial n-gram,
-   * i.e. how many words it has.
+   * Returns length of initial n-gram, i.e. how many words it has.
    *
    * @return number of words within the initial n-gram
    */

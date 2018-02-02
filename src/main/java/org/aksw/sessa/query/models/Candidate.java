@@ -48,15 +48,6 @@ public class Candidate {
   }
 
   /**
-   * Sets the energy score for this candidate
-   *
-   * @param energyScore energy value to the found URI
-   */
-  public void setEnergy(float energyScore) {
-    this.energy = energyScore;
-  }
-
-  /**
    * Returns the key of the entry in the dictionary in which the URI was found.
    *
    * @return the key of the entry in the dictionary in which the URI was found
@@ -81,6 +72,15 @@ public class Candidate {
    */
   public float getEnergy() {
     return energy;
+  }
+
+  /**
+   * Sets the energy score for this candidate
+   *
+   * @param energyScore energy value to the found URI
+   */
+  public void setEnergy(float energyScore) {
+    this.energy = energyScore;
   }
 
   /**

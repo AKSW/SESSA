@@ -14,8 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides a HashMap-based dictionary given a file handler.
- * This class is an implementation of the interface {@link DictionaryInterface}.
+ * Provides a HashMap-based dictionary given a file handler. This class is an implementation of the
+ * interface {@link DictionaryInterface}.
  *
  * @author Simon Bordewisch
  */
@@ -24,8 +24,9 @@ public class HashMapDictionary extends FileBasedDictionary {
   private static final Logger log = LoggerFactory.getLogger(FileBasedDictionary.class);
 
   /**
-   * Initializes the dictionary with given file handler.
-   * The file will be parsed into the dictionary.
+   * Initializes the dictionary with given file handler. The file will be parsed into the
+   * dictionary.
+   *
    * @param handler handler to be used for filling the dictionary
    */
   public HashMapDictionary(FileHandlerInterface handler) {
@@ -35,12 +36,13 @@ public class HashMapDictionary extends FileBasedDictionary {
 
   /**
    * Creates the dictionary based on every entry that the file handler gives
+   *
    * @param handler file handler that has file information
    * @return mapping of n-grams to set of URIs
    */
-   protected Map<String, Set<String>> createDictionary(FileHandlerInterface handler) {
+  protected Map<String, Set<String>> createDictionary(FileHandlerInterface handler) {
     Map<String, Set<String>> dictionary = new HashMap<>();
-    try{
+    try {
       for (Entry<String, String> entry; (entry = handler.nextEntry()) != null; ) {
         String key = entry.getKey();
         Set<String> values = dictionary.get(key);
@@ -57,8 +59,9 @@ public class HashMapDictionary extends FileBasedDictionary {
   }
 
   /**
-   * Given a n-gram, returns a set of URIs related to it or null if this map contains
-   * no mapping for the key.
+   * Given a n-gram, returns a set of URIs related to it or null if this map contains no mapping for
+   * the key.
+   *
    * @param nGram n-gram whose associated value is to be returned
    * @return mapping of n-grams to set of URIs
    */
@@ -66,14 +69,14 @@ public class HashMapDictionary extends FileBasedDictionary {
   public Set<Candidate> get(String nGram) {
     Set<String> foundUris = dictionary.get(nGram);
     Set<Candidate> candidateSet = new HashSet<>();
-    if(foundUris != null) {
+    if (foundUris != null) {
       for (String uri : foundUris) {
         Candidate candidate = new Candidate(uri, nGram);
         candidateSet.add(candidate);
       }
     }
     Set<Candidate> filteredCandidateSet = this.filter(nGram, candidateSet);
-    if(energyFunction != null) {
+    if (energyFunction != null) {
       this.calculateEnergy(filteredCandidateSet, nGram);
     }
     return filteredCandidateSet;
@@ -81,23 +84,26 @@ public class HashMapDictionary extends FileBasedDictionary {
 
   /**
    * Adds the entries in the give file to the dictionary.
+   *
    * @param handler handler that has file information
    */
-  public void putAll(FileHandlerInterface handler){
+  public void putAll(FileHandlerInterface handler) {
     dictionary.putAll(createDictionary(handler));
   }
 
   /**
    * Returns a set view of the mappings contained in this map.
+   *
    * @return a set view of the mappings contained in this map
    */
   public Set<Entry<String, Set<String>>> entrySet() {
     return dictionary.entrySet();
   }
 
-  private void calculateEnergy(Set<Candidate> candidateSet, String nGram){
-    for(Candidate candidate : candidateSet){
-      float energy = energyFunction.calculateEnergyScore(nGram, candidate.getUri(), candidate.getKey());
+  private void calculateEnergy(Set<Candidate> candidateSet, String nGram) {
+    for (Candidate candidate : candidateSet) {
+      float energy = energyFunction
+          .calculateEnergyScore(nGram, candidate.getUri(), candidate.getKey());
       candidate.setEnergy(energy);
     }
   }

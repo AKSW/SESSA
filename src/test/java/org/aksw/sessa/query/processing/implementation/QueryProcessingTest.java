@@ -26,7 +26,9 @@ public class QueryProcessingTest {
     QueryProcessingInterface qp = new SimpleQueryProcessing();
     ngram = "birthplace bill gates wife";
     nGramHierarchy = qp.processQuery(ngram);
-    String[] expectedStringArray = {"birthplace bill gates wife", "birthplace bill gates", "bill gates wife", "birthplace bill", "bill gates", "gates wife", "birthplace", "bill", "gates", "wife"};
+    String[] expectedStringArray = {"birthplace bill gates wife", "birthplace bill gates",
+        "bill gates wife", "birthplace bill", "bill gates", "gates wife", "birthplace", "bill",
+        "gates", "wife"};
     Assert.assertArrayEquals(expectedStringArray, nGramHierarchy.toStringArray());
   }
 }
