@@ -165,13 +165,12 @@ public class NGramEntryPosition {
   }
 
   public boolean isMergeable(Set<NGramEntryPosition> otherColors){
-    boolean isMergeable = true;
     for(NGramEntryPosition otherColor : otherColors){
       if(!isMergeable(otherColor)){
-        isMergeable =  false;
+        return false;
       }
     }
-    return isMergeable;
+    return true;
   }
 
   public boolean isMergeable(NGramEntryPosition otherColor){
