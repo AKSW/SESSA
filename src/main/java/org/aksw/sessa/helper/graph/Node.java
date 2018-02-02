@@ -1,6 +1,7 @@
 package org.aksw.sessa.helper.graph;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 
@@ -11,8 +12,8 @@ import org.aksw.sessa.query.models.NGramEntryPosition;
 public class Node<T> {
 
   private T nodeContent;
+  private long id;
 
-  private int explanation;
   private float energy;
   private Set<NGramEntryPosition> colors;
   private boolean isFactNode;
@@ -24,11 +25,7 @@ public class Node<T> {
    * @param nodeContent content to be stored in the node
    */
   public Node(T nodeContent) {
-    this.nodeContent = nodeContent;
-    this.explanation = 0;
-    this.energy = 0;
-    this.colors = new HashSet<>();
-    this.isFactNode = false;
+    this(nodeContent, 0, new HashSet<>(), false);
   }
 
   /**
@@ -43,8 +40,6 @@ public class Node<T> {
     this.nodeContent = nodeContent;
     this.energy = energy;
     this.colors = colors;
-    this.explanation = 0;
-    updateExplanation(colors);
     this.isFactNode = isFactNode;
   }
 
@@ -56,36 +51,16 @@ public class Node<T> {
   }
 
   /**
-   * Returns the explanation score of this node. For explanation of this score see {@link
-   * #updateExplanation(NGramEntryPosition)}}.
+   * Returns the explanation score of this node.
    */
   public int getExplanation() {
+    int explanation = 0;
+    for (NGramEntryPosition color : colors) {
+      explanation += color.getLength();
+    }
     return explanation;
   }
 
-  /**
-   * Updates the explanation score for this node.
-   *
-   * @param colors newly added colors, with which the explanation will be updated
-   * @see #updateExplanation(NGramEntryPosition)
-   */
-  private void updateExplanation(Set<NGramEntryPosition> colors) {
-    for (NGramEntryPosition color : colors) {
-      updateExplanation(color);
-    }
-  }
-
-  /**
-   * Updates the explanation score for this node. The explanation score provides information on how
-   * many uni-grams this node is build on. E.g. this node might hold content about Bill Gates and is
-   * explained by the uni-grams "bill" & "gates" and therefore has an explanation score of 2.
-   *
-   * @param color newly added color, with which the explanation will be updated
-   */
-  private void updateExplanation(NGramEntryPosition color) {
-    // length of a colors equals number of represented n-grams
-    this.explanation += color.getLength();
-  }
 
   /**
    * Returns the energy score of this node.
@@ -98,8 +73,8 @@ public class Node<T> {
 
   /**
    * Sets the energy score for this node. The energy score is another score that tries to explain
-   * how good trustworthy the n-gram mapping to the content is. E.g. this can be realized via
-   * Levenshtein distance.
+   * how trustworthy the n-gram mapping to the content is. E.g. this can be realized via Levenshtein
+   * distance.
    */
   public void setEnergy(float newEnergy) {
     energy = newEnergy;
@@ -118,12 +93,20 @@ public class Node<T> {
    * Adds a color to this node. Colors are represented by n-gram-positions in the n-gram hierarchy.
    * They show which n-grams were used to explain the content of this node.
    *
-   * @param color position of the n-gram in the n-gram hierarchy
+   * @param otherColor position of the n-gram in the n-gram hierarchy
    * @see NGramEntryPosition
    */
-  public void addColor(NGramEntryPosition color) {
-    this.colors.add(color);
-    updateExplanation(color);
+  public void addColor(NGramEntryPosition otherColor) {
+    Set<NGramEntryPosition> removeColors = new HashSet<>();
+    for (NGramEntryPosition color : colors) {
+      if (color.isOverlappingWith(otherColor)) {
+        if (otherColor.getLength() > color.getLength()) {
+          removeColors.add(color);
+        }
+      }
+    }
+    colors.removeAll(removeColors);
+    this.colors.add(otherColor);
   }
 
   /**
@@ -133,8 +116,9 @@ public class Node<T> {
    * @see #addColor(NGramEntryPosition)
    */
   public void addColors(Set<NGramEntryPosition> colors) {
-    this.colors.addAll(colors);
-    updateExplanation(colors);
+    for (NGramEntryPosition color : colors) {
+      addColor(color);
+    }
   }
 
   /**
@@ -157,6 +141,20 @@ public class Node<T> {
   }
 
   /**
+   * Returns ID of this node
+   */
+  long getId() {
+    return id;
+  }
+
+  /**
+   * Generates a random new ID for this node.
+   */
+  public void newId() {
+    id = new Random().nextLong();
+  }
+
+  /**
    * Checks if the color of this node and the other are overlapping. I.e. if they share a color or
    * if they share a descendant of a color.
    *
@@ -175,8 +173,24 @@ public class Node<T> {
   }
 
   /**
+   * Checks if colors of this node are mergeable with the given colors. Colors are mergeable if they
+   * either don't overlap or are related.
+   *
+   * @param otherColors colors which should be check for mergeablity
+   * @return true if colors are mergeable, false if they aren't
+   */
+  public boolean colorsAreMergeable(Set<NGramEntryPosition> otherColors) {
+    for (NGramEntryPosition color : this.colors) {
+      if (!color.isMergeable(otherColors)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
    * Compares the specified object with this node for equality. Returns true if the given object is
-   * also a Node and has the same content.
+   * also a Node and has the same content and the same id.
    *
    * @param other object to be compared for equality with this node
    * @return true if the specified object is equal to this node
@@ -184,7 +198,8 @@ public class Node<T> {
   @Override
   public boolean equals(Object other) {
     if (other instanceof Node<?>) {
-      if (((Node<?>) other).getContent().equals(this.nodeContent)) {
+      if (((Node<?>) other).getContent().equals(this.nodeContent) &&
+          ((Node<?>) other).getId() == this.getId()) {
         return true;
       }
     }
@@ -210,7 +225,9 @@ public class Node<T> {
    */
   @Override
   public String toString() {
-    return "Node{" + "nodeContent=" + nodeContent + ", explanation=" + explanation + ", energy="
+    return "Node{" + "nodeContent=" + nodeContent + ", id=" + getId() + ", explanation="
+        + getExplanation()
+        + ", energy="
         + energy + ", colors=" + colors + ", isFactNode=" + isFactNode + '}';
   }
 }

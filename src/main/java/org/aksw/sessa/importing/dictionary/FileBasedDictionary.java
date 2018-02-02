@@ -59,8 +59,11 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
     filteredCandidateSet.addAll(candidateSet);
     for (Filter filter : filterQue) {
       filteredCandidateSet = filter.filter(keyword, filteredCandidateSet);
-      log.debug("Used filter {} with result limit of {}. Got list: {}",
-          filter.getClass().getSimpleName(), filter.getNumberOfResults(), filteredCandidateSet);
+      log.debug("Used filter for keyword {} with {} with result limit of {}. Got list: {}",
+          keyword,
+          filter.getEnergyFunction().getClass().getSimpleName(),
+          filter.getNumberOfResults(),
+          filteredCandidateSet);
     }
     return filteredCandidateSet;
   }

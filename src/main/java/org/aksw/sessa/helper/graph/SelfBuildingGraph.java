@@ -6,9 +6,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.importing.rdf.SparqlGraphFiller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * This class implements a graph, that builds itself using its node-contents to find new nodes. This
+ * This class implements a graph, that builds itself using its node content to find new nodes. This
  * is currently realized using {@link org.aksw.sessa.importing.rdf.SparqlGraphFiller}. The class
  * only searches for new nodes if every node has an explanation score.
  *
@@ -22,19 +24,21 @@ public class SelfBuildingGraph implements GraphInterface {
    */
   public static final int MAX_EXPANSIONS = 3;
   private int currentExpansion;
-  private Set<Node> nodes;
+  private Map<Node, Node> nodes;
 
   /**
    * We only want to update the graph with new information. Therefore we store the nodes that got
    * added after the last update
    */
-  private Set<Node> lastNewNodes;
+  private Map<Node, Node> lastNewNodes;
   private Map<Node, Set<Node>> edgeMap;
   private Map<Node, Set<Node>> reversedEdgeMap; // we need both ways (except for fact-nodes)
   private static int factIterator = 0;
 
   // Stores already compared key pairs so they don't get compared again
-  private HashMap<Node, Set<Node>> comparedNodes;
+  private Map<Node, Set<Node>> comparedNodes;
+
+  private static final Logger log = LoggerFactory.getLogger(GraphInterface.class);
 
 
   /**
@@ -48,10 +52,14 @@ public class SelfBuildingGraph implements GraphInterface {
    * Constructs a graph with given nodes.
    */
   public SelfBuildingGraph(Set<Node> nodes) {
-    this.nodes = nodes;
+    this.nodes = new HashMap<>();
+    this.lastNewNodes = new HashMap<>();
     this.edgeMap = new HashMap<>();
     this.reversedEdgeMap = new HashMap<>();
-    this.lastNewNodes = new HashSet<>(nodes);
+    for (Node node : nodes) {
+      this.nodes.put(node, node);
+      this.lastNewNodes.put(node, node);
+    }
     this.comparedNodes = new HashMap<>();
     this.currentExpansion = 1;
   }
@@ -59,13 +67,13 @@ public class SelfBuildingGraph implements GraphInterface {
 
   @Override
   public void addNode(Node node) {
-    nodes.add(node);
-    lastNewNodes.add(node);
+    nodes.put(node, node);
+    lastNewNodes.put(node, node);
   }
 
   @Override
   public Set<Node> getNodes() {
-    return nodes;
+    return nodes.keySet();
   }
 
   @Override
@@ -127,7 +135,7 @@ public class SelfBuildingGraph implements GraphInterface {
    */
   private boolean everyNodeHasColor() {
     boolean everyNodeHasColor = true;
-    for (Node node : nodes) {
+    for (Node node : nodes.keySet()) {
       if (node.getColors().isEmpty()) {
         everyNodeHasColor = false;
         break;
@@ -145,15 +153,15 @@ public class SelfBuildingGraph implements GraphInterface {
    */
   protected void expandGraph() {
     if (currentExpansion <= MAX_EXPANSIONS) {
-      SparqlGraphFiller sgf = new SparqlGraphFiller();
-      Set<Node> newNodes = new HashSet<>();
+      SparqlGraphFiller filler = new SparqlGraphFiller();
+      Map<Node, Node> newNodes = new HashMap<>();
 
       // Copies of the node-sets so we can add nodes to the original ones
-      Set<Node> nodes = new HashSet<>(this.nodes);
-      Set<Node> lastNewNodes = new HashSet<>(this.lastNewNodes);
+      Map<Node, Node> nodes = new HashMap<>(this.nodes);
+      Map<Node, Node> lastNewNodes = new HashMap<>(this.lastNewNodes);
 
-      for (Node lastNewNode : lastNewNodes) {
-        for (Node node : nodes) {
+      for (Node lastNewNode : lastNewNodes.keySet()) {
+        for (Node node : nodes.keySet()) {
           if ((!comparedNodes.containsKey(lastNewNode) ||
               !comparedNodes.get(lastNewNode).contains(node)) &&
               !node.isFactNode()) {
@@ -163,13 +171,34 @@ public class SelfBuildingGraph implements GraphInterface {
             if (!node.getColors().isEmpty() &&
                 !lastNewNode.getColors().isEmpty() &&
                 !node.isOverlappingWith(lastNewNode)) {
-              Set<String> newContent = sgf.findMissingTripleElement(
+              Set<String> newContent = filler.findMissingTripleElement(
                   node.getContent().toString(),
                   lastNewNode.getContent().toString());
 
               for (String content : newContent) {
                 Node<String> foundNode = new Node<>(content);
-                newNodes.add(foundNode);
+                log.debug("SPARQL found new node {}", foundNode.getContent());
+                if (newNodes.containsKey(foundNode) || nodes.containsKey(foundNode)) {
+                  if (newNodes.containsKey(foundNode)) {
+                    foundNode = newNodes.get(foundNode);
+                    log.debug("Node was already found this round.");
+                  }
+                  if (nodes.containsKey(foundNode)) {
+                    foundNode = nodes.get(foundNode);
+                    log.debug("Its already in the node set.");
+                  }
+                  if (foundNode.colorsAreMergeable(lastNewNode.getColors()) &&
+                      foundNode.colorsAreMergeable(node.getColors())) {
+                    log.debug("Colors are mergeable.");
+                  } else {
+                    log.debug("Colors are not mergeable. Creating new node in graph");
+                    foundNode = new Node<>(content);
+                    foundNode.newId();
+                  }
+                }
+                foundNode.addColors(lastNewNode.getColors());
+                foundNode.addColors(node.getColors());
+                newNodes.put(foundNode, foundNode);
                 integrateNewNode(node, lastNewNode, foundNode);
               }
             }
@@ -218,6 +247,8 @@ public class SelfBuildingGraph implements GraphInterface {
     Node<Integer> factNode = new Node<>(factIterator);
     factIterator++;
     factNode.setNodeType(true);
+    factNode.addColors(node1.getColors());
+    factNode.addColors(node1.getColors());
     addNode(factNode);
     addNode(newNode);
     addEdge(factNode, node1);
@@ -238,7 +269,7 @@ public class SelfBuildingGraph implements GraphInterface {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Nodes:\n");
-    for (Node node : nodes) {
+    for (Node node : nodes.keySet()) {
       sb.append("\t");
       sb.append(node.toString());
       sb.append("\n");

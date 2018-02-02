@@ -37,7 +37,7 @@ public class ColorSpreader {
     lastActivatedNodes = new HashSet<>();
     activatedNodes = new HashSet<>(lastActivatedNodes);
     resultNodes = new HashSet<>();
-    bestExplanation = 0;
+    bestExplanation = -1;
     graph = new SelfBuildingGraph();
     initializeWithEmptyGraph(nGramMapping);
   }
@@ -66,21 +66,19 @@ public class ColorSpreader {
    * score.
    */
   private void updateResult() {
-    // TODO: Handle fact nodes?
-    // TODO: Handle energy score?
+    log.debug("Starting Update process for explanation score.");
     for (Node node : lastActivatedNodes) {
       if (!node.isFactNode()) {
-        if (resultNodes.isEmpty()) {
-          resultNodes.add(node);
-          bestExplanation = node.getExplanation();
-        } else {
-          if (node.getExplanation() >= bestExplanation) {
-            if (node.getExplanation() > bestExplanation) {
-              resultNodes.clear();
-              bestExplanation = node.getExplanation();
-            }
-            resultNodes.add(node);
+        log.debug("Checking explanation of node {}", node);
+        if (node.getExplanation() >= bestExplanation) {
+          log.debug("Node has best explanation.");
+          if (node.getExplanation() > bestExplanation) {
+            log.debug(
+                "Node has best explanation score yet. Clearing old result set and updating best explanation.");
+            resultNodes.clear();
+            bestExplanation = node.getExplanation();
           }
+          resultNodes.add(node);
         }
       }
     }
@@ -94,19 +92,16 @@ public class ColorSpreader {
   }
 
   /**
-   * Updates the scores and colors of a given node based on their neighbours
+   * Updates the scores of a given node based on their neighbours
    *
    * @param node node which should be updated
    */
   private void updateNode(Node node) {
     int energy = 0;
-    Set<NGramEntryPosition> colors = new HashSet<>();
     for (Node neighbor : graph.getAllNeighbors(node)) {
       energy += neighbor.getEnergy();
-      colors.addAll(neighbor.getColors()); // TODO: Get rid of the warning
     }
     node.setEnergy(energy);
-    node.addColors(colors);
   }
 
   /**
@@ -118,9 +113,11 @@ public class ColorSpreader {
    */
   private boolean makeActiviationStep() {
     Set<Node> updatedLastActivatedNodes = new HashSet<>();
+    log.debug("Checking if new nodes can be activated.");
     for (Node node : lastActivatedNodes) {
       Set<Node> neighbors = graph.getAllNeighbors(node);
       for (Node neighbor : neighbors) {
+        log.debug("Checking if following node can be activated:{}", neighbor);
         boolean fulfillsMinimumActivationCriterion = true;
 
         /* We are considering neighbors of already activated nodes,
@@ -142,6 +139,7 @@ public class ColorSpreader {
         if (fulfillsMinimumActivationCriterion &&
             colorsCanBeCombined(neighbor) &&
             !activatedNodes.contains(neighbor)) {
+          log.debug("Node can be updated");
           updateNode(neighbor);
           updatedLastActivatedNodes.add(neighbor);
         }
@@ -160,7 +158,6 @@ public class ColorSpreader {
    * @param node Node to check the criterion for
    * @return true if the colors can be combined
    */
-  @SuppressWarnings("unchecked")
   private boolean colorsCanBeCombined(Node node) {
     Set<NGramEntryPosition> colors = new HashSet<>();
     for (Node neighbor : graph.getAllNeighbors(node)) {
