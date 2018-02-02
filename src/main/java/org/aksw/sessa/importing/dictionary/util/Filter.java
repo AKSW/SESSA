@@ -104,4 +104,10 @@ public class Filter {
     return numberOfResults;
   }
 
+  /**
+   *
+   */
+  public EnergyFunctionInterface getEnergyFunction() {
+    return energyFunction;
+  }
 }
