@@ -4,7 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class represents a position in the n-gram hierarchy.
+ * This class represents a position in the n-gram hierarchy. A node with e.g. length of 2 and  third
+ * position (position=2) this object would represent the third bi-gram. If the whole n-gram is
+ * "birthplace bill gates wife", the object would represent "gates wife". Because this class is also
+ * used to describe which nodes are related in the graph, a NGramEntryPosition can also be seen als
+ * a color of a node.
  *
  * @author Simon Bordewisch
  */
@@ -23,7 +27,7 @@ public class NGramEntryPosition {
 
   /**
    * Initializes object with length and position in the "row". I.e. if e.g. length=2, position=2,
-   * this object would represent the third bigram. If the whole n-gram is "birthplace bill gates
+   * this object would represent the third bi-gram. If the whole n-gram is "birthplace bill gates
    * wife", the object would represent "gates wife".
    *
    * @param length length of the n-gram
@@ -131,6 +135,14 @@ public class NGramEntryPosition {
   }
 
 
+  /**
+   * Returns true if the given color is related to this color, i.e. if it is an ancestor or if the
+   * other color is an ancestor of this color.
+   *
+   * @param otherColor other color that should be checked for relation
+   * @return true if the given color is related to this color, false otherwise
+   * @see #isAncestorOf(NGramEntryPosition)
+   */
   public boolean isRelatedTo(NGramEntryPosition otherColor) {
     if (this.equals(otherColor)) {
       return true;
@@ -147,33 +159,66 @@ public class NGramEntryPosition {
     return false;
   }
 
+
+  /**
+   * Returns true if this color is an ancestor of the given color. A color is an ancestor of another
+   * node, if the node covers all words of the other node and is longer. For example, the color for
+   * "gates wife" would be an ancestor to the colors for "gates" and "wife".
+   *
+   * @param otherColor other color that should be checked if it is an descendant
+   * @return true if this color is an ancestor of the given color, false otherwise
+   */
   public boolean isAncestorOf(NGramEntryPosition otherColor) {
     return this.getAllDescendants().contains(otherColor);
   }
 
-  public boolean isOverlappingWith(NGramEntryPosition otherColor){
-    if(this.getPosition() <= otherColor.getPosition() &&
-        otherColor.getPosition() <= this.getPosition() + this.getLength() - 1){
+  /**
+   * Returns true if the represented positions of this color are overlapping with the represented
+   * positions of the given color. E.g. for the n-gram "birthplace bill gates wife", the color
+   * representing "birthplace bill" would overlap with the color representing "bill gates", because
+   * both cover the word "bill".
+   *
+   * @param otherColor color that should be compared with this color for overlaps
+   * @return true if the represented positions of this color are overlapping, false otherwise
+   */
+  public boolean isOverlappingWith(NGramEntryPosition otherColor) {
+    if (this.getPosition() <= otherColor.getPosition() &&
+        otherColor.getPosition() <= this.getPosition() + this.getLength() - 1) {
       return true;
     }
 
-    if(otherColor.getPosition() <= this.getPosition() &&
-        this.getPosition() <= otherColor.getPosition() + otherColor.getLength() - 1 ){
+    if (otherColor.getPosition() <= this.getPosition() &&
+        this.getPosition() <= otherColor.getPosition() + otherColor.getLength() - 1) {
       return true;
     }
     return false;
   }
 
-  public boolean isMergeable(Set<NGramEntryPosition> otherColors){
-    for(NGramEntryPosition otherColor : otherColors){
-      if(!isMergeable(otherColor)){
+  /**
+   * Returns true if the given set of colors is mergeable with this color. Also see {@link
+   * #isMergeable(NGramEntryPosition)}
+   *
+   * @param otherColors set of colors that should be checked for mergeability
+   * @return true if the given set of colors is mergeable with this color, false otherwise
+   * @see #isMergeable(NGramEntryPosition)
+   */
+  public boolean isMergeable(Set<NGramEntryPosition> otherColors) {
+    for (NGramEntryPosition otherColor : otherColors) {
+      if (!isMergeable(otherColor)) {
         return false;
       }
     }
     return true;
   }
 
-  public boolean isMergeable(NGramEntryPosition otherColor){
+  /**
+   * Returns true if the given set of colors is mergeable with this color. They are mergeable if
+   * they are related or don't overlap.
+   *
+   * @param otherColor set of colors that should be checked for mergeability
+   * @return true if the given color is mergeable with this color, false otherwise
+   */
+  public boolean isMergeable(NGramEntryPosition otherColor) {
     if (this.isRelatedTo(otherColor)) {
       return true;
     }
