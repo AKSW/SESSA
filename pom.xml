@@ -7,8 +7,41 @@
   <version>0.0.1</version>
   <packaging>jar</packaging>
   <name>KeywordSearch</name>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>spring-releases</id>
+      <url>https://repo.spring.io/libs-release</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>spring-milestones</id>
+      <url>http://repo.spring.io/milestone</url>
+    </pluginRepository>
+  </pluginRepositories>
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <JAVA_OPTS>-Xms415m -Xmx12G -XX:MaxPermSize=1G</JAVA_OPTS>
+          </systemProperties>
+          <mainClass>org.aksw.sessa.main.SESSAGerbilQABenchmarking</mainClass>
+          <layout>JAR</layout>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <classifier>bootable-with-spring</classifier>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -18,8 +51,29 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
+  <dependencyManagement>
+    <dependencies>
+      <!-- Override Spring Data release train provided by Spring Boot -->
+      <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-releasetrain</artifactId>
+        <version>Fowler-SR2</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>1.5.9.RELEASE</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <repositories>
     <repository>
       <id>mvnrepository</id>
@@ -40,6 +94,19 @@
       <id>central</id>
       <name>Central Repository</name>
       <url>http://central.maven.org/maven2/</url>
+    </repository>
+    <repository>
+      <id>spring-snapshot</id>
+      <name>Spring Snapshot Repository</name>
+      <url>https://repo.spring.io/snapshot</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>repository.spring.milestone</id>
+      <name>Spring Milestone Repository</name>
+      <url>https://repo.spring.io/milestone</url>
     </repository>
   </repositories>
   <properties>
@@ -67,7 +134,7 @@
     <dependency>
       <groupId>org.aksw.qa</groupId>
       <artifactId>commons</artifactId>
-      <version>0.4.14</version>
+      <version>0.4.16</version>
     </dependency>
 
     <!-- This is the core artifact; several other ones build on that. -->
@@ -90,6 +157,36 @@
       <artifactId>lucene-core</artifactId>
       <version>4.6.0</version>
     </dependency>
+
+    <!--
+      The following dependency has to be build first, as there is no repository for it.
+      Github-URL: https://github.com/dice-group/GerbilQA-Benchmarking-Template
+      How to install: mvn clean install
+    -->
+    <dependency>
+      <groupId>org.dice-research</groupId>
+      <artifactId>gerbilQABencmarkingTemplate</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
 
   </dependencies>
 </project>
