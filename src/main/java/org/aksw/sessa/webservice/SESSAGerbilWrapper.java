@@ -18,6 +18,10 @@ import org.dice.qa.AnswerContainer.AnswerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class is acts as a wrapper for the {@link org.dice.qa.AbstractQASystem AbstractQASystem}. It
+ * initializes SESSA for the web service with a dictionary.
+ */
 public class SESSAGerbilWrapper extends AbstractQASystem {
 
   private static final Logger log = LoggerFactory.getLogger(SESSAGerbilWrapper.class);
@@ -27,6 +31,9 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
   private String RDF_DBpedia_Ontology = "src/main/resources/dbpedia_2016-10.nt";
   private String RDF_DBpedia_Labels = "src/main/resources/labels_en.ttl";
 
+  /**
+   * Initialize SESSA with the standard dictionary files if there is no Lucene index already.
+   */
   public SESSAGerbilWrapper() {
     sessa = new SESSA();
     long startTime = System.nanoTime();
@@ -54,6 +61,15 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
     addFiltersAndEnergyFunction();
   }
 
+  /**
+   * Asks SESSA for answers and constructs the AnswerContainer
+   *
+   * @param question question the question that should be answered by SESSA (for now keyword based,
+   * i.e. 'birthplace bill gates wife' instead of "Where was Bill Gates' wife born")
+   * @param lang obsolete for now
+   * @return AnswerContainer, containing the answers, the type (always 'RESOURCE') and the
+   * SPARQL-query (which is null, because SESSA does not use just a single query)
+   */
   @Override
   public AnswerContainer retrieveAnswers(String question, String lang) {
     //Create an empty container for your answers
@@ -81,12 +97,6 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
     return answers;
   }
 
-  @Override
-  public void close(){
-    super.close();
-    //This will called as soon as the system will be shutdown
-    //Use it to open resources etc.
-  }
 
   /**
    * Use this method for adding filters and manipulate the energy score.

@@ -6,17 +6,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+/**
+ * Main class for using the web service of SESSA. Mainly only overrides the methods of {link
+ * org.dice.webservice.WebApplication Webapplication} with the needed classes of SESSA.
+ */
 @SpringBootApplication
 public class SESSAGerbilQABenchmarking extends WebApplication {
 
   @Bean
   public QASystem createSystem() {
-    /*
-		 * This is an Example QA System providing a static response.
-		 * Implement your System as a QASystem and create it here
-		 *
-		 * CREATE YOUR SYSTEM HERE
-		 */
     return new SESSAGerbilWrapper();
   }
 
