@@ -1,4 +1,4 @@
-package org.aksw.sessa.main;
+package org.aksw.sessa.webservice;
 
 import org.dice.qa.QASystem;
 import org.dice.webservice.WebApplication;

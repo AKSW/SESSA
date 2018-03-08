@@ -27,7 +27,7 @@
           <systemProperties>
             <JAVA_OPTS>-Xms415m -Xmx12G -XX:MaxPermSize=1G</JAVA_OPTS>
           </systemProperties>
-          <mainClass>org.aksw.sessa.main.SESSAGerbilQABenchmarking</mainClass>
+          <mainClass>org.aksw.sessa.webservice.SESSAGerbilQABenchmarking</mainClass>
           <layout>JAR</layout>
         </configuration>
         <executions>

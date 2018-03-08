@@ -1,4 +1,4 @@
-package org.aksw.sessa.main;
+package org.aksw.sessa.webservice;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -11,6 +11,7 @@ import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.energy.LevenshteinDistanceFunction;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.aksw.sessa.importing.dictionary.util.Filter;
+import org.aksw.sessa.main.SESSA;
 import org.dice.qa.AbstractQASystem;
 import org.dice.qa.AnswerContainer;
 import org.dice.qa.AnswerContainer.AnswerType;
