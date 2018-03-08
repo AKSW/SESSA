@@ -5,7 +5,7 @@ import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import java.util.HashSet;
 import java.util.Set;
 import org.aksw.sessa.importing.dictionary.energy.LevenshteinDistanceFunction;
-import org.aksw.sessa.importing.dictionary.energy.PagerRankFunction;
+import org.aksw.sessa.importing.dictionary.energy.PageRankFunction;
 import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.aksw.sessa.query.models.Candidate;
 import org.junit.Assert;
@@ -27,7 +27,7 @@ public class FilterTest {
 
   @Test
   public void testFilter_WithPageRank() {
-    Filter filter = new Filter(new PagerRankFunction(), 2);
+    Filter filter = new Filter(new PageRankFunction(), 2);
     Set<Candidate> testSet = new HashSet<>();
     Candidate exactEntry = new Candidate("http://dbpedia.org/resource/Stadium", "stadium");
     testSet.add(exactEntry);

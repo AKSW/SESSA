@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * Provides function to calculate the energy score based on wikipedia page rank of given URI. This
  * class is an implementation of the interface {@link EnergyFunctionInterface}.
  */
-public class PagerRankFunction implements EnergyFunctionInterface {
+public class PageRankFunction implements EnergyFunctionInterface {
 
   private org.slf4j.Logger log = LoggerFactory.getLogger(EnergyFunctionInterface.class);
 

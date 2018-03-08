@@ -101,7 +101,7 @@ public class SESSAMeasurement {
    */
   private void addFiltersAndEnergyFunction() {
     Filter lFilter = new Filter(new LevenshteinDistanceFunction(), 5);
-    //Filter pFilter = new Filter(new PagerRankFunction(), 3);
+    //Filter pFilter = new Filter(new PageRankFunction(), 3);
 
     EnergyFunctionInterface lFunction = new LevenshteinDistanceFunction();
     sessa.addFilter(lFilter);
