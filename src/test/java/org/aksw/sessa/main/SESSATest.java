@@ -10,9 +10,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
+import org.aksw.sessa.helper.files.handler.ReverseTsvFileHandler;
 import org.aksw.sessa.helper.files.handler.TsvFileHandler;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
+import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,14 +23,18 @@ import org.junit.Test;
 public class SESSATest {
 
   public static final String TSV_FILE = "src/test/resources/en_surface_forms_small.tsv";
+  public static final String REVERSE_TSV_FILE = "src/test/resources/small_reverse_dictionary.tsv";
   private SESSA sessa = new SESSA();
   private String question;
   private Set<String> answer;
+  HashMapDictionary dict;
 
   @Before
   public void initialize() throws IOException {
     FileHandlerInterface handler = new TsvFileHandler(TSV_FILE);
+    FileHandlerInterface handler2 = new ReverseTsvFileHandler(REVERSE_TSV_FILE);
     sessa.loadFileToHashMapDictionary(handler);
+    sessa.loadFileToHashMapDictionary(handler2);
   }
 
   @Test
@@ -84,6 +90,12 @@ public class SESSATest {
   }
 
   @Test
+  public void testAnswer_ManyRdfs_Label() {
+    question = "company, aerospace industry, nuclear reactor technology";
+    answer = sessa.answer(question);
+  }
+
+  @Test
   public void testGetGraphFor_TestColors() {
     question = "music by elton john current production minskoff theatre";
     GraphInterface graph = sessa.getGraphFor(question);
@@ -96,6 +108,7 @@ public class SESSATest {
     System.out.println(graph);
     Assert.assertThat(answerNode.getExplanation(), equalTo(question.split(" ").length));
   }
+
   // TODO: create tests for other questions
 
   // TODO: create tests for accessibility to QueryProcessing & Co.

@@ -7,3 +7,13 @@ glossop north end afc	http://dbpedia.org/resource/Glossop_North_End_AFC
 alberto valentim carmo nieto	http://dbpedia.org/resource/Alberto_Valentim_Carmo_Nieto	http://dbpedia.org/resource/Glossop_North_End_AFC_Fake
 kakwa river	http://dbpedia.org/resource/Kakwa_River
 hitchenko	http://dbpedia.org/resource/Andriy_Hitchenko
+company	http://dbpedia.org/ontology/Company	http://dbpedia.org/resource/Kompany	http://dbpedia.org/resource/Compnay	http://dbpedia.org/ontology/company	http://dbpedia.org/resource/Company
+industry	http://dbpedia.org/resource/Indusry	http://dbpedia.org/resource/Industri	http://dbpedia.org/ontology/industry	http://dbpedia.org/resource/Industry	http://dbpedia.org/resource/IndustrY
+reactor	http://dbpedia.org/ontology/rector	http://dbpedia.org/resource/Reactor	http://dbpedia.org/resource/N_reactor	http://dbpedia.org/resource/Rfactor	http://dbpedia.org/resource/Reactos
+reactor technology	http://dbpedia.org/resource/Oak_Ridge_School_of_Reactor_Technology
+aerospace	http://dbpedia.org/resource/M7_Aerospace	http://dbpedia.org/resource/UP_Aerospace	http://dbpedia.org/resource/Zerospace	http://dbpedia.org/resource/Aerospace	http://dbpedia.org/resource/AD_Aerospace
+nuclear	http://dbpedia.org/resource/Nucleas	http://dbpedia.org/resource/Nuclear	http://dbpedia.org/resource/Nucelar	http://dbpedia.org/resource/Nuculear	http://dbpedia.org/resource/Unclear
+technology	http://dbpedia.org/resource/TechnologY	http://dbpedia.org/resource/4G_technology	http://dbpedia.org/resource/Technology	http://dbpedia.org/resource/Techonology	http://dbpedia.org/resource/TV_technology
+aerospace industry	http://dbpedia.org/resource/British_aerospace_industry	http://dbpedia.org/resource/Russian_aerospace_industry	http://dbpedia.org/resource/Aerospace_Industry	http://dbpedia.org/resource/Chinese_aerospace_industry	http://dbpedia.org/resource/Aerospace_industry
+nuclear reactor	http://dbpedia.org/resource/R4_nuclear_reactor	http://dbpedia.org/resource/Nuclear_reactor	http://dbpedia.org/resource/R1_nuclear_reactor	http://dbpedia.org/resource/Nuclear_Reactor	http://dbpedia.org/resource/Nuclear_reactors
+nuclear reactor technology	http://dbpedia.org/resource/Nuclear_Reactor_Technology	http://dbpedia.org/resource/Nuclear_reactor_technology
