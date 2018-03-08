@@ -29,6 +29,8 @@ public class SESSAMeasurement {
   private SESSA sessa;
   private String RDF_labels = "src/main/resources/dbpedia_3Eng_class.ttl";
   private String RDF_ontology = "src/main/resources/dbpedia_3Eng_property.ttl";
+  private String RDF_DBpedia_Ontology = "src/main/resources/dbpedia_2016-10.nt";
+  private String RDF_DBpedia_Labels = "src/main/resources/labels_en.ttl";
 
   public SESSAMeasurement() {
     sessa = new SESSA();
@@ -41,6 +43,8 @@ public class SESSAMeasurement {
         //Change the handler and the file to be handled here
         sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_labels));
         sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_ontology));
+        sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_DBpedia_Ontology));
+        sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_DBpedia_Labels));
         long endTime = System.nanoTime();
         log.info("Finished importing Lucene Dictionary (in {}sec).",
             (endTime - startTime) / (1000 * 1000 * 1000));
@@ -58,8 +62,8 @@ public class SESSAMeasurement {
   public static void main(String[] args) {
     SESSAMeasurement myMess = new SESSAMeasurement();
     long startTime = System.nanoTime();
-    Dataset qald7TrainMultilingual = Dataset.QALD7_Train_Multilingual;
-    List<IQuestion> questions = LoaderController.load(qald7TrainMultilingual);
+    Dataset qaldTrainMultilingual = Dataset.QALD3_Test_dbpedia;
+    List<IQuestion> questions = LoaderController.load(qaldTrainMultilingual);
     double avgFMeasure = 0;
     int numberOfQuestions = 0;
     double answerFMeasure = 0;
