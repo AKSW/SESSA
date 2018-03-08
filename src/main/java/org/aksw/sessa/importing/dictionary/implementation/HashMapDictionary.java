@@ -50,6 +50,7 @@ public class HashMapDictionary extends FileBasedDictionary {
           values = new HashSet<>();
         }
         values.add(entry.getValue());
+        log.trace("Adding to dictionary: {} - {}", key, values);
         dictionary.put(key, values);
       }
     } catch (IOException e) {

@@ -174,15 +174,15 @@ public class SelfBuildingGraph implements GraphInterface {
 
               for (String content : newContent) {
                 Node<String> foundNode = new Node<>(content);
-                log.debug("SPARQL found new node {}", foundNode.getContent());
+                log.debug("SPARQL found new node {} with nodes {} and {}.", foundNode.getContent(), node.getContent(), lastNewNode.getContent());
                 if (newNodes.containsKey(foundNode) || nodes.containsKey(foundNode)) {
                   if (newNodes.containsKey(foundNode)) {
                     foundNode = newNodes.get(foundNode);
-                    log.debug("Node was already found this round.");
+                    log.debug("Node was already found this round with colors {}.", foundNode.getColors());
                   }
                   if (nodes.containsKey(foundNode)) {
                     foundNode = nodes.get(foundNode);
-                    log.debug("Its already in the node set.");
+                    log.debug("It's already in the node set.");
                   }
                   if (foundNode.colorsAreMergeable(lastNewNode.getColors()) &&
                       foundNode.colorsAreMergeable(node.getColors())) {
