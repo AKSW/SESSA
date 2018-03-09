@@ -1,19 +1,19 @@
 package org.aksw.sessa.helper.files.handler;
 
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.riot.RDFParser;
+import org.apache.jena.riot.lang.PipedRDFIterator;
+import org.apache.jena.riot.lang.PipedRDFStream;
+import org.apache.jena.riot.lang.PipedTriplesStream;
 
 /**
  * Provides handling for RDF-files. This class is an implementation of the interface {@link
@@ -22,7 +22,7 @@ import org.apache.jena.vocabulary.RDFS;
 public class RdfFileHandler implements FileHandlerInterface {
 
   private String file;
-  private StmtIterator stmtIterator;
+  private PipedRDFIterator<Triple> iter;
 
   /**
    * Creates a RdfFileHandler that uses the given file and base-URI. Uses {@link
@@ -37,11 +37,21 @@ public class RdfFileHandler implements FileHandlerInterface {
    * @param lang - the language of the serialization null selects the default (i.e. RDF/XML)
    */
   public RdfFileHandler(String file, String base, String lang) throws IOException {
-    this.file = file;
-    InputStream inputStream = new FileInputStream(file);
-    Model model = ModelFactory.createDefaultModel();
-    model.read(inputStream, base, lang);
-    stmtIterator = model.listStatements(null, RDFS.label, (RDFNode) null);
+    // Create a PipedRDFStream to accept input and a PipedRDFIterator to
+    // consume it
+    // You can optionally supply a buffer size here for the
+    // PipedRDFIterator, see the documentation for details about recommended
+    // buffer sizes
+    iter = new PipedRDFIterator<>();
+    final PipedRDFStream<Triple> inputStream = new PipedTriplesStream(iter);
+    // PipedRDFStream and PipedRDFIterator need to be on different threads
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+
+    // Create a runnable for our parser thread
+    Runnable parser = () -> RDFParser.source(file).parse(inputStream);
+    // Start the parser on another thread
+    executor.submit(parser);
+
   }
 
   /**
@@ -63,12 +73,12 @@ public class RdfFileHandler implements FileHandlerInterface {
    */
   @Override
   public Entry<String, String> nextEntry() throws IOException {
-    if (stmtIterator.hasNext()) {
-      final Statement stmt = stmtIterator.next();
-      Resource subject = stmt.getSubject();
-      RDFNode object = stmt.getObject();
+    if (iter.hasNext()) {
+      final Triple stmt = iter.next();
+      Node subject = stmt.getSubject();
+      Node object = stmt.getObject();
       return new SimpleEntry<>(
-          object.asLiteral().getString(),
+          object.getLiteral().getLexicalForm(),
           subject.getURI());
     } else {
       return null;
@@ -92,6 +102,6 @@ public class RdfFileHandler implements FileHandlerInterface {
    */
   @Override
   public void close() throws IOException {
-    stmtIterator.close();
+    iter.close();
   }
 }
