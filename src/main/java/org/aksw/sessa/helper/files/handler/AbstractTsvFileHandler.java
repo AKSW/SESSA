@@ -16,7 +16,6 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
   protected String file;
   String firstEntry;
   Stack<String> otherEntries;
-  private FileInputStream inputStream;
   private Scanner sc;
   private final String CHARSET_NAME = "UTF-8";
 
@@ -28,7 +27,7 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
    */
   AbstractTsvFileHandler(String file) throws IOException {
     this.file = file;
-    inputStream = new FileInputStream(file);
+    FileInputStream inputStream = new FileInputStream(file);
     sc = new Scanner(inputStream, CHARSET_NAME);
     otherEntries = new Stack<>();
   }
