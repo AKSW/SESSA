@@ -33,7 +33,7 @@ public class ReverseTsvFileHandlerTest {
   @Test
   public void testNextEntry_CountEntries() {
     // dictionary size is read directly from file
-    final int SIZE = 10;
+    final int SIZE = 53;
     Assert.assertEquals(SIZE, entrySet.size());
   }
 
