@@ -1,8 +1,8 @@
 package org.aksw.sessa.helper.files.handler;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.Stack;
 
 /**
@@ -16,7 +16,9 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
   protected String file;
   String firstEntry;
   Stack<String> otherEntries;
-  private BufferedReader reader;
+  private FileInputStream inputStream;
+  private Scanner sc;
+  private final String CHARSET_NAME = "UTF-8";
 
   /**
    * Initializes reader with given file and stack as empty stack.
@@ -26,7 +28,8 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
    */
   AbstractTsvFileHandler(String file) throws IOException {
     this.file = file;
-    reader = new BufferedReader((new FileReader(file)));
+    inputStream = new FileInputStream(file);
+    sc = new Scanner(inputStream, CHARSET_NAME);
     otherEntries = new Stack<>();
   }
 
@@ -37,8 +40,8 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
    * @throws IOException If an I/O error occurs
    */
   boolean getNextPair() throws IOException {
-    String line = reader.readLine();
-    if (line != null) {
+    if (sc.hasNextLine()) {
+      String line = sc.nextLine();
       String[] entryArray = line.split("\t");
       if (entryArray.length < 2) {
         throw new IOException("Malformed TSV-format in following line: " + line);
@@ -70,6 +73,6 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
    */
   @Override
   public void close() throws IOException {
-    reader.close();
+    sc.close();
   }
 }
