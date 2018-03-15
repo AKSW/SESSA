@@ -239,7 +239,7 @@ public class SelfBuildingGraph extends Graph {
     factIterator++;
     factNode.setNodeType(true);
     factNode.addColors(node1.getColors());
-    factNode.addColors(node1.getColors());
+    factNode.addColors(node2.getColors());
     addNode(factNode);
     addNode(newNode);
     addEdge(factNode, node1);
