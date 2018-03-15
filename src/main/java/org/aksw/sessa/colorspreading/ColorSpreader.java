@@ -160,9 +160,12 @@ public class ColorSpreader {
    * @return true if the colors can be combined
    */
   private boolean colorsCanBeCombined(Node node) {
-    Set<NGramEntryPosition> colors = new HashSet<>();
-    for (Node neighbor : graph.getAllNeighbors(node)) {
-      colors.addAll(neighbor.getColors());
+    Set<Node> neighbors = graph.getAllNeighbors(node);
+    for(Node neighbor : neighbors){
+      if(!node.colorsAreMergeable(neighbor.getColors())){
+        log.debug("Nodes {} and {} cannot combine colors.", node, neighbor);
+        return false;
+      }
     }
     return true;
   }
