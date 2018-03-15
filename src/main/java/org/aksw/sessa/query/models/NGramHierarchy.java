@@ -12,26 +12,26 @@ import java.util.Set;
  */
 public class NGramHierarchy {
 
-  private String[] ngram;
+  private String[] nGram;
 
   /**
    * Initializes with already splitted n-gram. The split has to be between the words. E.g. the
    * orginal n-gram "birthplace bill gates" has to be given as '["birthplace", "bill", "gates"]'.
    *
-   * @param ngram already split n-gram
+   * @param nGram already split n-gram
    */
-  public NGramHierarchy(String[] ngram) {
-    this.ngram = ngram;
+  public NGramHierarchy(String[] nGram) {
+    this.nGram = nGram;
   }
 
   /**
    * Initializes with n-gram sentences in normal String-representation. Unigram has to be split by
    * one single space.
    *
-   * @param ngram n-gram in String-representation
+   * @param nGram n-gram in String-representation
    */
-  public NGramHierarchy(String ngram) {
-    this.ngram = ngram.split(" ");
+  public NGramHierarchy(String nGram) {
+    this(nGram.split(" "));
   }
 
   /**
@@ -53,13 +53,13 @@ public class NGramHierarchy {
    */
   public String getNGram(int length, int index) {
     if (length == 1) {
-      return ngram[index];
+      return nGram[index];
     } else {
       StringBuilder sb = new StringBuilder();
       for (int i = index; i < length + index - 1; i++) {
-        sb.append(ngram[i] + " ");
+        sb.append(nGram[i] + " ");
       }
-      sb.append(ngram[length + index - 1]);
+      sb.append(nGram[length + index - 1]);
       return sb.toString();
     }
   }
@@ -75,14 +75,14 @@ public class NGramHierarchy {
   public String[] getParents(int length, int index) {
     String parents[];
     if (index == 0) {
-      if (index + length == ngram.length) {
+      if (index + length == nGram.length) {
         return null;
       } else {
         String parent = getNGram(length + 1, index);
         parents = new String[1];
         parents[0] = parent;
       }
-    } else if (index + length == ngram.length) {
+    } else if (index + length == nGram.length) {
       String parent = getNGram(length + 1, index - 1);
       parents = new String[1];
       parents[0] = parent;
@@ -124,10 +124,10 @@ public class NGramHierarchy {
    * @return n-gram hierarchy represented as array
    */
   public String[] toStringArray() {
-    String[] hierarchy = new String[(ngram.length * (ngram.length + 1)) / 2];
+    String[] hierarchy = new String[(nGram.length * (nGram.length + 1)) / 2];
     int hierarchyIndex = 0;
-    for (int l = ngram.length; l > 0; l--) {
-      for (int i = 0; i + l <= ngram.length; i++) {
+    for (int l = nGram.length; l > 0; l--) {
+      for (int i = 0; i + l <= nGram.length; i++) {
         hierarchy[hierarchyIndex] = getNGram(l, i);
         hierarchyIndex++;
       }
@@ -145,8 +145,8 @@ public class NGramHierarchy {
    */
   public Set<NGramEntryPosition> getAllPositions() {
     Set<NGramEntryPosition> positions = new HashSet<>();
-    for (int l = ngram.length; l > 0; l--) {
-      for (int i = 0; i + l <= ngram.length; i++) {
+    for (int l = nGram.length; l > 0; l--) {
+      for (int i = 0; i + l <= nGram.length; i++) {
         positions.add(new NGramEntryPosition(l, i));
       }
     }
@@ -159,7 +159,26 @@ public class NGramHierarchy {
    * @return number of words within the initial n-gram
    */
   public int getNGramLength() {
-    return ngram.length;
+    return nGram.length;
+  }
+
+  /**
+   * Extends the hierarchy by adding additional keywords at the end.
+   * @param extension array of strings which should be added
+   */
+  public void extendHierarchy(String[] extension){
+    String[] temp = this.nGram;
+    this.nGram = new String[temp.length + extension.length];
+    System.arraycopy(temp,0,this.nGram,0,temp.length);
+    System.arraycopy(extension,0,this.nGram,temp.length,extension.length);
+  }
+
+  public void extendHierarchy(String extension){
+    extendHierarchy(extension.split(" "));
+  }
+
+  public String toString(){
+    return String.join(" ", nGram);
   }
 
 }

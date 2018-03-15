@@ -1,5 +1,7 @@
 package org.aksw.sessa.query.models;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Assert;
@@ -110,5 +112,30 @@ public class NGramHierarchyTest {
     hierarchyPositions.add(new NGramEntryPosition(1, 3));
 
     Assert.assertEquals(hierarchyPositions, hierarchy.getAllPositions());
+  }
+
+  @Test
+  public void testToString(){
+    Assert.assertThat(hierarchy.toString(), equalTo(nGramBill));
+  }
+
+  @Test
+  public void testExtendHierarchy_WithToString(){
+    String type = "type";
+    hierarchy.extendHierarchy(type);
+    String original = hierarchy.toString();
+    Assert.assertThat(original, equalTo(nGramBill + " " + type));
+  }
+
+  @Test
+  public void testExtendHierarchy_WithToStringArray() {
+    String type = "type";
+    hierarchy.extendHierarchy(type);
+    String[] hierarchyArray = {"birthplace bill gates wife type",
+        "birthplace bill gates wife", "bill gates wife type",
+        "birthplace bill gates", "bill gates wife", "gates wife type",
+        "birthplace bill", "bill gates", "gates wife", "wife type",
+        "birthplace", "bill", "gates", "wife", "type"};
+    Assert.assertThat(hierarchyArray, equalTo(hierarchy.toStringArray()));
   }
 }
