@@ -163,7 +163,7 @@ public class NGramHierarchy {
   }
 
   /**
-   * Extends the hierarchy by adding additional keywords at the end.
+   * Extends the hierarchy by adding additional keywords (as array) at the end.
    * @param extension array of strings which should be added
    */
   public void extendHierarchy(String[] extension){
@@ -173,10 +173,18 @@ public class NGramHierarchy {
     System.arraycopy(extension,0,this.nGram,temp.length,extension.length);
   }
 
+  /**
+   * Extends the hierarchy by adding additional keywords at the end.
+   * @param extension array of strings which should be added
+   */
   public void extendHierarchy(String extension){
     extendHierarchy(extension.split(" "));
   }
 
+  /**
+   * Returns all keywords in their representive order as string (with space as delimiter).
+   * @return all keywords in their representive order as string (with space as delimiter).
+   */
   public String toString(){
     return String.join(" ", nGram);
   }
