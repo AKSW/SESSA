@@ -36,8 +36,6 @@ public class SelfBuildingGraph extends Graph {
    * added after the last update
    */
   private Map<Node, Node> lastNewNodes;
-  private Map<Node, Set<Node>> edgeMap;
-  private Map<Node, Set<Node>> reversedEdgeMap; // we need both ways (except for fact-nodes)
   // Stores already compared key pairs so they don't get compared again
   private Map<Node, Set<Node>> comparedNodes;
 
@@ -53,10 +51,9 @@ public class SelfBuildingGraph extends Graph {
    * Constructs a graph with given nodes.
    */
   public SelfBuildingGraph(Set<Node> nodes) {
+    super();
     this.nodes = new HashMap<>();
     this.lastNewNodes = new HashMap<>();
-    this.edgeMap = new HashMap<>();
-    this.reversedEdgeMap = new HashMap<>();
     for (Node node : nodes) {
       this.nodes.put(node, node);
       this.lastNewNodes.put(node, node);
@@ -78,40 +75,14 @@ public class SelfBuildingGraph extends Graph {
   }
 
   @Override
-  public void addEdge(Node from, Node to) {
-    //TODO: Make sure the nodes are in the graph.
-    addEdge(from, to, edgeMap);
-    addEdge(to, from, reversedEdgeMap);
-  }
-
-  @Override
-  public Set<Node> getNeighborsLeadingFrom(Node neighborsOf) {
-    Set<Node> neighbors = edgeMap.get(neighborsOf);
-    if (neighbors != null) {
-      return neighbors;
-    } else {
-      return new HashSet<>();
-    }
-  }
-
-  @Override
-  public Set<Node> getNeighborsLeadingTo(Node neighborsOf) {
-    Set<Node> neighbors = reversedEdgeMap.get(neighborsOf);
-    if (neighbors != null) {
-      return neighbors;
-    } else {
-      return new HashSet<>();
-    }
-  }
-
-  @Override
   public Set<Node> getAllNeighbors(Node neighborsOf) {
     //TODO: For now expanding graph in here should be enough, but maybe search for better solution
     if (everyNodeHasColor()) {
       expandGraph();
       //TODO this is called too often, see call hierachy, possibly the same nodes get added and added again and the graph is not unique, see unit test
     }
-    Set<Node> allNeighbors = getNeighborsLeadingFrom(neighborsOf);
+    Set<Node> allNeighbors = new HashSet<>();
+    allNeighbors.addAll(getNeighborsLeadingFrom(neighborsOf));
     allNeighbors.addAll(getNeighborsLeadingTo(neighborsOf));
     return allNeighbors;
   }
@@ -271,7 +242,7 @@ public class SelfBuildingGraph extends Graph {
       for (Node node : entry.getValue()) {
         sb.append("\t");
         sb.append(entry.getKey().getContent().toString());
-        sb.append("->");
+        sb.append(" -> ");
         sb.append(node.getContent().toString());
         sb.append("\n");
       }
