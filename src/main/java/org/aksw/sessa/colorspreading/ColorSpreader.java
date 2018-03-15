@@ -114,7 +114,8 @@ public class ColorSpreader {
    */
   private boolean makeActivationStep() {
     Set<Node> updatedLastActivatedNodes = new HashSet<>();
-    log.debug("Checking if new nodes can be activated. Number of Candidates: {}", lastActivatedNodes.size());
+    log.debug("Checking if new nodes can be activated. Number of Candidates: {}",
+        lastActivatedNodes.size());
     for (Node node : lastActivatedNodes) {
       Set<Node> neighbors = graph.getAllNeighbors(node);
       for (Node neighbor : neighbors) {
@@ -161,8 +162,8 @@ public class ColorSpreader {
    */
   private boolean colorsCanBeCombined(Node node) {
     Set<Node> neighbors = graph.getAllNeighbors(node);
-    for(Node neighbor : neighbors){
-      if(!node.colorsAreMergeable(neighbor.getColors())){
+    for (Node neighbor : neighbors) {
+      if (!node.colorsAreMergeable(neighbor.getColors())) {
         log.debug("Nodes {} and {} cannot combine colors.", node, neighbor);
         return false;
       }
