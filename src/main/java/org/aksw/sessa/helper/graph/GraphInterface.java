@@ -54,4 +54,16 @@ public interface GraphInterface {
    */
   Set<Node> getAllNeighbors(Node neighborsOf);
 
+  /**
+   * Returns a string representation of this class. The string representation consists of a list of
+   * nodes and edges. Nodes are lead by the word 'Nodes:' followed by one node per line. The nodes
+   * are represented by their string representation. The edges are introduced by 'Edges:' followed
+   * by one edge per line. One edge consists of the content of the first node, followed by an arrow
+   * '->' followed by the content of the second node.
+   *
+   * @return a string representation of this graph class
+   */
+  @Override
+  String toString();
+
 }
