@@ -66,7 +66,8 @@ public class ColorSpreader {
    * score.
    */
   private void updateResult() {
-    log.debug("Starting Update process for explanation score.");
+    log.debug("Starting Update process for explanation score. {} nodes to check.",
+        lastActivatedNodes.size());
     for (Node node : lastActivatedNodes) {
       if (!node.isFactNode()) {
         log.debug("Checking explanation of node {}", node);
@@ -111,9 +112,9 @@ public class ColorSpreader {
    *
    * @return true if at least one node was updated (i.e. it got a new color)
    */
-  private boolean makeActiviationStep() {
+  private boolean makeActivationStep() {
     Set<Node> updatedLastActivatedNodes = new HashSet<>();
-    log.debug("Checking if new nodes can be activated.");
+    log.debug("Checking if new nodes can be activated. Number of Candidates: {}", lastActivatedNodes.size());
     for (Node node : lastActivatedNodes) {
       Set<Node> neighbors = graph.getAllNeighbors(node);
       for (Node neighbor : neighbors) {
@@ -125,7 +126,7 @@ public class ColorSpreader {
          * minimum activation criterion.
          */
         if (neighbor.isFactNode()) {
-          Set<Node> neighborsOfFactNode = graph.getNeighborsLeadingFrom(neighbor);
+          Set<Node> neighborsOfFactNode = graph.getAllNeighbors(neighbor);
           int countActivated = 0;
           for (Node factNodeNeighbor : neighborsOfFactNode) {
             if (factNodeNeighbor.getExplanation() > 0 && factNodeNeighbor.getEnergy() > 0) {
@@ -163,13 +164,6 @@ public class ColorSpreader {
     for (Node neighbor : graph.getAllNeighbors(node)) {
       colors.addAll(neighbor.getColors());
     }
-    for (NGramEntryPosition color : colors) {
-      Set<NGramEntryPosition> intersection = new HashSet<>(colors);
-      intersection.retainAll(color.getAllDescendants());
-      if (!intersection.isEmpty()) {
-        return false;
-      }
-    }
     return true;
   }
 
@@ -186,7 +180,7 @@ public class ColorSpreader {
       activationSteps++;
       log.debug("Starting new activation step (#{}).", activationSteps);
       log.debug("\tNumber of nodes in graph: {}", graph.getNodes().size());
-      colorsHaveSpread = makeActiviationStep();
+      colorsHaveSpread = makeActivationStep();
     }
     log.debug("Spreading colors completed");
     log.debug("Final number of activation steps: {}", activationSteps);
