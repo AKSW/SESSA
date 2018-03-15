@@ -41,6 +41,7 @@ public class Node<T> {
     this.energy = energy;
     this.colors = colors;
     this.isFactNode = isFactNode;
+    this.id = 0;
   }
 
   /**
