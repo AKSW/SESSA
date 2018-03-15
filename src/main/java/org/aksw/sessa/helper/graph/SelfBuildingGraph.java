@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Simon Bordewisch
  */
-public class SelfBuildingGraph implements GraphInterface {
+public class SelfBuildingGraph extends Graph {
 
   /**
    * This variable is used to define how many expansions can be made before the graph should not be
@@ -26,6 +26,10 @@ public class SelfBuildingGraph implements GraphInterface {
   private static final Logger log = LoggerFactory.getLogger(GraphInterface.class);
   private static int factIterator = 0;
   private int currentExpansion;
+
+  /**
+   * Node set which maps on itself to be easily searchable and gettable.
+   */
   private Map<Node, Node> nodes;
   /**
    * We only want to update the graph with new information. Therefore we store the nodes that got
@@ -78,18 +82,6 @@ public class SelfBuildingGraph implements GraphInterface {
     //TODO: Make sure the nodes are in the graph.
     addEdge(from, to, edgeMap);
     addEdge(to, from, reversedEdgeMap);
-  }
-
-  private void addEdge(Node from, Node to, Map<Node, Set<Node>> toMap) {
-    if (toMap.containsKey(from)) {
-      Set<Node> neighbors = toMap.get(from);
-      neighbors.add(to);
-      toMap.put(from, neighbors);
-    } else {
-      Set<Node> neighbors = new HashSet<>();
-      neighbors.add(to);
-      toMap.put(from, neighbors);
-    }
   }
 
   @Override
@@ -174,11 +166,13 @@ public class SelfBuildingGraph implements GraphInterface {
 
               for (String content : newContent) {
                 Node<String> foundNode = new Node<>(content);
-                log.debug("SPARQL found new node {} with nodes {} and {}.", foundNode.getContent(), node.getContent(), lastNewNode.getContent());
+                log.debug("SPARQL found new node {} with nodes {} and {}.", foundNode.getContent(),
+                    node.getContent(), lastNewNode.getContent());
                 if (newNodes.containsKey(foundNode) || nodes.containsKey(foundNode)) {
                   if (newNodes.containsKey(foundNode)) {
                     foundNode = newNodes.get(foundNode);
-                    log.debug("Node was already found this round with colors {}.", foundNode.getColors());
+                    log.debug("Node was already found this round with colors {}.",
+                        foundNode.getColors());
                   }
                   if (nodes.containsKey(foundNode)) {
                     foundNode = nodes.get(foundNode);
@@ -251,6 +245,7 @@ public class SelfBuildingGraph implements GraphInterface {
     addEdge(factNode, node1);
     addEdge(factNode, node2);
     addEdge(factNode, newNode);
+    log.debug("Created new fact-node {} for {} & {} & {}.", factNode, node1, node2, newNode);
   }
 
   /**
