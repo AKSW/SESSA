@@ -213,8 +213,8 @@ public class SelfBuildingGraph extends Graph {
     factNode.addColors(node2.getColors());
     addNode(factNode);
     addNode(newNode);
-    addEdge(factNode, node1);
-    addEdge(factNode, node2);
+    addEdge(node1, factNode);
+    addEdge(node2, factNode);
     addEdge(factNode, newNode);
     log.debug("Created new fact-node {} for {} & {} & {}.", factNode, node1, node2, newNode);
   }
