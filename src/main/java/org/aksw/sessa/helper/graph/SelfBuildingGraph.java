@@ -62,18 +62,6 @@ public class SelfBuildingGraph extends Graph {
     this.currentExpansion = 1;
   }
 
-
-  @Override
-  public void addNode(Node node) {
-    nodes.put(node, node);
-    lastNewNodes.put(node, node);
-  }
-
-  @Override
-  public Set<Node> getNodes() {
-    return nodes.keySet();
-  }
-
   @Override
   public Set<Node> getAllNeighbors(Node neighborsOf) {
     //TODO: For now expanding graph in here should be enough, but maybe search for better solution
@@ -217,37 +205,6 @@ public class SelfBuildingGraph extends Graph {
     addEdge(node2, factNode);
     addEdge(factNode, newNode);
     log.debug("Created new fact-node {} for {} & {} & {}.", factNode, node1, node2, newNode);
-  }
-
-  /**
-   * Returns a string representation of this class. The string representation consists of a list of
-   * nodes and edges. Nodes are lead by the word 'Nodes:' followed by one node per line. The nodes
-   * are represented by their string representation. The edges are introduced by 'Edges:' followed
-   * by one edge per line. One edge consists of the content of the first node, followed by an arrow
-   * '->' followed by the content of the second node.
-   *
-   * @return a string representation of this graph class
-   */
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("Nodes:\n");
-    for (Node node : nodes.keySet()) {
-      sb.append("\t");
-      sb.append(node.toString());
-      sb.append("\n");
-    }
-    sb.append("Edges:\n");
-    for (Entry<Node, Set<Node>> entry : edgeMap.entrySet()) {
-      for (Node node : entry.getValue()) {
-        sb.append("\t");
-        sb.append(entry.getKey().getContent().toString());
-        sb.append(" -> ");
-        sb.append(node.getContent().toString());
-        sb.append("\n");
-      }
-    }
-    return sb.toString();
   }
 
 }
