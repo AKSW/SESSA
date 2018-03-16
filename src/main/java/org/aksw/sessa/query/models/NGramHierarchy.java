@@ -39,6 +39,15 @@ public class NGramHierarchy {
   }
 
   /**
+   * This method is for copying an already existing n-gram hierarchy.
+   *
+   * @param nGram existing n-gram hierarchy which should be copied
+   */
+  public NGramHierarchy(NGramHierarchy hierarchy) {
+    this(hierarchy.toStringArray());
+  }
+
+  /**
    * Returns the n-gram for which the positional data was given.
    *
    * @param pos the n-gram entry position
