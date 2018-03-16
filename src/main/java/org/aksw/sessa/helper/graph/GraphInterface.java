@@ -3,6 +3,7 @@ package org.aksw.sessa.helper.graph;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.aksw.sessa.helper.graph.exception.NodeNotFoundException;
 
 /**
  * Implementations of this interface should represent oriented graphs.
@@ -10,11 +11,18 @@ import java.util.Set;
 public interface GraphInterface {
 
   /**
-   * Adds a node to the tree if it is not already present.
+   * Adds a node to the graph if it is not already present.
    *
    * @param node node which should be added to the graph
    */
   void addNode(Node node);
+
+  /**
+   * Adds all given nodes to the graph if it is not already present.
+   *
+   * @param nodes set of nodes which should be added to the graph
+   */
+  void addNodes(Set<Node> nodes);
 
   /**
    * Returns all nodes of the graph as a set.
@@ -22,6 +30,14 @@ public interface GraphInterface {
    * @return set of all nodes in this graph
    */
   Set<Node> getNodes();
+
+  /**
+   * Checks if the given node is in the graph.
+   *
+   * @param node node which should be checked for existance in the graph
+   * @return true if node is in the graph, false otherwise
+   */
+  boolean containsNode(Node node);
 
   /**
    * Add oriented edge between two nodes.
