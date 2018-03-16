@@ -18,8 +18,10 @@ import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.aksw.sessa.query.models.Candidate;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
-import org.aksw.sessa.query.processing.QueryProcessingInterface;
-import org.aksw.sessa.query.processing.implementation.SimpleQueryProcessing;
+import org.aksw.sessa.query.models.QAModel;
+import org.aksw.sessa.query.processing.post.PostProcessing;
+import org.aksw.sessa.query.processing.pre.QueryProcessingInterface;
+import org.aksw.sessa.query.processing.pre.implementation.SimpleQueryProcessing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,9 +80,13 @@ public class SESSA {
     if (question.equals("")) {
       return null;
     } else {
+      QAModel qaModel = new QAModel();
+      qaModel.setQuestion(question);
       NGramHierarchy nGramHierarchy = queryProcess.processQuery(question);
+      qaModel.setNGramHierarchy(nGramHierarchy);
       CandidateGenerator canGen = new CandidateGenerator(dictionary);
       Map<NGramEntryPosition, Set<Candidate>> canMap = canGen.getCandidateMapping(nGramHierarchy);
+      qaModel.setCandidateMap(canMap);
       log.debug("Candidate map content:");
       for (Entry<NGramEntryPosition, Set<Candidate>> entry : canMap.entrySet()) {
         NGramEntryPosition pos = entry.getKey();
@@ -92,9 +98,11 @@ public class SESSA {
       ColorSpreader colorSpreader = new ColorSpreader(canMap);
       colorSpreader.spreadColors();
       log.debug("{}", colorSpreader.getGraph());
-      Set<Node> results = colorSpreader.getResult();
+      qaModel.setResults(colorSpreader.getResult());
+      PostProcessing postProc = new PostProcessing();
+      qaModel = postProc.process(qaModel);
       Set<String> stringResults = new HashSet<>();
-      for (Node result : results) {
+      for (Node result : qaModel.getResults()) {
         stringResults.add(result.getContent().toString());
       }
       return stringResults;
@@ -122,5 +130,34 @@ public class SESSA {
     ColorSpreader colorSpreader = new ColorSpreader(canMap);
     colorSpreader.spreadColors();
     return colorSpreader.getGraph();
+  }
+
+  QAModel[] getQAModels(String question) {
+    if (question.equals("")) {
+      return null;
+    } else {
+      QAModel qaModel = new QAModel();
+      qaModel.setQuestion(question);
+      NGramHierarchy nGramHierarchy = queryProcess.processQuery(question);
+      qaModel.setNGramHierarchy(nGramHierarchy);
+      CandidateGenerator canGen = new CandidateGenerator(dictionary);
+      Map<NGramEntryPosition, Set<Candidate>> canMap = canGen.getCandidateMapping(nGramHierarchy);
+      qaModel.setCandidateMap(canMap);
+      log.debug("Candidate map content:");
+      for (Entry<NGramEntryPosition, Set<Candidate>> entry : canMap.entrySet()) {
+        NGramEntryPosition pos = entry.getKey();
+        log.debug("\t{}='{}'=>{}",
+            pos,
+            nGramHierarchy.getNGram(pos.getLength(), pos.getPosition()),
+            entry.getValue());
+      }
+      ColorSpreader colorSpreader = new ColorSpreader(canMap);
+      colorSpreader.spreadColors();
+      log.debug("{}", colorSpreader.getGraph());
+      qaModel.setResults(colorSpreader.getResult());
+      PostProcessing postProc = new PostProcessing();
+      QAModel postQaModel = postProc.process(qaModel);
+      return new QAModel[]{qaModel, postQaModel};
+    }
   }
 }
