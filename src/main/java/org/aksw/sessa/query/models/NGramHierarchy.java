@@ -168,25 +168,52 @@ public class NGramHierarchy {
 
   /**
    * Extends the hierarchy by adding additional keywords (as array) at the end.
+   *
    * @param extension array of strings which should be added
    */
-  public void extendHierarchy(String[] extension){
+  public void extendHierarchy(String[] extension) {
     this.nGram.addAll(Arrays.asList(extension));
   }
 
   /**
    * Extends the hierarchy by adding additional keywords at the end.
+   *
    * @param extension array of strings which should be added
    */
-  public void extendHierarchy(String extension){
+  public void extendHierarchy(String extension) {
     extendHierarchy(extension.split(" "));
   }
 
+  public NGramEntryPosition getPosition(String nGram) {
+    return getPosition(nGram.split(" "));
+  }
+
+  public NGramEntryPosition getPosition(String[] forNGram) {
+    int pos = -1;
+    for (int i = 0; i < nGram.size(); i++) {
+      if (nGram.get(i).equals(forNGram[0])) {
+        boolean foundWholeNGram = true;
+        for (int j = 1; j < forNGram.length; j++) {
+          if (i + j >= nGram.size() || !nGram.get(i + j).equals(forNGram[j])) {
+            foundWholeNGram = false;
+          }
+        }
+        if (foundWholeNGram) {
+          return new NGramEntryPosition(forNGram.length, i);
+        } else {
+          return null;
+        }
+      }
+    }
+    return null;
+  }
+
   /**
-   * Returns all keywords in their representive order as string (with space as delimiter).
-   * @return all keywords in their representive order as string (with space as delimiter).
+   * Returns all keywords in their representative order as string (with space as delimiter).
+   *
+   * @return all keywords in their representative order as string (with space as delimiter).
    */
-  public String toString(){
+  public String toString() {
     return String.join(" ", nGram);
   }
 
