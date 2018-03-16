@@ -18,7 +18,10 @@ public class Graph implements GraphInterface {
 
   private static final Logger log = LoggerFactory.getLogger(GraphInterface.class);
 
-  private Set<Node> nodes;
+  /**
+   * Node set which maps on itself to be easily searchable and gettable.
+   */
+  protected Map<Node, Node> nodes;
   protected Map<Node, Set<Node>> edgeMap;
   protected Map<Node, Set<Node>> reversedEdgeMap; // we need both ways (besides for fact-nodes)
 
@@ -26,7 +29,7 @@ public class Graph implements GraphInterface {
    * Initialized empty graph.
    */
   public Graph() {
-    nodes = new HashSet<>();
+    nodes = new HashMap<>();
     edgeMap = new HashMap<>();
     reversedEdgeMap = new HashMap<>();
   }
@@ -38,7 +41,8 @@ public class Graph implements GraphInterface {
    * @param edgeMap represents oriented edges between nodes
    */
   public Graph(HashSet<Node> nodes, HashMap<Node, Set<Node>> edgeMap) {
-    this.nodes = nodes;
+    this.nodes = new HashMap<>();
+    this.addNodes(nodes);
     this.edgeMap = edgeMap;
     for (Entry<Node, Set<Node>> entry : edgeMap.entrySet()) {
       for (Node to : entry.getValue()) {
@@ -49,7 +53,7 @@ public class Graph implements GraphInterface {
 
   @Override
   public void addNode(Node node) {
-    nodes.add(node);
+    nodes.put(node, node);
   }
 
   @Override
@@ -61,7 +65,7 @@ public class Graph implements GraphInterface {
 
   @Override
   public boolean containsNode(Node node) {
-    return nodes.contains(node);
+    return nodes.containsKey(node);
   }
 
   @Override
@@ -69,7 +73,7 @@ public class Graph implements GraphInterface {
     try {
       if (!containsNode(from)) {
         throw new NodeNotFoundException(
-            "Edge cannot be added, because the given node is not in the graph.", from, this);
+            "Edge cannot be added, because the given node '" + from +  "' is not in the graph.", from, this);
       }
       if (!containsNode(to)) {
         throw new NodeNotFoundException(
@@ -80,6 +84,7 @@ public class Graph implements GraphInterface {
       addEdge(to, from, reversedEdgeMap);
     } catch (NodeNotFoundException ex) {
       log.error(ex.getLocalizedMessage(), ex);
+      log.error(ex.getGraph().toString());
     }
   }
 
@@ -111,7 +116,7 @@ public class Graph implements GraphInterface {
 
   @Override
   public Set<Node> getNodes() {
-    return nodes;
+    return nodes.keySet();
   }
 
   public Map<Node, Set<Node>> getEdges() {
@@ -152,7 +157,7 @@ public class Graph implements GraphInterface {
       try {
         if (!this.containsNode(node)) {
           throw new NodeNotFoundException(
-              "Given node" + node.getContent().toString() + " is not in graph.");
+              "Given node '" + node.getContent().toString() + "' is not in graph.");
         }
         pathsGraph.addNode(node);
         Set<Node> neighbors = this.getNeighborsLeadingTo(node);
@@ -189,7 +194,7 @@ public class Graph implements GraphInterface {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Nodes:\n");
-    for (Node node : nodes) {
+    for (Node node : nodes.keySet()) {
       sb.append("\t");
       sb.append(node.toString());
       sb.append("\n");
