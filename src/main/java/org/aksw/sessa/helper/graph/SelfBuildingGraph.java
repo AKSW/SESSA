@@ -63,6 +63,12 @@ public class SelfBuildingGraph extends Graph {
   }
 
   @Override
+  public void addNode(Node node) {
+    nodes.put(node, node);
+    lastNewNodes.put(node, node);
+  }
+
+  @Override
   public Set<Node> getAllNeighbors(Node neighborsOf) {
     //TODO: For now expanding graph in here should be enough, but maybe search for better solution
     if (everyNodeHasColor()) {
