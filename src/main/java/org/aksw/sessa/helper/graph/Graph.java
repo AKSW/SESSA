@@ -83,7 +83,7 @@ public class Graph implements GraphInterface {
     }
   }
 
-  protected void addEdge(Node from, Node to, Map<Node, Set<Node>> toMap) {
+  private void addEdge(Node from, Node to, Map<Node, Set<Node>> toMap) {
     if (toMap.containsKey(from)) {
       Set<Node> neighbors = toMap.get(from);
       neighbors.add(to);
