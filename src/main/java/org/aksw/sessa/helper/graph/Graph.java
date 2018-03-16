@@ -174,6 +174,19 @@ public class Graph implements GraphInterface {
     return pathsGraph;
   }
 
+  /**
+   * Finds all paths from the root to the given node and returns them as a graph.
+   *
+   * @param node node for which the paths should be found
+   * @return all paths from the root to the given node
+   */
+  @Override
+  public Graph findPathsToNode(Node node) {
+    Set<Node> nodes = new HashSet<>();
+    nodes.add(node);
+    return findPathsToNodes(nodes);
+  }
+
   @Override
   public void addSubGraph(GraphInterface subGraph) {
     this.addNodes(subGraph.getNodes());
@@ -203,7 +216,7 @@ public class Graph implements GraphInterface {
       for (Node node : entry.getValue()) {
         sb.append("\t");
         sb.append(entry.getKey().getContent().toString());
-        sb.append("->");
+        sb.append(" -> ");
         sb.append(node.getContent().toString());
         sb.append("\n");
       }
@@ -233,5 +246,29 @@ public class Graph implements GraphInterface {
     int result = this.getNodes() != null ? this.getNodes().hashCode() : 0;
     result = 31 * result + (this.getEdges() != null ? this.getEdges().hashCode() : 0);
     return result;
+  }
+
+  @Override
+  public String asDOTFormat(String graphName){
+    StringBuilder sb = new StringBuilder();
+    sb.append("digraph ");
+    sb.append(graphName);
+    sb.append("\n{");
+    for (Entry<Node, Set<Node>> entry : edgeMap.entrySet()) {
+      for (Node node : entry.getValue()) {
+        sb.append("\t\"");
+        sb.append(entry.getKey().getContent().toString());
+        sb.append("\" -> \"");
+        sb.append(node.getContent().toString());
+        sb.append("\";\n");
+      }
+    }
+    sb.append("}");
+    return sb.toString();
+  }
+
+  @Override
+  public String asDOTFormat(){
+    return asDOTFormat("graph");
   }
 }

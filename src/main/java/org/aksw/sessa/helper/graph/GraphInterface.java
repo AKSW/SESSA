@@ -101,11 +101,20 @@ public interface GraphInterface {
   Set<Node> getAllNeighbors(Node neighborsOf);
 
   /**
-   * Finds all paths from the root to the given node and returns them as a graph.
+   * Finds all paths from the root to the given nodes and returns them as a graph.
+   *
    * @param nodes nodes for which the paths should be found
    * @return all paths from the root to the given node
    */
   Graph findPathsToNodes(Set<Node> nodes);
+
+  /**
+   * Finds all paths from the root to the given node and returns them as a graph.
+   *
+   * @param node node for which the paths should be found
+   * @return all paths from the root to the given node
+   */
+  Graph findPathsToNode(Node node);
 
   /**
    * Returns a string representation of this class. The string representation consists of a list of
@@ -118,5 +127,23 @@ public interface GraphInterface {
    */
   @Override
   String toString();
+
+  /**
+   * Returns the graph in DOT format.
+   *
+   * @return graph in DOT format
+   *
+   * {@see https://de.wikipedia.org/wiki/DOT_(GraphViz)}
+   */
+  String asDOTFormat();
+
+  /**
+   * Returns the graph in DOT format with the given graph name.
+   *
+   * @return graph in DOT format
+   *
+   * {@see https://de.wikipedia.org/wiki/DOT_(GraphViz)}
+   */
+  String asDOTFormat(String graphName);
 
 }
