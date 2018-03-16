@@ -79,7 +79,6 @@ public class Graph implements GraphInterface {
         throw new NodeNotFoundException(
             "Edge cannot be added, because the given node is not in the graph.", to, this);
       }
-      log.debug("Adding edge for {} & {}", from.getContent(), to.getContent());
       addEdge(from, to, edgeMap);
       addEdge(to, from, reversedEdgeMap);
     } catch (NodeNotFoundException ex) {
