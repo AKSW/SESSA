@@ -15,6 +15,7 @@ import org.aksw.sessa.helper.files.handler.TsvFileHandler;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
+import org.aksw.sessa.query.models.QAModel;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -89,10 +90,20 @@ public class SESSATest {
     Assert.assertThat(answer, equalTo(answerSet));
   }
 
+//  @Test
+//  public void testAnswer_ManyRdfs_Label() {
+//    question = "company, aerospace industry, nuclear reactor technology";
+//    answer = sessa.answer(question);
+//  }
+
   @Test
-  public void testAnswer_ManyRdfs_Label() {
-    question = "company, aerospace industry, nuclear reactor technology";
-    answer = sessa.answer(question);
+  public void testAnswer_WhichShouldGiveRdfType_BeforePreProcessing(){
+    question = "musical music by elton john";
+    QAModel[] qaModels = sessa.getQAModels(question);
+    Node<String> node = new Node<>("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+    Assert.assertThat(qaModels[0].getResults(), hasItem(node));
+    node = new Node<>("http://dbpedia.org/resource/The_Lion_King_(musical)");
+    Assert.assertThat(qaModels[1].getResults(), hasItem(node));
   }
 
   @Test
