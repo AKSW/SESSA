@@ -20,15 +20,18 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SESSATest {
+
+  private static final Logger log = LoggerFactory.getLogger(SESSATest.class);
 
   public static final String TSV_FILE = "src/test/resources/en_surface_forms_small.tsv";
   public static final String REVERSE_TSV_FILE = "src/test/resources/small_reverse_dictionary.tsv";
   private SESSA sessa = new SESSA();
   private String question;
   private Set<String> answer;
-  HashMapDictionary dict;
 
   @Before
   public void initialize() throws IOException {
@@ -101,8 +104,13 @@ public class SESSATest {
     question = "musical music by elton john";
     QAModel[] qaModels = sessa.getQAModels(question);
     Node<String> node = new Node<>("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+    GraphInterface graph = qaModels[0].getGraph();
+    GraphInterface path = graph.findPathsToNodes(qaModels[0].getResults());
+    log.debug("\n{}", path.asDOTFormat());
     Assert.assertThat(qaModels[0].getResults(), hasItem(node));
     node = new Node<>("http://dbpedia.org/resource/The_Lion_King_(musical)");
+    path = qaModels[1].getGraph().findPathsToNodes(qaModels[1].getResults());
+    log.debug("\n{}", path.asDOTFormat());
     Assert.assertThat(qaModels[1].getResults(), hasItem(node));
   }
 
