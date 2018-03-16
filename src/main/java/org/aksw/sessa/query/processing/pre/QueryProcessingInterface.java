@@ -1,4 +1,4 @@
-package org.aksw.sessa.query.processing;
+package org.aksw.sessa.query.processing.pre;
 
 import org.aksw.sessa.query.models.NGramHierarchy;
 

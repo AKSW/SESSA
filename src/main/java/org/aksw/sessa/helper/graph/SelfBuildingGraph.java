@@ -23,14 +23,10 @@ public class SelfBuildingGraph extends Graph {
    * further expanded.
    */
   public static final int MAX_EXPANSIONS = 3;
-  private static final Logger log = LoggerFactory.getLogger(GraphInterface.class);
+  private static final Logger log = LoggerFactory.getLogger(SelfBuildingGraph.class);
   private static int factIterator = 0;
   private int currentExpansion;
 
-  /**
-   * Node set which maps on itself to be easily searchable and gettable.
-   */
-  private Map<Node, Node> nodes;
   /**
    * We only want to update the graph with new information. Therefore we store the nodes that got
    * added after the last update
@@ -62,16 +58,10 @@ public class SelfBuildingGraph extends Graph {
     this.currentExpansion = 1;
   }
 
-
   @Override
   public void addNode(Node node) {
-    nodes.put(node, node);
+    super.addNode(node);
     lastNewNodes.put(node, node);
-  }
-
-  @Override
-  public Set<Node> getNodes() {
-    return nodes.keySet();
   }
 
   @Override
@@ -217,37 +207,6 @@ public class SelfBuildingGraph extends Graph {
     addEdge(node2, factNode);
     addEdge(factNode, newNode);
     log.debug("Created new fact-node {} for {} & {} & {}.", factNode, node1, node2, newNode);
-  }
-
-  /**
-   * Returns a string representation of this class. The string representation consists of a list of
-   * nodes and edges. Nodes are lead by the word 'Nodes:' followed by one node per line. The nodes
-   * are represented by their string representation. The edges are introduced by 'Edges:' followed
-   * by one edge per line. One edge consists of the content of the first node, followed by an arrow
-   * '->' followed by the content of the second node.
-   *
-   * @return a string representation of this graph class
-   */
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("Nodes:\n");
-    for (Node node : nodes.keySet()) {
-      sb.append("\t");
-      sb.append(node.toString());
-      sb.append("\n");
-    }
-    sb.append("Edges:\n");
-    for (Entry<Node, Set<Node>> entry : edgeMap.entrySet()) {
-      for (Node node : entry.getValue()) {
-        sb.append("\t");
-        sb.append(entry.getKey().getContent().toString());
-        sb.append(" -> ");
-        sb.append(node.getContent().toString());
-        sb.append("\n");
-      }
-    }
-    return sb.toString();
   }
 
 }

@@ -1,5 +1,7 @@
 package org.aksw.sessa.helper.graph;
 
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -8,11 +10,18 @@ import java.util.Set;
 public interface GraphInterface {
 
   /**
-   * Adds a node to the tree if it is not already present.
+   * Adds a node to the graph if it is not already present.
    *
    * @param node node which should be added to the graph
    */
   void addNode(Node node);
+
+  /**
+   * Adds all given nodes to the graph if it is not already present.
+   *
+   * @param nodes set of nodes which should be added to the graph
+   */
+  void addNodes(Set<Node> nodes);
 
   /**
    * Returns all nodes of the graph as a set.
@@ -22,12 +31,49 @@ public interface GraphInterface {
   Set<Node> getNodes();
 
   /**
+   * Checks if the given node is in the graph.
+   *
+   * @param node node which should be checked for existance in the graph
+   * @return true if node is in the graph, false otherwise
+   */
+  boolean containsNode(Node node);
+
+  /**
    * Add oriented edge between two nodes.
    *
    * @param from node from which the edge originates
    * @param to node to which the edge leads to
    */
   void addEdge(Node from, Node to);
+
+  /**
+   * Give a map of all edges, adds all edges to the graph.
+   *
+   * @param edges edges which should be added to the graph
+   */
+  void addEdges(Map<Node, Set<Node>> edges);
+
+  /**
+   * Give one entry of a edge map, i.e. a representation of one node and all its edges, where it is
+   * the tail, it will add those edges.
+   *
+   * @param edgesFromNode edges leading from one node, which should be added to the graph
+   */
+  void addEdges(Entry<Node, Set<Node>> edgesFromNode);
+
+  /**
+   * Returns all edges of the graph as a map.
+   *
+   * @return all edges of the graph as a map
+   */
+  Map<Node, Set<Node>> getEdges();
+
+  /**
+   * Adds a given subgraph to the graph. More precisely, it adds all nodes and edges to the graph.
+   *
+   * @param subGraph subgraph which should be added to the graph.
+   */
+  void addSubGraph(GraphInterface subGraph);
 
   /**
    * Returns neighbors of a node, i.e. all nodes, which share an edge with the given node and the
@@ -55,6 +101,22 @@ public interface GraphInterface {
   Set<Node> getAllNeighbors(Node neighborsOf);
 
   /**
+   * Finds all paths from the root to the given nodes and returns them as a graph.
+   *
+   * @param nodes nodes for which the paths should be found
+   * @return all paths from the root to the given node
+   */
+  Graph findPathsToNodes(Set<Node> nodes);
+
+  /**
+   * Finds all paths from the root to the given node and returns them as a graph.
+   *
+   * @param node node for which the paths should be found
+   * @return all paths from the root to the given node
+   */
+  Graph findPathsToNode(Node node);
+
+  /**
    * Returns a string representation of this class. The string representation consists of a list of
    * nodes and edges. Nodes are lead by the word 'Nodes:' followed by one node per line. The nodes
    * are represented by their string representation. The edges are introduced by 'Edges:' followed
@@ -65,5 +127,23 @@ public interface GraphInterface {
    */
   @Override
   String toString();
+
+  /**
+   * Returns the graph in DOT format.
+   *
+   * @return graph in DOT format
+   *
+   * {@see https://de.wikipedia.org/wiki/DOT_(GraphViz)}
+   */
+  String asDOTFormat();
+
+  /**
+   * Returns the graph in DOT format with the given graph name.
+   *
+   * @return graph in DOT format
+   *
+   * {@see https://de.wikipedia.org/wiki/DOT_(GraphViz)}
+   */
+  String asDOTFormat(String graphName);
 
 }
