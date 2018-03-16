@@ -89,4 +89,21 @@ public class GraphTest {
 
     Assert.assertEquals(allNeighborsOf1, graph.getAllNeighbors(nodes.get(4)));
   }
+
+  @Test
+  public void testFindPathsToNodes_for8() {
+    Set<Node> nodesToSearchFor = new HashSet<>();
+    nodesToSearchFor.add(nodes.get(8));
+
+    Set<Node> reference = new HashSet<>();
+    reference.add(nodes.get(8));
+    reference.add(nodes.get(7));
+    reference.add(nodes.get(2));
+    reference.add(nodes.get(3));
+    reference.add(nodes.get(4));
+    reference.add(nodes.get(0));
+    reference.add(nodes.get(1));
+    GraphInterface paths = graph.findPathsToNodes(nodesToSearchFor);
+    Assert.assertThat(paths.getNodes(), equalTo(reference));
+  }
 }
