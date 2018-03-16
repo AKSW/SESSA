@@ -1,6 +1,8 @@
 package org.aksw.sessa.query.models;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.core.Is.is;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -136,6 +138,34 @@ public class NGramHierarchyTest {
         "birthplace bill gates", "bill gates wife", "gates wife type",
         "birthplace bill", "bill gates", "gates wife", "wife type",
         "birthplace", "bill", "gates", "wife", "type"};
-    Assert.assertThat(hierarchyArray, equalTo(hierarchy.toStringArray()));
+    Assert.assertThat(hierarchy.toStringArray(), equalTo(hierarchyArray));
+  }
+
+  @Test
+  public void testGetPosition_forBillGates(){
+    NGramEntryPosition pos = new NGramEntryPosition(2, 1);
+    Assert.assertThat(hierarchy.getPosition("bill gates"), equalTo(pos));
+  }
+
+  @Test
+  public void testGetPosition_forBirthplace(){
+    NGramEntryPosition pos = new NGramEntryPosition(1, 0);
+    Assert.assertThat(hierarchy.getPosition("birthplace"), equalTo(pos));
+  }
+
+  @Test
+  public void testGetPosition_forWife(){
+    NGramEntryPosition pos = new NGramEntryPosition(1, 3);
+    Assert.assertThat(hierarchy.getPosition("wife"), equalTo(pos));
+  }
+
+  @Test
+  public void testGetPosition_forFirstMatchButThenNot(){
+    Assert.assertThat(hierarchy.getPosition("bill grates"), is(nullValue()));
+  }
+
+  @Test
+  public void testGetPosition_forOutOfBounds(){
+    Assert.assertThat(hierarchy.getPosition("wife outofbounce"), is(nullValue()));
   }
 }
