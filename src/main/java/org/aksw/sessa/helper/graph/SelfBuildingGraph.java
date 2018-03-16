@@ -28,10 +28,6 @@ public class SelfBuildingGraph extends Graph {
   private int currentExpansion;
 
   /**
-   * Node set which maps on itself to be easily searchable and gettable.
-   */
-  private Map<Node, Node> nodes;
-  /**
    * We only want to update the graph with new information. Therefore we store the nodes that got
    * added after the last update
    */
@@ -64,7 +60,7 @@ public class SelfBuildingGraph extends Graph {
 
   @Override
   public void addNode(Node node) {
-    nodes.put(node, node);
+    super.addNode(node);
     lastNewNodes.put(node, node);
   }
 
