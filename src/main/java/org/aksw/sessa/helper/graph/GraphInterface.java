@@ -1,5 +1,7 @@
 package org.aksw.sessa.helper.graph;
 
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -28,6 +30,28 @@ public interface GraphInterface {
    * @param to node to which the edge leads to
    */
   void addEdge(Node from, Node to);
+
+  /**
+   * Give a map of all edges, adds all edges to the graph.
+   *
+   * @param edges edges which should be added to the graph
+   */
+  void addEdges(Map<Node, Set<Node>> edges);
+
+  /**
+   * Give one entry of a edge map, i.e. a representation of one node and all its edges, where it is
+   * the tail, it will add those edges.
+   *
+   * @param edgesFromNode edges leading from one node, which should be added to the graph
+   */
+  void addEdges(Entry<Node, Set<Node>> edgesFromNode);
+
+  /**
+   * Returns all edges of the graph as a map.
+   *
+   * @return all edges of the graph as a map
+   */
+  Map<Node, Set<Node>> getEdges();
 
   /**
    * Returns neighbors of a node, i.e. all nodes, which share an edge with the given node and the
