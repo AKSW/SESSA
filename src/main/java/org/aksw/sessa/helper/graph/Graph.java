@@ -146,22 +146,32 @@ public class Graph implements GraphInterface {
   }
 
   @Override
-  public Graph findPathsToNodes(Set<Node> nodes){
+  public Graph findPathsToNodes(Set<Node> nodes) {
     Graph pathsGraph = new Graph();
-    for(Node node : nodes){
-      Set<Node> neighbors = this.getNeighborsLeadingTo(node);
-      for(Node neighbor : neighbors){
-        pathsGraph.addNode(neighbor);
-        pathsGraph.addEdge(neighbor, node);
+    for (Node node : nodes) {
+      try {
+        if (!this.containsNode(node)) {
+          throw new NodeNotFoundException(
+              "Given node" + node.getContent().toString() + " is not in graph.");
+        }
+        pathsGraph.addNode(node);
+        Set<Node> neighbors = this.getNeighborsLeadingTo(node);
+        for (Node neighbor : neighbors) {
+          pathsGraph.addNode(neighbor);
+          pathsGraph.addEdge(neighbor, node);
+        }
+        Graph subGraph = findPathsToNodes(neighbors);
+        pathsGraph.addSubGraph(subGraph);
+      } catch (NodeNotFoundException ex) {
+        log.error(ex.getLocalizedMessage(), ex);
+        log.error("Skipping node.");
       }
-      Graph subGraph = findPathsToNodes(neighbors);
-      pathsGraph.addSubGraph(subGraph);
     }
     return pathsGraph;
   }
 
   @Override
-  public void addSubGraph(GraphInterface subGraph){
+  public void addSubGraph(GraphInterface subGraph) {
     this.addNodes(subGraph.getNodes());
     this.addEdges(subGraph.getEdges());
   }
@@ -197,4 +207,27 @@ public class Graph implements GraphInterface {
     return sb.toString();
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Graph)) {
+      return false;
+    }
+
+    Graph graph = (Graph) o;
+
+    if (this.getNodes() != null ? !this.getNodes().equals(graph.getNodes()) : graph.getNodes() != null) {
+      return false;
+    }
+    return this.getEdges() != null ? this.getEdges().equals(graph.getEdges()) : graph.getEdges() == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = this.getNodes() != null ? this.getNodes().hashCode() : 0;
+    result = 31 * result + (this.getEdges() != null ? this.getEdges().hashCode() : 0);
+    return result;
+  }
 }
