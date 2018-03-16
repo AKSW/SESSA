@@ -1,7 +1,7 @@
-package org.aksw.sessa.query.processing.implementation;
+package org.aksw.sessa.query.processing.pre.implementation;
 
 import org.aksw.sessa.query.models.NGramHierarchy;
-import org.aksw.sessa.query.processing.QueryProcessingInterface;
+import org.aksw.sessa.query.processing.pre.QueryProcessingInterface;
 
 /**
  * Simplest query processing class. Does not process the query before it is transformed to a n-gram
