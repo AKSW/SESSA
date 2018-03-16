@@ -14,7 +14,7 @@ import org.junit.Test;
 
 public class GraphTest {
 
-  List<Node> nodes;
+  private List<Node> nodes;
   private Graph graph;
 
   @Before
@@ -95,15 +95,46 @@ public class GraphTest {
     Set<Node> nodesToSearchFor = new HashSet<>();
     nodesToSearchFor.add(nodes.get(8));
 
-    Set<Node> reference = new HashSet<>();
-    reference.add(nodes.get(8));
-    reference.add(nodes.get(7));
-    reference.add(nodes.get(2));
-    reference.add(nodes.get(3));
-    reference.add(nodes.get(4));
-    reference.add(nodes.get(0));
-    reference.add(nodes.get(1));
+    Set<Node> referenceNodes = new HashSet<>();
+    referenceNodes.add(nodes.get(8));
+    referenceNodes.add(nodes.get(7));
+    referenceNodes.add(nodes.get(2));
+    referenceNodes.add(nodes.get(3));
+    referenceNodes.add(nodes.get(4));
+    referenceNodes.add(nodes.get(0));
+    referenceNodes.add(nodes.get(1));
     GraphInterface paths = graph.findPathsToNodes(nodesToSearchFor);
-    Assert.assertThat(paths.getNodes(), equalTo(reference));
+    Assert.assertThat(paths.getNodes(), equalTo(referenceNodes));
+  }
+
+  @Test
+  public void testFindPathsToNodes_for6() {
+    Set<Node> nodesToSearchFor = new HashSet<>();
+    nodesToSearchFor.add(nodes.get(6));
+    GraphInterface paths = graph.findPathsToNodes(nodesToSearchFor);
+
+    GraphInterface referenceGraph = new Graph();
+    referenceGraph.addNode(nodes.get(1));
+    referenceGraph.addNode(nodes.get(2));
+    referenceGraph.addNode(nodes.get(3));
+    referenceGraph.addNode(nodes.get(5));
+    referenceGraph.addNode(nodes.get(6));
+
+    referenceGraph.addEdge(nodes.get(1), nodes.get(6));
+    referenceGraph.addEdge(nodes.get(2), nodes.get(5));
+    referenceGraph.addEdge(nodes.get(3), nodes.get(5));
+    referenceGraph.addEdge(nodes.get(5), nodes.get(6));
+
+
+    Assert.assertThat(paths, equalTo(referenceGraph));
+  }
+
+
+  @Test
+  public void testFindPathsToNodes_WithNonExistentNode() {
+    Set<Node> nodesToSearchFor = new HashSet<>();
+    nodesToSearchFor.add(new Node<Integer>(20));
+    GraphInterface paths = graph.findPathsToNodes(nodesToSearchFor);
+    Assert.assertThat(paths.getNodes(), empty());
   }
 }
