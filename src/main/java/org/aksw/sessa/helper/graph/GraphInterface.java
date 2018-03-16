@@ -101,6 +101,13 @@ public interface GraphInterface {
   Set<Node> getAllNeighbors(Node neighborsOf);
 
   /**
+   * Finds all paths from the root to the given node and returns them as a graph.
+   * @param nodes nodes for which the paths should be found
+   * @return all paths from the root to the given node
+   */
+  Graph findPathsToNodes(Set<Node> nodes);
+
+  /**
    * Returns a string representation of this class. The string representation consists of a list of
    * nodes and edges. Nodes are lead by the word 'Nodes:' followed by one node per line. The nodes
    * are represented by their string representation. The edges are introduced by 'Edges:' followed

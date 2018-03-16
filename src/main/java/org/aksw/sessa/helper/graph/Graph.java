@@ -145,6 +145,27 @@ public class Graph implements GraphInterface {
     return allNeighbors;
   }
 
+  @Override
+  public Graph findPathsToNodes(Set<Node> nodes){
+    Graph pathsGraph = new Graph();
+    for(Node node : nodes){
+      Set<Node> neighbors = this.getNeighborsLeadingTo(node);
+      for(Node neighbor : neighbors){
+        pathsGraph.addNode(neighbor);
+        pathsGraph.addEdge(neighbor, node);
+      }
+      Graph subGraph = findPathsToNodes(neighbors);
+      pathsGraph.addSubGraph(subGraph);
+    }
+    return pathsGraph;
+  }
+
+  @Override
+  public void addSubGraph(GraphInterface subGraph){
+    this.addNodes(subGraph.getNodes());
+    this.addEdges(subGraph.getEdges());
+  }
+
   /**
    * Returns a string representation of this class. The string representation consists of a list of
    * nodes and edges. Nodes are lead by the word 'Nodes:' followed by one node per line. The nodes
