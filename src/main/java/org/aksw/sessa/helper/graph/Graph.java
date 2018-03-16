@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Graph implements GraphInterface {
 
-  private static final Logger log = LoggerFactory.getLogger(GraphInterface.class);
+  private static final Logger log = LoggerFactory.getLogger(Graph.class);
 
   /**
    * Node set which maps on itself to be easily searchable and gettable.

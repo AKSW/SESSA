@@ -23,7 +23,7 @@ public class SelfBuildingGraph extends Graph {
    * further expanded.
    */
   public static final int MAX_EXPANSIONS = 3;
-  private static final Logger log = LoggerFactory.getLogger(GraphInterface.class);
+  private static final Logger log = LoggerFactory.getLogger(SelfBuildingGraph.class);
   private static int factIterator = 0;
   private int currentExpansion;
 
