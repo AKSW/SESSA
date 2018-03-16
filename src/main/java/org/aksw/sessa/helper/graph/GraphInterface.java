@@ -3,7 +3,6 @@ package org.aksw.sessa.helper.graph;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.aksw.sessa.helper.graph.exception.NodeNotFoundException;
 
 /**
  * Implementations of this interface should represent oriented graphs.
@@ -68,6 +67,13 @@ public interface GraphInterface {
    * @return all edges of the graph as a map
    */
   Map<Node, Set<Node>> getEdges();
+
+  /**
+   * Adds a given subgraph to the graph. More precisely, it adds all nodes and edges to the graph.
+   *
+   * @param subGraph subgraph which should be added to the graph.
+   */
+  void addSubGraph(GraphInterface subGraph);
 
   /**
    * Returns neighbors of a node, i.e. all nodes, which share an edge with the given node and the
