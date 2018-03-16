@@ -51,6 +51,12 @@ public class Graph implements GraphInterface {
     nodes.add(node);
   }
 
+  public void addNodes(Set<Node> nodes) {
+    for (Node node : nodes) {
+      addNode(node);
+    }
+  }
+
   @Override
   public void addEdge(Node from, Node to) {
     //TODO: Make sure the nodes are in the graph.
@@ -71,9 +77,25 @@ public class Graph implements GraphInterface {
     }
   }
 
+  public void addEdges(Map<Node, Set<Node>> edges) {
+    for (Entry<Node, Set<Node>> edgesFromNode : edges.entrySet()) {
+      addEdges(edgesFromNode);
+    }
+  }
+
+  public void addEdges(Entry<Node, Set<Node>> edgesFromNode) {
+    for (Node toNode : edgesFromNode.getValue()) {
+      addEdge(edgesFromNode.getKey(), toNode);
+    }
+  }
+
   @Override
   public Set<Node> getNodes() {
     return nodes;
+  }
+
+  public Map<Node, Set<Node>> getEdges() {
+    return edgeMap;
   }
 
   @Override
