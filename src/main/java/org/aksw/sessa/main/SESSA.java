@@ -154,6 +154,7 @@ public class SESSA {
       ColorSpreader colorSpreader = new ColorSpreader(canMap);
       colorSpreader.spreadColors();
       log.debug("{}", colorSpreader.getGraph());
+      qaModel.setGraph(colorSpreader.getGraph());
       qaModel.setResults(colorSpreader.getResult());
       PostProcessing postProc = new PostProcessing();
       QAModel postQaModel = postProc.process(qaModel);

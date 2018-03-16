@@ -1,5 +1,7 @@
 package org.aksw.sessa.colorspreading;
 
+import static org.hamcrest.Matchers.containsString;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,11 +12,15 @@ import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Simon Bordewisch on 15.06.17.
  */
 public class ColorSpreaderTest {
+
+  private static final Logger log = LoggerFactory.getLogger(ColorSpreaderTest.class);
 
   private ColorSpreader colorSpread;
   private Map<NGramEntryPosition, Set<Candidate>> nodeMapping;
@@ -62,8 +68,9 @@ public class ColorSpreaderTest {
   @Test
   public void testSpreadColors_billGatesTestCase() {
     Set<Node> results = colorSpread.spreadColors();
+    log.debug("{}",colorSpread.getGraph().toString());
     for (Node result : results) {
-      Assert.assertTrue(((String) result.getContent()).contains("Dallas"));
+      Assert.assertThat(((String) result.getContent()), containsString("Dallas"));
     }
   }
 }

@@ -199,7 +199,7 @@ public class Node<T> {
   @Override
   public boolean equals(Object other) {
     if (other instanceof Node<?>) {
-      if (((Node<?>) other).getContent().equals(this.nodeContent) &&
+      if (((Node<?>) other).getContent().equals(this.getContent()) &&
           ((Node<?>) other).getId() == this.getId()) {
         return true;
       }
@@ -214,7 +214,7 @@ public class Node<T> {
    */
   @Override
   public int hashCode() {
-    return nodeContent.hashCode();
+    return this.getContent().hashCode();
   }
 
   /**
