@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.aksw.sessa.helper.graph.exception.NodeNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,7 @@ public class Graph implements GraphInterface {
     nodes.add(node);
   }
 
+  @Override
   public void addNodes(Set<Node> nodes) {
     for (Node node : nodes) {
       addNode(node);
@@ -58,11 +60,27 @@ public class Graph implements GraphInterface {
   }
 
   @Override
+  public boolean containsNode(Node node) {
+    return nodes.contains(node);
+  }
+
+  @Override
   public void addEdge(Node from, Node to) {
-    //TODO: Make sure the nodes are in the graph.
-    log.debug("Adding edge for {} & {}", from.getContent(), to.getContent());
-    addEdge(from, to, edgeMap);
-    addEdge(to, from, reversedEdgeMap);
+    try {
+      if (!containsNode(from)) {
+        throw new NodeNotFoundException(
+            "Edge cannot be added, because the given node is not in the graph.", from, this);
+      }
+      if (!containsNode(to)) {
+        throw new NodeNotFoundException(
+            "Edge cannot be added, because the given node is not in the graph.", to, this);
+      }
+      log.debug("Adding edge for {} & {}", from.getContent(), to.getContent());
+      addEdge(from, to, edgeMap);
+      addEdge(to, from, reversedEdgeMap);
+    } catch (NodeNotFoundException ex) {
+      log.error(ex.getLocalizedMessage(), ex);
+    }
   }
 
   protected void addEdge(Node from, Node to, Map<Node, Set<Node>> toMap) {
@@ -77,12 +95,14 @@ public class Graph implements GraphInterface {
     }
   }
 
+  @Override
   public void addEdges(Map<Node, Set<Node>> edges) {
     for (Entry<Node, Set<Node>> edgesFromNode : edges.entrySet()) {
       addEdges(edgesFromNode);
     }
   }
 
+  @Override
   public void addEdges(Entry<Node, Set<Node>> edgesFromNode) {
     for (Node toNode : edgesFromNode.getValue()) {
       addEdge(edgesFromNode.getKey(), toNode);
