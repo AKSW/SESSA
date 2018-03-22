@@ -9,11 +9,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.apache.jena.graph.Node;
+import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.riot.RDFParser;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.apache.jena.riot.lang.PipedRDFStream;
 import org.apache.jena.riot.lang.PipedTriplesStream;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
  * Provides handling for RDF-files. This class is an implementation of the interface {@link
@@ -23,6 +25,7 @@ public class RdfFileHandler implements FileHandlerInterface {
 
   private String file;
   private PipedRDFIterator<Triple> iter;
+  private Node rdfsLabelNode;
 
   /**
    * Creates a RdfFileHandler that uses the given file and base-URI. Uses {@link
@@ -37,6 +40,10 @@ public class RdfFileHandler implements FileHandlerInterface {
    * @param lang - the language of the serialization null selects the default (i.e. RDF/XML)
    */
   public RdfFileHandler(String file, String base, String lang) throws IOException {
+    // Setting a node with rdfs:label to filter out triples without it.
+    // For some reason I can't declare & define it in the method, there it is here.
+    rdfsLabelNode = NodeFactory.createURI((RDFS.label.getURI()));
+
     // Create a PipedRDFStream to accept input and a PipedRDFIterator to
     // consume it
     // You can optionally supply a buffer size here for the
@@ -73,16 +80,20 @@ public class RdfFileHandler implements FileHandlerInterface {
    */
   @Override
   public Entry<String, String> nextEntry() throws IOException {
-    if (iter.hasNext()) {
-      final Triple stmt = iter.next();
+    Triple stmt;
+    do {
+      if (iter.hasNext()) {
+        stmt = iter.next();
+      } else {
+        return null;
+      }
+    } while (!stmt.getPredicate().matches(rdfsLabelNode));
+
       Node subject = stmt.getSubject();
       Node object = stmt.getObject();
       return new SimpleEntry<>(
-          object.getLiteral().getLexicalForm().toLowerCase(),
+          object.getLiteral().getLexicalForm().toString().toLowerCase(),
           subject.getURI());
-    } else {
-      return null;
-    }
   }
 
   /**
