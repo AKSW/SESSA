@@ -40,6 +40,8 @@ public class RdfFileHandler implements FileHandlerInterface {
    * @param lang - the language of the serialization null selects the default (i.e. RDF/XML)
    */
   public RdfFileHandler(String file, String base, String lang) throws IOException {
+    this.file = file;
+
     // Setting a node with rdfs:label to filter out triples without it.
     // For some reason I can't declare & define it in the method, there it is here.
     rdfsLabelNode = NodeFactory.createURI((RDFS.label.getURI()));
