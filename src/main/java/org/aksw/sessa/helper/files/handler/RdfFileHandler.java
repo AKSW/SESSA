@@ -2,7 +2,6 @@ package org.aksw.sessa.helper.files.handler;
 
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
@@ -11,6 +10,8 @@ import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.riot.RDFParser;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.apache.jena.riot.lang.PipedRDFStream;
@@ -28,8 +29,7 @@ public class RdfFileHandler implements FileHandlerInterface {
   private Node rdfsLabelNode;
 
   /**
-   * Creates a RdfFileHandler that uses the given file and base-URI. Uses {@link
-   * org.apache.jena.rdf.model.Model#read(InputStream, String, String)} to read the RDF-file.
+   * Creates a RdfFileHandler that uses PipedRDFIterator to read the RDF-file.
    *
    * @param file RDF-file to be handled by this class
    * @param base the base uri to be used when converting relative URI's to absolute URI's.
@@ -57,7 +57,8 @@ public class RdfFileHandler implements FileHandlerInterface {
     ExecutorService executor = Executors.newSingleThreadExecutor();
 
     // Create a runnable for our parser thread
-    Runnable parser = () -> RDFParser.source(file).parse(inputStream);
+    Lang langObj = RDFLanguages.nameToLang(lang);
+    Runnable parser = () -> RDFParser.source(file).base(base).lang(langObj).parse(inputStream);
     // Start the parser on another thread
     executor.submit(parser);
 
@@ -94,7 +95,7 @@ public class RdfFileHandler implements FileHandlerInterface {
       Node subject = stmt.getSubject();
       Node object = stmt.getObject();
       return new SimpleEntry<>(
-          object.getLiteral().getLexicalForm().toString().toLowerCase(),
+          object.getLiteral().getLexicalForm().toLowerCase(),
           subject.getURI());
   }
 
