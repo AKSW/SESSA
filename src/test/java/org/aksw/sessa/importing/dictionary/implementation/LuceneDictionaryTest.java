@@ -49,8 +49,7 @@ public class LuceneDictionaryTest extends FileBasedDictionaryTest {
   @Test
   @Ignore
   public void get_Kennedy() {
-    String nGram = "John F. Kennedy";
-    System.out.println(dictionary.get(nGram));
+    String nGram = "John F. Kennedy".toLowerCase();
     Assert.assertThat(dictionary.get(nGram), not(empty()));
   }
 
@@ -61,7 +60,6 @@ public class LuceneDictionaryTest extends FileBasedDictionaryTest {
   @Ignore
   public void get_Apollo14() {
     String nGram = "Apollo 14";
-    System.out.println(dictionary.get(nGram));
     Assert.assertThat(dictionary.get(nGram), not(empty()));
   }
 
