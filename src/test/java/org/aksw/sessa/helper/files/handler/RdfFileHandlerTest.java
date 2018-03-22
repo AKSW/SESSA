@@ -39,7 +39,7 @@ public class RdfFileHandlerTest {
   @Test
   public void testNextEntry_testFirstEntry() throws Exception {
     Entry<String, String> expected = new SimpleEntry<>(
-        "AccessibleComputing",
+        "accessiblecomputing",
         "http://dbpedia.org/resource/AccessibleComputing");
     Assert.assertThat(entrySet, hasItem(expected));
   }
@@ -47,7 +47,7 @@ public class RdfFileHandlerTest {
   @Test
   public void testNextEntry_testLastEntry() throws Exception {
     Entry<String, String> expected = new SimpleEntry<>(
-        "A",
+        "a",
         "http://dbpedia.org/resource/A");
     Assert.assertThat(entrySet, hasItem(expected));
   }
@@ -55,15 +55,15 @@ public class RdfFileHandlerTest {
   @Test
   public void testNextEntry_testEntryWithTwoWordsLiteral() throws Exception {
     Entry<String, String> expected = new SimpleEntry<>(
-        "Adolf Hitler",
-        "http://dbpedia.org/resource/AdolfHitler");
+        "arturo vidal",
+        "http://dbpedia.org/resource/Arturo_Vidal");
     Assert.assertThat(entrySet, hasItem(expected));
   }
 
   @Test
   public void testNextEntry_testEntryWithOtherLanguage() throws Exception {
     Entry<String, String> expected = new SimpleEntry<>(
-        "Abece Darians",
+        "abece darians",
         "http://dbpedia.org/resource/AbeceDarians");
     Assert.assertThat(entrySet, hasItem(expected));
   }

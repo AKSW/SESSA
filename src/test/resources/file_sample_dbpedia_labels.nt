@@ -31,7 +31,7 @@
 <http://dbpedia.org/resource/AtlasShruggedCharacters> <http://www.w3.org/2000/01/rdf-schema#label> "AtlasShruggedCharacters"@en .
 <http://dbpedia.org/resource/AyersMusicPublishingCompany> <http://www.w3.org/2000/01/rdf-schema#label> "AyersMusicPublishingCompany"@en .
 <http://dbpedia.org/resource/AfricanAmericanPeople> <http://www.w3.org/2000/01/rdf-schema#label> "AfricanAmericanPeople"@en .
-<http://dbpedia.org/resource/AdolfHitler> <http://www.w3.org/2000/01/rdf-schema#label> "Adolf Hitler"@en .
+<http://dbpedia.org/resource/Arturo_Vidal> <http://www.w3.org/2000/01/rdf-schema#label> "Arturo Vidal"@en .
 <http://dbpedia.org/resource/AbeceDarians> <http://www.w3.org/2000/01/rdf-schema#label> "Abece Darians"@de .
 <http://dbpedia.org/resource/AbeL> <http://www.w3.org/2000/01/rdf-schema#label> "AbeL"@en .
 <http://dbpedia.org/resource/ArgumentsForTheExistenceOfGod> <http://www.w3.org/2000/01/rdf-schema#label> "ArgumentsForTheExistenceOfGod"@en .
