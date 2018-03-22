@@ -23,14 +23,15 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.search.similarities.Similarity;
-import org.apache.lucene.search.spans.SpanMultiTermQueryWrapper;
-import org.apache.lucene.search.spans.SpanNearQuery;
-import org.apache.lucene.search.spans.SpanQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.Version;
@@ -139,17 +140,23 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     Set<Candidate> foundCandidateSet = new HashSet<>();
     try {
       String[] uniGrams = nGram.split(" ");
-      SpanQuery[] queryTerms = new SpanQuery[uniGrams.length];
-      for (int i = 0; i < uniGrams.length; i++) {
-        FuzzyQuery fq = new FuzzyQuery(new Term(FIELD_NAME_KEY, uniGrams[i]), 1);
-        queryTerms[i] = new SpanMultiTermQueryWrapper<>(fq);
+      BooleanQuery queryTerms = new BooleanQuery();
+      for (String uniGram : uniGrams) {
+        Query query;
+        if (uniGram.length() < 4) {
+          query = new TermQuery(new Term(FIELD_NAME_KEY, uniGram));
+        } else {
+          query = new FuzzyQuery(new Term(FIELD_NAME_KEY, uniGram), 1);
+        }
+        queryTerms.add(query, BooleanClause.Occur.MUST);
       }
-      SpanNearQuery wholeQuery = new SpanNearQuery(queryTerms, 0, true);
+      log.trace("{}", queryTerms.toString());
 
       TopScoreDocCollector collector = TopScoreDocCollector
           .create(maxResultSize, true);
-      iSearcher.search(wholeQuery, collector);
+      iSearcher.search(queryTerms, collector);
       ScoreDoc[] hits = collector.topDocs().scoreDocs;
+      log.trace("{}", hits);
       for (ScoreDoc hit : hits) {
         Document hitDoc = iSearcher.doc(hit.doc);
         String key = hitDoc.get(FIELD_NAME_KEY);
