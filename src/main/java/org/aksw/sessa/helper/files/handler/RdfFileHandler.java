@@ -78,7 +78,7 @@ public class RdfFileHandler implements FileHandlerInterface {
       Node subject = stmt.getSubject();
       Node object = stmt.getObject();
       return new SimpleEntry<>(
-          object.getLiteral().getLexicalForm(),
+          object.getLiteral().getLexicalForm().toLowerCase(),
           subject.getURI());
     } else {
       return null;
