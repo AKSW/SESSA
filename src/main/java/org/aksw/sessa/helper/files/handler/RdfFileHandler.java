@@ -57,8 +57,13 @@ public class RdfFileHandler implements FileHandlerInterface {
     ExecutorService executor = Executors.newSingleThreadExecutor();
 
     // Create a runnable for our parser thread
-    Lang langObj = RDFLanguages.nameToLang(lang);
-    Runnable parser = () -> RDFParser.source(file).base(base).lang(langObj).parse(inputStream);
+    Runnable parser;
+    if (lang != null) {
+      Lang langObj = RDFLanguages.nameToLang(lang);
+      parser = () -> RDFParser.source(file).base(base).lang(langObj).parse(inputStream);
+    } else {
+      parser = () -> RDFParser.source(file).base(base).parse(inputStream);
+    }
     // Start the parser on another thread
     executor.submit(parser);
 
@@ -71,7 +76,7 @@ public class RdfFileHandler implements FileHandlerInterface {
    * @param file RDF-file to be handled by this class
    */
   public RdfFileHandler(String file) throws IOException {
-    this(file, null, "TTL");
+    this(file, null, null);
   }
 
 
@@ -92,11 +97,11 @@ public class RdfFileHandler implements FileHandlerInterface {
       }
     } while (!stmt.getPredicate().matches(rdfsLabelNode));
 
-      Node subject = stmt.getSubject();
-      Node object = stmt.getObject();
-      return new SimpleEntry<>(
-          object.getLiteral().getLexicalForm().toLowerCase(),
-          subject.getURI());
+    Node subject = stmt.getSubject();
+    Node object = stmt.getObject();
+    return new SimpleEntry<>(
+        object.getLiteral().getLexicalForm().toLowerCase(),
+        subject.getURI());
   }
 
   /**
