@@ -2,6 +2,7 @@ package org.aksw.sessa.importing.dictionary.implementation;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.empty;
 
 import java.io.IOException;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
@@ -10,6 +11,7 @@ import org.aksw.sessa.query.models.Candidate;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class LuceneDictionaryTest extends FileBasedDictionaryTest {
@@ -39,6 +41,28 @@ public class LuceneDictionaryTest extends FileBasedDictionaryTest {
     ((LuceneDictionary) dictionary).clearIndex();
     candidate = new Candidate(uri, nGram);
     Assert.assertThat(dictionary.get(nGram), not(hasItem(candidate)));
+  }
+
+  /**
+   * Test for Issue #28
+   */
+  @Test
+  @Ignore
+  public void get_Kennedy() {
+    String nGram = "John F. Kennedy";
+    System.out.println(dictionary.get(nGram));
+    Assert.assertThat(dictionary.get(nGram), not(empty()));
+  }
+
+  /**
+   * Test for Issue #28
+   */
+  @Test
+  @Ignore
+  public void get_Apollo14() {
+    String nGram = "Apollo 14";
+    System.out.println(dictionary.get(nGram));
+    Assert.assertThat(dictionary.get(nGram), not(empty()));
   }
 
 }

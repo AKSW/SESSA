@@ -18,9 +18,17 @@ public abstract class FileBasedDictionaryTest {
   FileBasedDictionary dictionary;
 
   @Test
-  public void get_TestTwoWords() {
+  public void get_TestTwoWords_Bill() {
     String uri = "http://dbpedia.org/resource/Bill_Gates";
     String nGram = "bill gates";
+    Candidate candidate = new Candidate(uri, nGram);
+    Assert.assertThat(dictionary.get(nGram), hasItem(candidate));
+  }
+
+  @Test
+  public void get_TestTwoWords_barack() {
+    String uri = "http://dbpedia.org/resource/Barack_Obama";
+    String nGram = "Barack Obama".toLowerCase();
     Candidate candidate = new Candidate(uri, nGram);
     Assert.assertThat(dictionary.get(nGram), hasItem(candidate));
   }
