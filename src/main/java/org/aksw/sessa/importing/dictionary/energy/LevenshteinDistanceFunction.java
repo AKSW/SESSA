@@ -22,6 +22,6 @@ public class LevenshteinDistanceFunction implements EnergyFunctionInterface {
   @Override
   public float calculateEnergyScore(String nGram, String foundURI, String foundKey) {
     LuceneLevenshteinDistance levenshtein = new LuceneLevenshteinDistance();
-    return levenshtein.getDistance(nGram, foundKey);
+    return levenshtein.getDistance(nGram.toLowerCase(), foundKey.toLowerCase());
   }
 }
