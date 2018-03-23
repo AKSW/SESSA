@@ -46,11 +46,11 @@ public class RdfFileHandler implements FileHandlerInterface {
     // For some reason I can't declare & define it in the method, there it is here.
     rdfsLabelNode = NodeFactory.createURI((RDFS.label.getURI()));
 
-    // Create a PipedRDFStream to accept input and a PipedRDFIterator to
-    // consume it
-    // You can optionally supply a buffer size here for the
-    // PipedRDFIterator, see the documentation for details about recommended
-    // buffer sizes
+    /*
+     * Create a PipedRDFStream to accept input and a PipedRDFIterator to consume it.
+     * You can optionally supply a buffer size here for the PipedRDFIterator, see the documentation
+     * for details about recommended buffer sizes
+     */
     iter = new PipedRDFIterator<>();
     final PipedRDFStream<Triple> inputStream = new PipedTriplesStream(iter);
     // PipedRDFStream and PipedRDFIterator need to be on different threads
@@ -70,8 +70,8 @@ public class RdfFileHandler implements FileHandlerInterface {
   }
 
   /**
-   * Therefore the given RDF-files has to have no relative URIs in the source and has to be a
-   * TTL-formatted file.
+   * Creates a RdfFileHandler with given file. No base will be used and the lang will be read from
+   * file extension.
    *
    * @param file RDF-file to be handled by this class
    */
