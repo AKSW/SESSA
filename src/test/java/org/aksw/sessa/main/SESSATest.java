@@ -81,16 +81,28 @@ public class SESSATest {
     Assert.assertThat(answer, hasItem("http://dbpedia.org/resource/The_Lion_King_(musical)"));
   }
 
-  @Test
   /**
    * This test on issue #18.
    */
+  @Test
   public void testAnswer_onColorUpdateProblem() {
     question = "offical language suriname";
     answer = sessa.answer(question);
     HashSet<String> answerSet = new HashSet<>();
     answerSet.add("http://dbpedia.org/resource/Dutch_language");
     Assert.assertThat(answer, equalTo(answerSet));
+  }
+
+
+  /**
+   * This tests on issue #29.
+   */
+  @Test
+  public void testAnswer_onNoConnectionProblem() {
+    question = "juan carlos I wife parents";
+    answer = sessa.answer(question);
+    Assert.assertThat(answer, hasItem("http://dbpedia.org/resource/Paul_of_Greece"));
+    Assert.assertThat(answer, hasItem("http://dbpedia.org/resource/Frederika_of_Hanover"));
   }
 
 //  @Test
@@ -127,8 +139,4 @@ public class SESSATest {
     System.out.println(graph);
     Assert.assertThat(answerNode.getExplanation(), equalTo(question.split(" ").length));
   }
-
-  // TODO: create tests for other questions
-
-  // TODO: create tests for accessibility to QueryProcessing & Co.
 }
