@@ -1,6 +1,7 @@
 package org.aksw.sessa.helper.files.handler;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
@@ -41,7 +42,10 @@ public class RdfFileHandler implements FileHandlerInterface {
    */
   public RdfFileHandler(String file, String base, String lang) throws IOException {
     this.file = file;
-
+    File f = new File(file);
+    if(!f.exists()){
+      throw new IOException("File '" + file + "' was not found.");
+    }
     // Setting a node with rdfs:label to filter out triples without it.
     // For some reason I can't declare & define it in the method, there it is here.
     rdfsLabelNode = NodeFactory.createURI((RDFS.label.getURI()));
