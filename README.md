@@ -7,6 +7,8 @@ Recommended files to run SESSA (and needed files to run SESSAMeasurement):
 cd src/main
 mkdir resources
 cd resources
+wget https://raw.githubusercontent.com/dice-group/NLIWOD/master/qa.hawk/resources/dbpedia_3Eng_class.ttl
+wget https://raw.githubusercontent.com/dice-group/NLIWOD/master/qa.hawk/resources/dbpedia_3Eng_property.ttl
 wget downloads.dbpedia.org/2016-10/dbpedia_2016-10.nt
 wget downloads.dbpedia.org/2016-10/core-i18n/en/labels_en.ttl.bz2
 bunzip2 labels_en.ttl.bz2
