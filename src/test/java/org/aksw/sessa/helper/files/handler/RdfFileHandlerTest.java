@@ -2,6 +2,7 @@ package org.aksw.sessa.helper.files.handler;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 
+import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -66,6 +67,11 @@ public class RdfFileHandlerTest {
         "abece darians",
         "http://dbpedia.org/resource/AbeceDarians");
     Assert.assertThat(entrySet, hasItem(expected));
+  }
+
+  @Test(expected = IOException.class)
+  public void testIOException() throws Exception{
+    new RdfFileHandler(FILE + "NotThere");
   }
 
 }
