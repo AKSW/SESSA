@@ -1,7 +1,9 @@
 package org.aksw.sessa.query.models;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.aksw.sessa.helper.graph.Graph;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 
@@ -13,14 +15,18 @@ public class QAModel {
   private Set<Node> results;
   private NGramHierarchy nGramHierarchy;
   private Map<NGramEntryPosition, Set<Candidate>> candidateMap;
+  private int explanationScore;
+  private int maxPossibleExplanationScore;
 
   public QAModel(){
-    question = null;
-    preProcessedQuestion = null;
-    graph = null;
-    results = null;
+    question = "";
+    preProcessedQuestion = "";
+    graph = new Graph();
+    results = new HashSet<>();
     nGramHierarchy = null;
     candidateMap = null;
+    explanationScore = 0;
+    maxPossibleExplanationScore = 0;
   }
 
   public QAModel(QAModel other){
@@ -30,6 +36,8 @@ public class QAModel {
     results = other.getResults();
     nGramHierarchy = other.getNGramHierarchy();
     candidateMap = other.getCandidateMap();
+    explanationScore = other.getExplanationScore();
+    maxPossibleExplanationScore = other.getMaxPossibleExplanationScore();
   }
 
 
@@ -39,6 +47,7 @@ public class QAModel {
 
   public void setQuestion(String question) {
     this.question = question;
+    maxPossibleExplanationScore = question.split(" ").length;
   }
 
   public String getPreProcessedQuestion() {
@@ -63,6 +72,9 @@ public class QAModel {
 
   public void setResults(Set<Node> results) {
     this.results = results;
+    if(results != null && !results.isEmpty()) {
+      explanationScore = results.iterator().next().getExplanation();
+    }
   }
 
   public NGramHierarchy getNGramHierarchy() {
@@ -81,6 +93,16 @@ public class QAModel {
       Map<NGramEntryPosition, Set<Candidate>> candidateMap) {
     this.candidateMap = candidateMap;
   }
+
+  public int getExplanationScore() {
+    return explanationScore;
+  }
+
+
+  public int getMaxPossibleExplanationScore() {
+    return maxPossibleExplanationScore;
+  }
+
 
   @Override
   public String toString() {
