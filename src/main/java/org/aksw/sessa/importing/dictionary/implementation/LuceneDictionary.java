@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
@@ -24,6 +26,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
@@ -51,6 +54,14 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    * Contains the path to the index.
    */
   public static final String DEFAULT_PATH_TO_INDEX = "resources/index";
+
+  /**
+   * Contais the buffer size, i.e. the number of entries in the bufferSize-hashmap before the
+   * changes are committed to the Lucene dictionary. Smaller numbers will lead to performance loss
+   * due to the committing cost. Larger numbers will lead to more memory consumption.
+   */
+  private int bufferSize = 1000000;
+
   /**
    * Contains the field name for the keys in Lucene.
    */
@@ -96,7 +107,6 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     this(handler, DEFAULT_PATH_TO_INDEX);
   }
 
-
   /**
    * Constructs a LuceneDictionary with given handler and location of index.
    *
@@ -124,6 +134,15 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     } catch (Exception e) {
       log.error(e.getLocalizedMessage(), e);
     }
+  }
+
+  /**
+   * Contais the buffer size, i.e. the number of entries in the buffer-hashmap before the changes
+   * are committed to the Lucene dictionary. Smaller numbers will lead to performance loss due to
+   * the committing cost. Larger numbers will lead to more memory consumption.
+   */
+  public void setBufferSize(int bufferSize) {
+    this.bufferSize = bufferSize;
   }
 
   /**
@@ -205,9 +224,36 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     try {
       log.debug("Starting indexing for  file '{}'", handler.getFileName());
       int count = 0;
+      Map<String, Set<String>> candidateEntries = new HashMap<>();
       for (Entry<String, String> entry; (entry = handler.nextEntry()) != null; ) {
-        addDocumentToIndex(entry.getKey(), entry.getValue());
-        count++;
+        String key = entry.getKey().toLowerCase();
+        String value = entry.getValue();
+        log.trace("Checking entry {}", entry);
+        if (!inDictionary(entry)) {
+          log.trace("\tEntry not in Lucene");
+          if (candidateEntries.containsKey(key)) {
+            log.trace("\tEntry in buffer");
+            if (!candidateEntries.get(key).contains(value.toLowerCase())) {
+              log.trace("\t\tEntry value not in buffer");
+              Set<String> tmp = candidateEntries.get(key);
+              tmp.add(value.toLowerCase());
+              candidateEntries.put(key, tmp);
+              addDocumentToIndex(key, value);
+              count++;
+            }
+          } else {
+            log.trace("\tEntry not in buffer");
+            Set<String> tmp = new HashSet<>();
+            tmp.add(value.toLowerCase());
+            candidateEntries.put(key, tmp);
+            addDocumentToIndex(key, value);
+            count++;
+          }
+        }
+        if (count % bufferSize == 0) {
+          candidateEntries.clear();
+          commitAndUpdate();
+        }
       }
       commitAndUpdate();
       log.debug("Number of entries added: {}", count);
@@ -223,6 +269,36 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     doc.add(new StringField(FIELD_NAME_VALUE, value, Store.YES));
     iWriter.addDocument(doc);
   }
+
+  private boolean inDictionary(Entry<String, String> entry) {
+    BooleanQuery queryTerms = new BooleanQuery();
+    Query queryKey = new TermQuery(new Term(FIELD_NAME_KEY, entry.getKey().toLowerCase()));
+    queryTerms.add(queryKey, Occur.MUST);
+    TopScoreDocCollector collector = TopScoreDocCollector
+        .create(5, true);
+    Map<String, String> foundEntries = new HashMap<>();
+    try {
+      iSearcher.search(queryTerms, collector);
+      ScoreDoc[] hits = collector.topDocs().scoreDocs;
+      for (ScoreDoc hit : hits) {
+        Document hitDoc = iSearcher.doc(hit.doc);
+        String key = hitDoc.get(FIELD_NAME_KEY);
+        String uri = hitDoc.get(FIELD_NAME_VALUE);
+        foundEntries.put(key.toLowerCase(), uri.toLowerCase());
+      }
+    } catch (IOException ioE) {
+      log.error(ioE.getLocalizedMessage());
+    }
+    String key = entry.getKey().toLowerCase();
+    if (foundEntries.containsKey(key)) {
+      String value = foundEntries.get(key);
+      if (value != null && value.equals(entry.getValue())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
   /**
    * Commits all pending write operations and updates iReader and iSearcher
