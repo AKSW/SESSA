@@ -125,10 +125,10 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       similarity = new DictionaryEntrySimilarity();
       config.setSimilarity(similarity);
       iWriter = new IndexWriter(directory, config);
-      if (!filesExists && handler != null) {
+      if (handler != null) {
+        commitAndUpdate();
         putAll(handler);
       }
-      commitAndUpdate();
       log.debug("Loaded LuceneDictionary. Total number of entries in dictionary: {}",
           iReader.numDocs());
     } catch (Exception e) {
