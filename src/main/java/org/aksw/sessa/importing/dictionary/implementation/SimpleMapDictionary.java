@@ -94,4 +94,13 @@ public class SimpleMapDictionary implements DictionaryInterface {
   public void setEnergyFunction(EnergyFunctionInterface function) {
     energyFunction = function;
   }
+
+  /**
+   * Returns the size of the dictionary, i.e. how many pairs of keys and values. As this is mainly a
+   * test class, the method will provide a constant negative value.
+   */
+  @Override
+  public int size() {
+    return -1;
+  }
 }

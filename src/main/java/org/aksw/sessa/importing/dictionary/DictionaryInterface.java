@@ -36,5 +36,10 @@ public interface DictionaryInterface {
    * @param energyFunction energy function which should be applied to the results.
    */
   void setEnergyFunction(EnergyFunctionInterface energyFunction);
+
+  /**
+   * Returns the size of the dictionary, i.e. how many pairs of keys and values.
+   */
+  int size();
 }
 

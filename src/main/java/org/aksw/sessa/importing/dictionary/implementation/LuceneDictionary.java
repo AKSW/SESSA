@@ -189,6 +189,13 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     return this.filter(nGram, foundCandidateSet);
   }
 
+  /**
+   * Returns the size of the dictionary, i.e. how many pairs of keys and values.
+   */
+  @Override
+  public int size() {
+    return iReader.numDocs();
+  }
 
   /**
    * Closes all files handled, i.e. the index-files.

@@ -23,6 +23,7 @@ public class HashMapDictionary extends FileBasedDictionary {
 
   private static final Logger log = LoggerFactory.getLogger(HashMapDictionary.class);
   private Map<String, Set<String>> dictionary;
+  private int dictionarySize;
   /**
    * Initializes the dictionary with given file handler. The file will be parsed into the
    * dictionary.
@@ -30,6 +31,7 @@ public class HashMapDictionary extends FileBasedDictionary {
    * @param handler handler to be used for filling the dictionary
    */
   public HashMapDictionary(FileHandlerInterface handler) {
+    dictionarySize = 0;
     dictionary = createDictionary(handler);
   }
 
@@ -74,6 +76,7 @@ public class HashMapDictionary extends FileBasedDictionary {
       for (String uri : foundUris) {
         Candidate candidate = new Candidate(uri, nGram);
         candidateSet.add(candidate);
+        dictionarySize++;
       }
     }
     Set<Candidate> filteredCandidateSet = this.filter(nGram, candidateSet);
@@ -90,6 +93,14 @@ public class HashMapDictionary extends FileBasedDictionary {
    */
   public void putAll(FileHandlerInterface handler) {
     dictionary.putAll(createDictionary(handler));
+  }
+
+  /**
+   * Returns the size of the dictionary, i.e. how many pairs of keys and values.
+   */
+  @Override
+  public int size() {
+    return dictionarySize;
   }
 
   /**
