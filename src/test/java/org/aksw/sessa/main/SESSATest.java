@@ -1,6 +1,7 @@
 package org.aksw.sessa.main;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -14,7 +15,6 @@ import org.aksw.sessa.helper.files.handler.ReverseTsvFileHandler;
 import org.aksw.sessa.helper.files.handler.TsvFileHandler;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
-import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.aksw.sessa.query.models.QAModel;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,10 +25,9 @@ import org.slf4j.LoggerFactory;
 
 public class SESSATest {
 
-  private static final Logger log = LoggerFactory.getLogger(SESSATest.class);
-
   public static final String TSV_FILE = "src/test/resources/en_surface_forms_small.tsv";
   public static final String REVERSE_TSV_FILE = "src/test/resources/small_reverse_dictionary.tsv";
+  private static final Logger log = LoggerFactory.getLogger(SESSATest.class);
   private SESSA sessa = new SESSA();
   private String question;
   private Set<String> answer;
@@ -139,4 +138,25 @@ public class SESSATest {
     System.out.println(graph);
     Assert.assertThat(answerNode.getExplanation(), equalTo(question.split(" ").length));
   }
+
+
+  // Some test for popular questions
+
+  @Test
+  @Ignore // cant be answered, as there is the URI http://dbpedia.org/resource/President_of_the_USA which gets associated with the whole question
+  public void testAnswer_PresidentOfUSA() {
+    question = "current president of usa";
+    answer = sessa.answer(question);
+    Assert.assertThat(answer, hasItem("http://dbpedia.org/resource/Donald_Trump"));
+  }
+
+  @Test
+  @Ignore // cant be answered, as capital only points to dbo:Capital (the class, not the property)
+  public void testAnswer_OnCapitalOfGermany() {
+    question = "capital germany";
+    answer = sessa.answer(question);
+    Assert.assertThat(answer, hasItem("http://dbpedia.org/resource/Berlin"));
+    Assert.assertThat(answer, hasSize(1));
+  }
+
 }
