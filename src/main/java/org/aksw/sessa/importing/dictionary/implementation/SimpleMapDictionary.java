@@ -1,5 +1,6 @@
 package org.aksw.sessa.importing.dictionary.implementation;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -29,7 +30,7 @@ public class SimpleMapDictionary implements DictionaryInterface {
    * @param dictionary map to be used for the dictionary
    */
   public SimpleMapDictionary(Map<String, Set<String>> dictionary) {
-    this.dictionary = dictionary;
+    this.dictionary = new HashMap<>(dictionary);
     filterQue = new PriorityQueue<>();
     energyFunction = null;
   }
