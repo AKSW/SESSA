@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class HashMapDictionary extends FileBasedDictionary {
 
-  private static final Logger log = LoggerFactory.getLogger(FileBasedDictionary.class);
+  private static final Logger log = LoggerFactory.getLogger(HashMapDictionary.class);
   private Map<String, Set<String>> dictionary;
   /**
    * Initializes the dictionary with given file handler. The file will be parsed into the
