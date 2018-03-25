@@ -56,7 +56,7 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
         sessa.loadFileToLuceneDictionary(null);
       }
     } catch (IOException e) {
-      log.error(e.getLocalizedMessage(), e);
+      log.error(e.getLocalizedMessage());
     }
     addFiltersAndEnergyFunction();
   }

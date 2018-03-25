@@ -132,7 +132,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       log.debug("Loaded LuceneDictionary. Total number of entries in dictionary: {}",
           iReader.numDocs());
     } catch (Exception e) {
-      log.error(e.getLocalizedMessage(), e);
+      log.error(e.getLocalizedMessage());
     }
   }
 
@@ -206,7 +206,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       iWriter.close();
       directory.close();
     } catch (IOException e) {
-      log.error(e.getLocalizedMessage(), e);
+      log.error(e.getLocalizedMessage());
     }
   }
 
@@ -218,7 +218,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       iWriter.deleteAll();
       commitAndUpdate();
     } catch (IOException ioE) {
-      log.error(ioE.getLocalizedMessage(), ioE);
+      log.error(ioE.getLocalizedMessage());
     }
   }
 
@@ -266,7 +266,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       log.debug("Number of entries added: {}", count);
       log.debug("Total number of entries in index: {}", iReader.numDocs());
     } catch (IOException e) {
-      log.error(e.getLocalizedMessage(), e);
+      log.error(e.getLocalizedMessage());
     }
   }
 

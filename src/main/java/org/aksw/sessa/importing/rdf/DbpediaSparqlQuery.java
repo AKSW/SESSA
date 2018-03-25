@@ -51,7 +51,7 @@ public class DbpediaSparqlQuery {
 
     } catch (Exception e) {
       log.error("Error with query {}", queryString);
-      log.error(e.getLocalizedMessage(), e);
+      log.error(e.getLocalizedMessage());
     }
     log.trace("Query: '{}'. Found: {}", queryString, finalSet);
     return finalSet;
@@ -79,7 +79,7 @@ public class DbpediaSparqlQuery {
 
     } catch (Exception e) {
       log.error("Error with query {}", queryString);
-      log.error(e.getLocalizedMessage(), e);
+      log.error(e.getLocalizedMessage());
     }
     log.trace("Query: '{}'. Found: {}", queryString, finalSet);
     return answer;

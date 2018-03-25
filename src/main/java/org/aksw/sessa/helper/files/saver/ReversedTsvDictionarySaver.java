@@ -44,7 +44,7 @@ public class ReversedTsvDictionarySaver {
         dictionary.putAll(handler);
       }
     } catch (IOException e) {
-      log.error(e.getLocalizedMessage(), e);
+      log.error(e.getLocalizedMessage());
     }
   }
 
@@ -59,7 +59,7 @@ public class ReversedTsvDictionarySaver {
         writer.println();
       }
     } catch (IOException e) {
-      log.error(e.getLocalizedMessage(), e);
+      log.error(e.getLocalizedMessage());
     }
   }
 }

@@ -82,7 +82,7 @@ public class Graph implements GraphInterface {
       addEdge(from, to, edgeMap);
       addEdge(to, from, reversedEdgeMap);
     } catch (NodeNotFoundException ex) {
-      log.error(ex.getLocalizedMessage(), ex);
+      log.error(ex.getLocalizedMessage());
       log.error(ex.getGraph().toString());
     }
   }
@@ -167,7 +167,7 @@ public class Graph implements GraphInterface {
         Graph subGraph = findPathsToNodes(neighbors);
         pathsGraph.addSubGraph(subGraph);
       } catch (NodeNotFoundException ex) {
-        log.error(ex.getLocalizedMessage(), ex);
+        log.error(ex.getLocalizedMessage());
         log.error("Skipping node.");
       }
     }

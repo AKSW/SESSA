@@ -72,7 +72,7 @@ public class PageRankFunction implements EnergyFunctionInterface {
     } catch (Exception e) {
       log.error("Error with query {}", queryString);
       log.error("Answer set until this point is: {}", finalSet);
-      log.error(e.getLocalizedMessage(), e);
+      log.error(e.getLocalizedMessage());
     }
     log.trace("Query: '{}'. Found: {}", queryString, finalSet);
     return finalSet;

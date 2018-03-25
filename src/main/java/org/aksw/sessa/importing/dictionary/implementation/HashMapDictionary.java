@@ -56,7 +56,7 @@ public class HashMapDictionary extends FileBasedDictionary {
         dictionary.put(key, values);
       }
     } catch (IOException e) {
-      log.error(e.getLocalizedMessage(), e);
+      log.error(e.getLocalizedMessage());
     }
     return dictionary;
   }

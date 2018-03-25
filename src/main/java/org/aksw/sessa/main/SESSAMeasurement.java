@@ -54,7 +54,7 @@ public class SESSAMeasurement {
         sessa.loadFileToLuceneDictionary(null);
       }
     } catch (IOException e) {
-      log.error(e.getLocalizedMessage(), e);
+      log.error(e.getLocalizedMessage());
     }
     addFiltersAndEnergyFunction();
   }
