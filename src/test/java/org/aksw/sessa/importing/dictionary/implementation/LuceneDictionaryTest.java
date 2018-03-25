@@ -3,9 +3,11 @@ package org.aksw.sessa.importing.dictionary.implementation;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 
 import java.io.IOException;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
+import org.aksw.sessa.helper.files.handler.RdfFileHandler;
 import org.aksw.sessa.helper.files.handler.TsvFileHandler;
 import org.aksw.sessa.query.models.Candidate;
 import org.junit.After;
@@ -17,6 +19,7 @@ import org.junit.Test;
 public class LuceneDictionaryTest extends FileBasedDictionaryTest {
 
   private final String TEST_INDEX_LOCATION = "src/test/resources/index";
+  private final String TEST_FOR_IN_DICTIONARY = "src/test/resources/testInDictionaryExample.nt";
 
   @Before
   public void init() throws IOException {
@@ -61,6 +64,15 @@ public class LuceneDictionaryTest extends FileBasedDictionaryTest {
   public void get_Apollo14() {
     String nGram = "Apollo 14";
     Assert.assertThat(dictionary.get(nGram), not(empty()));
+  }
+
+  @Test
+  public void testInDictionary() throws Exception {
+    int size = dictionary.size();
+    // Add file with 4 entries, but all are basically the same
+    FileHandlerInterface tmpHandler = new RdfFileHandler(TEST_FOR_IN_DICTIONARY);
+    dictionary.putAll(tmpHandler);
+    Assert.assertThat(dictionary.size(), equalTo(size + 1));
   }
 
 }
