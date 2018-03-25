@@ -1,14 +1,15 @@
 package org.aksw.sessa.importing.dictionary.implementation;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.aksw.sessa.query.models.Candidate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class provides an easy implementation of dictionaries. It essentially just wraps the  given
@@ -16,8 +17,10 @@ import org.aksw.sessa.query.models.Candidate;
  */
 public class SimpleMapDictionary implements DictionaryInterface {
 
+  private static final Logger log = LoggerFactory.getLogger(SimpleMapDictionary.class);
+
   private Map<String, Set<String>> dictionary;
-  private List<Filter> filterList;
+  private PriorityQueue<Filter> filterQue;
   private EnergyFunctionInterface energyFunction;
 
   /**
@@ -27,7 +30,7 @@ public class SimpleMapDictionary implements DictionaryInterface {
    */
   public SimpleMapDictionary(Map<String, Set<String>> dictionary) {
     this.dictionary = dictionary;
-    filterList = new LinkedList<>();
+    filterQue = new PriorityQueue<>();
     energyFunction = null;
   }
 
@@ -52,12 +55,33 @@ public class SimpleMapDictionary implements DictionaryInterface {
         candidateSet.add(candidate);
       }
     }
-    return candidateSet;
+    return filter(nGram, candidateSet);
+  }
+
+  /**
+   * Allows the dictionary to filter based on the added filters.
+   *
+   * @param keyword the initial keyword for the search in the dictionary
+   * @param candidateSet found set of candidates for the keyword
+   * @return filtered set of candidates
+   */
+  private Set<Candidate> filter(String keyword, Set<Candidate> candidateSet) {
+    Set<Candidate> filteredCandidateSet = new HashSet<>();
+    filteredCandidateSet.addAll(candidateSet);
+    for (Filter filter : filterQue) {
+      filteredCandidateSet = filter.filter(keyword, filteredCandidateSet);
+      log.debug("Used filter for keyword {} with {} with result limit of {}. Got list: {}",
+          keyword,
+          filter.getEnergyFunction().getClass().getSimpleName(),
+          filter.getNumberOfResults(),
+          filteredCandidateSet);
+    }
+    return filteredCandidateSet;
   }
 
   @Override
   public void addFilter(Filter filter) {
-    filterList.add(filter);
+    filterQue.add(filter);
   }
 
   /**
