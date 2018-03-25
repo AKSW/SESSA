@@ -3,7 +3,6 @@ package org.aksw.sessa.importing.dictionary;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 public abstract class FileBasedDictionary implements DictionaryInterface {
 
-  protected Map<String, Set<String>> dictionary;
   protected PriorityQueue<Filter> filterQue;
   protected EnergyFunctionInterface energyFunction;
 
@@ -76,12 +74,5 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
   @Override
   public void setEnergyFunction(EnergyFunctionInterface energyFunction) {
     this.energyFunction = energyFunction;
-  }
-
-  @Override
-  public String toString() {
-    return "FileBasedDictionary{" +
-        "dictionary=" + dictionary +
-        '}';
   }
 }
