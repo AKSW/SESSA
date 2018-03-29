@@ -52,7 +52,16 @@ public class CandidateGenerator {
       for (NGramEntryPosition child : parent.getAllDescendants()) {
         Set<Candidate> parentCandidates = candidateMap.get(parent);
         Set<Candidate> childCandidates = candidateMap.get(child);
-        childCandidates.removeAll(parentCandidates);
+        Set<Candidate> tmpPruneSet = new HashSet<>();
+        for (Candidate parentCandidate : parentCandidates) {
+          for (Candidate childCandidate : childCandidates) {
+            if (parentCandidate.getUri().equals(childCandidate.getUri())) {
+              tmpPruneSet.add(childCandidate);
+            }
+          }
+        }
+        childCandidates.removeAll(tmpPruneSet);
+        candidateMap.put(child, childCandidates);
       }
     }
     return candidateMap;
