@@ -32,15 +32,12 @@ public class SESSAMeasurement {
 
   private static final Logger log = LoggerFactory.getLogger(SESSAMeasurement.class);
   private static final String PROPERTIES_FILE = "application.properties";
+  
   private static final String DEFAULT_PATH_KEY = "dictionary_files.rdf.location";
   private static final String DEFAULT_PATH = "src/main/resources";
 
 
   private SESSA sessa;
-  private String RDF_labels = "src/main/resources/dbpedia_3Eng_class.ttl";
-  private String RDF_ontology = "src/main/resources/dbpedia_3Eng_property.ttl";
-  private String RDF_DBpedia_Ontology = "src/main/resources/dbpedia_2016-10.nt";
-  private String RDF_DBpedia_Labels = "src/main/resources/labels_en.ttl";
   private Properties properties;
 
   public SESSAMeasurement() {
@@ -48,7 +45,7 @@ public class SESSAMeasurement {
     long startTime = System.nanoTime();
     properties = new Properties(loadProperties());
     log.info("Building Lucene Dictionary from RDF files. This could take some time!");
-    try (Stream<Path> paths = Files.walk(Paths.get(DEFAULT_PATH))) {
+    try (Stream<Path> paths = Files.walk(Paths.get(properties.getProperty(DEFAULT_PATH_KEY)))) {
       paths
           .filter(Files::isRegularFile)
           .forEach(path -> {
@@ -60,7 +57,7 @@ public class SESSAMeasurement {
           });
     } catch (IOException ioE) {
       log.error(ioE.getLocalizedMessage());
-      log.info("Could not load any file. Trying to intiate dictionary from previous run instead.");
+      log.info("Could not load any file. Trying to initiate dictionary from previous run instead.");
       sessa.loadFileToLuceneDictionary(null);
     }
 
