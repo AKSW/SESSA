@@ -1,4 +1,4 @@
-package org.aksw.sessa.query.models;
+package org.aksw.sessa.candidate;
 
 /**
  * This class is used to store a candidate for a n-gram and its energy. The energy approximates the

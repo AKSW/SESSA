@@ -8,7 +8,7 @@ import java.util.Set;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.util.Filter;
-import org.aksw.sessa.query.models.Candidate;
+import org.aksw.sessa.candidate.Candidate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

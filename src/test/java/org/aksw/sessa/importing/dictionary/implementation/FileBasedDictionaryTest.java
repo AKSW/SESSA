@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.files.handler.ReverseTsvFileHandler;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
-import org.aksw.sessa.query.models.Candidate;
+import org.aksw.sessa.candidate.Candidate;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -9,7 +9,7 @@ import java.io.IOException;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.files.handler.RdfFileHandler;
 import org.aksw.sessa.helper.files.handler.TsvFileHandler;
-import org.aksw.sessa.query.models.Candidate;
+import org.aksw.sessa.candidate.Candidate;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

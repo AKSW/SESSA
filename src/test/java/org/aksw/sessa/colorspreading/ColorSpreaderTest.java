@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.aksw.sessa.helper.graph.Node;
-import org.aksw.sessa.query.models.Candidate;
+import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.junit.Assert;
 import org.junit.Before;

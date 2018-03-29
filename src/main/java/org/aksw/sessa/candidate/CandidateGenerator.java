@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
-import org.aksw.sessa.query.models.Candidate;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 

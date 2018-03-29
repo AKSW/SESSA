@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Set;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
-import org.aksw.sessa.query.models.Candidate;
+import org.aksw.sessa.candidate.Candidate;
 
 /**
  * This abstract class is the foundation for making filters for the dictionary classes. Filters

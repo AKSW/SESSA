@@ -3,6 +3,7 @@ package org.aksw.sessa.query.models;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.helper.graph.Graph;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;

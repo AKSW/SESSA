@@ -15,7 +15,7 @@ import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.util.DictionaryEntrySimilarity;
-import org.aksw.sessa.query.models.Candidate;
+import org.aksw.sessa.candidate.Candidate;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;

@@ -15,7 +15,7 @@ import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.aksw.sessa.importing.dictionary.util.Filter;
-import org.aksw.sessa.query.models.Candidate;
+import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 import org.aksw.sessa.query.models.QAModel;

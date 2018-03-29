@@ -3,7 +3,7 @@ package org.aksw.sessa.importing.dictionary;
 import java.util.Set;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.util.Filter;
-import org.aksw.sessa.query.models.Candidate;
+import org.aksw.sessa.candidate.Candidate;
 
 /**
  * This interface provides the skeleton for classes which should import files, which contain entries

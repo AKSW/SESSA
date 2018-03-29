@@ -7,7 +7,7 @@ import java.util.Set;
 import org.aksw.sessa.importing.dictionary.energy.LevenshteinDistanceFunction;
 import org.aksw.sessa.importing.dictionary.energy.PageRankFunction;
 import org.aksw.sessa.importing.dictionary.util.Filter;
-import org.aksw.sessa.query.models.Candidate;
+import org.aksw.sessa.candidate.Candidate;
 import org.junit.Assert;
 import org.junit.Test;
 
