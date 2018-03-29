@@ -24,9 +24,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <systemProperties>
-            <JAVA_OPTS>-Xms415m -Xmx12G -XX:MaxPermSize=1G</JAVA_OPTS>
-          </systemProperties>
           <mainClass>org.aksw.sessa.webservice.SESSAGerbilQABenchmarking</mainClass>
           <layout>JAR</layout>
         </configuration>
@@ -51,7 +48,6 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
   <dependencyManagement>
