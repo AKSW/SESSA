@@ -2,7 +2,6 @@ package org.aksw.sessa.webservice;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +38,6 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
     long startTime = System.nanoTime();
     try {
       Path path = FileSystems.getDefault().getPath(LuceneDictionary.DEFAULT_PATH_TO_INDEX);
-      if (!Files.exists(path)) {
         log.info("No Lucene Dictionary found.");
         log.info("Building Lucene Dictionary from RDF files. This could take some time!");
         //Change the handler and the file to be handled here
@@ -50,11 +48,6 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
         long endTime = System.nanoTime();
         log.info("Finished importing Lucene Dictionary (in {}sec).",
             (endTime - startTime) / (1000 * 1000 * 1000));
-      } else {
-        log.info(
-            "Found existing Lucene Dictionary. If you want to build a new one, delete the dictionary!");
-        sessa.loadFileToLuceneDictionary(null);
-      }
     } catch (IOException e) {
       log.error(e.getLocalizedMessage());
     }
@@ -77,7 +70,7 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
 
     //Create your answers as a Set
     Set<String> answerSet = new HashSet<>();
-    /**
+    /*
      * Here you have to actually ask your system for answers, the types and the sparql query
      */
     log.debug("Start answering question.");
