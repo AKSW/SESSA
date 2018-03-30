@@ -35,10 +35,10 @@ public class SESSAMeasurement {
   private SESSA sessa;
 
   public SESSAMeasurement() {
-    sessa = new SESSA();
     long startTime = System.nanoTime();
     Properties properties = new Properties(PropertiesInitializer.loadProperties(PROPERTIES_FILE));
     log.info("Building Lucene Dictionary from RDF files. This could take some time!");
+    sessa = new SESSA(properties);
     try (Stream<Path> paths = Files.walk(Paths.get(properties.getProperty(DEFAULT_PATH_KEY)))) {
       paths
           .filter(Files::isRegularFile)
