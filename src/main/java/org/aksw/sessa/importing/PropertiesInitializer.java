@@ -14,7 +14,7 @@ public class PropertiesInitializer {
   public static final String LUCENE_OVERRIDE_KEY = "dictionary.lucene.override_on_start";
   public static final String LUCENE_OVERRIDE = "false";
   public static final String LUCENE_LOCATION_KEY = "dictionary.lucene.location";
-  public static final String LUCENE_LOCATION = "resources";
+  public static final String LUCENE_LOCATION = "resources/lucene_index";
 
   private static final Logger log = LoggerFactory.getLogger(PropertiesInitializer.class);
 
