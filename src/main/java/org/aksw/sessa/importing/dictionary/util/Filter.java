@@ -60,23 +60,24 @@ public class Filter {
    */
   public Set<Candidate> filter(String keyword, Set<Candidate> candidateSet) {
 
-    PriorityQueue<Entry<Candidate, Float>> sortedResults;
+    PriorityQueue<Candidate> sortedResults;
     if (descendingOrder) {
       sortedResults = new PriorityQueue<>(100,
-          Collections.reverseOrder(Comparator.comparing(Entry::getValue)));
+          Collections.reverseOrder(Comparator.comparing(Candidate::getEnergy)));
     } else {
-      sortedResults = new PriorityQueue<>(100, Comparator.comparing(Entry::getValue));
+      sortedResults = new PriorityQueue<>(100, Comparator.comparing(Candidate::getEnergy));
     }
 
     for (Candidate candidate : candidateSet) {
       float rank = getRank(keyword, candidate.getUri(), candidate.getKey());
-      sortedResults.add(new SimpleEntry<>(candidate, rank));
+      candidate.setEnergy(rank);
+      sortedResults.add(candidate);
     }
     Set<Candidate> finalResultSet = new HashSet<>();
     for (int resultSize = 0;
         resultSize < numberOfResults && !sortedResults.isEmpty();
         resultSize++) {
-      finalResultSet.add(sortedResults.poll().getKey());
+      finalResultSet.add(sortedResults.poll());
     }
     return finalResultSet;
   }
