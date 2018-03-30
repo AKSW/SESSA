@@ -103,6 +103,17 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    *
    * @param handler file handler, which contains file and is capable of parsing said file
    */
+  public LuceneDictionary(String indexLocation) {
+    this(null, indexLocation);
+  }
+
+  /**
+   * Calls {@link #LuceneDictionary(FileHandlerInterface, String) LuceneDictionary(FileHandlerInterface,
+   * DEFAULT_PATH_TO_INDEX)}. This means that the index will be written in the in default location
+   * (
+   *
+   * @param handler file handler, which contains file and is capable of parsing said file
+   */
   public LuceneDictionary(FileHandlerInterface handler) {
     this(handler, DEFAULT_PATH_TO_INDEX);
   }
@@ -118,7 +129,6 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
       maxResultSize = NUMBER_OF_DOCS_RECEIVED_FROM_INDEX;
       SimpleAnalyzer analyzer = new SimpleAnalyzer(LUCENE_VERSION);
       Path path = FileSystems.getDefault().getPath(indexLocation);
-      boolean filesExists = Files.exists(path);
       directory = MMapDirectory.open(path.toFile());
       //directory = new RAMDirectory(); // alternative to file based Lucene
       IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, analyzer);
