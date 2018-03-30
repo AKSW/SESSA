@@ -3,7 +3,6 @@ package org.aksw.sessa.importing.dictionary.implementation;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.util.DictionaryEntrySimilarity;
-import org.aksw.sessa.candidate.Candidate;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
@@ -97,11 +96,9 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   }
 
   /**
-   * Calls {@link #LuceneDictionary(FileHandlerInterface, String) LuceneDictionary(FileHandlerInterface,
-   * DEFAULT_PATH_TO_INDEX)}. This means that the index will be written in the in default location
-   * (
-   *
-   * @param handler file handler, which contains file and is capable of parsing said file
+   * Calls {@link #LuceneDictionary(FileHandlerInterface, String) LuceneDictionary(null,
+   * indexLocation)}. This means that the given index will remain as is and additional dictionary
+   * entries have to be added via {@link #putAll(FileHandlerInterface)}. (
    */
   public LuceneDictionary(String indexLocation) {
     this(null, indexLocation);
