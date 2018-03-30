@@ -1,10 +1,7 @@
 package org.aksw.sessa.main;
 
 import com.google.common.base.Joiner;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,10 +14,10 @@ import org.aksw.qa.commons.datastructure.IQuestion;
 import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
 import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
+import org.aksw.sessa.importing.PropertiesInitializer;
 import org.aksw.sessa.helper.files.handler.RdfFileHandler;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.energy.LevenshteinDistanceFunction;
-import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,18 +29,15 @@ public class SESSAMeasurement {
 
   private static final Logger log = LoggerFactory.getLogger(SESSAMeasurement.class);
   private static final String PROPERTIES_FILE = "application.properties";
-  
-  private static final String DEFAULT_PATH_KEY = "dictionary_files.rdf.location";
-  private static final String DEFAULT_PATH = "src/main/resources";
+  private static final String DEFAULT_PATH_KEY = "dictionary.files.rdf.location";
 
 
   private SESSA sessa;
-  private Properties properties;
 
   public SESSAMeasurement() {
     sessa = new SESSA();
     long startTime = System.nanoTime();
-    properties = new Properties(loadProperties());
+    Properties properties = new Properties(PropertiesInitializer.loadProperties(PROPERTIES_FILE));
     log.info("Building Lucene Dictionary from RDF files. This could take some time!");
     try (Stream<Path> paths = Files.walk(Paths.get(properties.getProperty(DEFAULT_PATH_KEY)))) {
       paths
@@ -104,26 +98,6 @@ public class SESSAMeasurement {
         answerFMeasure / questionsAnswered.size());
   }
 
-  private Properties loadProperties() {
-    log.info("Trying to load properties file...");
-    Properties properties = new Properties();
-    // load default value
-    properties.setProperty(DEFAULT_PATH_KEY, DEFAULT_PATH);
-
-    // load properties from file
-    try(FileInputStream in = new FileInputStream(PROPERTIES_FILE)) {
-      log.info("Properties file found! Loading values...");
-      properties.load(in);
-    } catch (FileNotFoundException fnfE) {
-      log.info("Properties file not found. Using default values instead.");
-      log.debug("Path to properties file was {}", PROPERTIES_FILE);
-    } catch(IOException ioE) {
-      log.error(ioE.getLocalizedMessage());
-      log.error("Using default values instead.");
-    }
-    return properties;
-  }
-
   /**
    * Use this method for adding filters and manipulate the energy score.
    */
@@ -135,7 +109,6 @@ public class SESSAMeasurement {
     sessa.addFilter(lFilter);
     sessa.setEnergyFunction(lFunction);
     //sessa.addFilter(pRFilter);
-
   }
 
 }
