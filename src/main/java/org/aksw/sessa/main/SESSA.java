@@ -3,9 +3,12 @@ package org.aksw.sessa.main;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
+import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.candidate.CandidateGenerator;
 import org.aksw.sessa.colorspreading.ColorSpreader;
+import org.aksw.sessa.importing.PropertiesInitializer;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
@@ -15,7 +18,6 @@ import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.implementation.HashMapDictionary;
 import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.aksw.sessa.importing.dictionary.util.Filter;
-import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.aksw.sessa.query.models.NGramHierarchy;
 import org.aksw.sessa.query.models.QAModel;
@@ -31,8 +33,14 @@ import org.slf4j.LoggerFactory;
 public class SESSA {
 
   private static final Logger log = LoggerFactory.getLogger(SESSA.class);
+
+  private static final String LUCENE_OVERRIDE_KEY = "dictionary.lucene.override_on_start";
+  private static final String LUCENE_LOCATION_KEY = "dictionary.lucene.location";
+
   private DictionaryInterface dictionary;
   private QueryProcessingInterface queryProcess;
+
+  private Properties properties;
 
   /**
    *
@@ -40,6 +48,18 @@ public class SESSA {
 
   public SESSA() {
     queryProcess = new SimpleQueryProcessing();
+    // load default properties
+    log.info("Trying to load properties file...");
+    properties = PropertiesInitializer.loadDefaultProperties();
+  }
+
+  /**
+   *
+   */
+
+  public SESSA(Properties properties) {
+    queryProcess = new SimpleQueryProcessing();
+    this.properties = new Properties(properties);
   }
 
   public void loadFileToHashMapDictionary(FileHandlerInterface handler) {
@@ -52,7 +72,11 @@ public class SESSA {
 
   public void loadFileToLuceneDictionary(FileHandlerInterface handler) {
     if (dictionary == null) {
-      dictionary = new LuceneDictionary(handler);
+      String luceneLocation = properties.getProperty(LUCENE_LOCATION_KEY);
+      dictionary = new LuceneDictionary(luceneLocation);
+      if (properties.getProperty(LUCENE_OVERRIDE_KEY).toLowerCase().equals("true")) {
+        ((LuceneDictionary)dictionary).clearIndex();
+      }
     } else if (dictionary instanceof LuceneDictionary) {
       ((LuceneDictionary) dictionary).putAll(handler);
     }
