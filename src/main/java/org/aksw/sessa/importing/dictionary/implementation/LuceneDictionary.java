@@ -92,7 +92,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    * location is the default location.
    */
   public LuceneDictionary() {
-    this(null, DEFAULT_PATH_TO_INDEX);
+    this(null, null);
   }
 
   /**
@@ -112,7 +112,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    * @param handler file handler, which contains file and is capable of parsing said file
    */
   public LuceneDictionary(FileHandlerInterface handler) {
-    this(handler, DEFAULT_PATH_TO_INDEX);
+    this(handler, null);
   }
 
   /**
@@ -122,6 +122,11 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    * @param indexLocation indicates where the index should be saved
    */
   public LuceneDictionary(FileHandlerInterface handler, String indexLocation) {
+    if (indexLocation == null) {
+      Properties properties = PropertiesInitializer.loadDefaultProperties();
+      indexLocation = properties.getProperty(LUCENE_LOCATION_KEY);
+    }
+
     try {
       maxResultSize = NUMBER_OF_DOCS_RECEIVED_FROM_INDEX;
       SimpleAnalyzer analyzer = new SimpleAnalyzer(LUCENE_VERSION);
