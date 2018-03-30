@@ -75,6 +75,7 @@ public class SESSA {
       String luceneLocation = properties.getProperty(LUCENE_LOCATION_KEY);
       dictionary = new LuceneDictionary(luceneLocation);
       if (properties.getProperty(LUCENE_OVERRIDE_KEY).toLowerCase().equals("true")) {
+        log.info("Properties set to override present dictionary. Deleting index.");
         ((LuceneDictionary)dictionary).clearIndex();
       }
     } else if (dictionary instanceof LuceneDictionary) {
