@@ -9,9 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
+import org.aksw.sessa.importing.PropertiesInitializer;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.util.DictionaryEntrySimilarity;
@@ -49,18 +51,7 @@ import org.apache.lucene.util.Version;
  */
 public class LuceneDictionary extends FileBasedDictionary implements AutoCloseable {
 
-  /**
-   * Contains the path to the index.
-   */
-  public static final String DEFAULT_PATH_TO_INDEX = "resources/index";
-
-  /**
-   * Contais the buffer size, i.e. the number of entries in the bufferSize-hashmap before the
-   * changes are committed to the Lucene dictionary. Smaller numbers will lead to performance loss
-   * due to the committing cost. Larger numbers will lead to more memory consumption.
-   */
-  private int bufferSize = 1000000;
-
+  public static final String LUCENE_LOCATION_KEY = "dictionary.lucene.location";
   /**
    * Contains the field name for the keys in Lucene.
    */
@@ -79,6 +70,12 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   public static final List<String> STOP_WORDS = ImmutableList
       .of("the", "of", "on", "in", "for", "at", "to");
   private static final Version LUCENE_VERSION = Version.LUCENE_46;
+  /**
+   * Contains the buffer size, i.e. the number of entries in the bufferSize-hashmap before the
+   * changes are committed to the Lucene dictionary. Smaller numbers will lead to performance loss
+   * due to the committing cost. Larger numbers will lead to more memory consumption.
+   */
+  private int bufferSize = 1000000;
   private Directory directory;
   private Similarity similarity;
   private IndexSearcher iSearcher;
