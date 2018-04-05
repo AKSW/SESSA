@@ -40,5 +40,12 @@ public class ConfigurationInitializerTest {
     Assert.assertThat(config.getString(LUCENE_LOCATION_KEY), is("lucene_index"));
   }
 
+  @Test
+  public void testGetConfiguration_LoadWithFileNotThere() throws Exception {
+    System.setProperty("configuration.location", "not_existing.properties");
+    Configuration config = ConfigurationInitializer.loadConfiguration();
+    Assert.assertThat(config.getBoolean(LUCENE_OVERRIDE_KEY), is(false));
+  }
+
 
 }
