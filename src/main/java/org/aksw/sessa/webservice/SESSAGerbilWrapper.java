@@ -1,14 +1,11 @@
 package org.aksw.sessa.webservice;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 import org.aksw.sessa.helper.files.handler.RdfFileHandler;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.energy.LevenshteinDistanceFunction;
-import org.aksw.sessa.importing.dictionary.implementation.LuceneDictionary;
 import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.aksw.sessa.main.SESSA;
 import org.dice.qa.AbstractQASystem;
@@ -37,16 +34,16 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
     sessa = new SESSA();
     long startTime = System.nanoTime();
     try {
-        log.info("No Lucene Dictionary found.");
-        log.info("Building Lucene Dictionary from RDF files. This could take some time!");
-        //Change the handler and the file to be handled here
-        sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_labels));
-        sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_ontology));
-        sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_DBpedia_Ontology));
-        sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_DBpedia_Labels));
-        long endTime = System.nanoTime();
-        log.info("Finished importing Lucene Dictionary (in {}sec).",
-            (endTime - startTime) / (1000 * 1000 * 1000));
+      log.info("No Lucene Dictionary found.");
+      log.info("Building Lucene Dictionary from RDF files. This could take some time!");
+      //Change the handler and the file to be handled here
+      sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_labels));
+      sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_ontology));
+      sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_DBpedia_Ontology));
+      sessa.loadFileToLuceneDictionary(new RdfFileHandler(RDF_DBpedia_Labels));
+      long endTime = System.nanoTime();
+      log.info("Finished importing Lucene Dictionary (in {}sec).",
+          (endTime - startTime) / (1000 * 1000 * 1000));
     } catch (IOException e) {
       log.error(e.getLocalizedMessage());
     }
