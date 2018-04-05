@@ -9,14 +9,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
 import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
-import org.aksw.sessa.importing.PropertiesInitializer;
+import org.aksw.sessa.importing.config.ConfigurationInitializer;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.util.DictionaryEntrySimilarity;
+import org.apache.commons.configuration2.Configuration;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
@@ -51,15 +51,6 @@ import org.apache.lucene.util.Version;
  */
 public class LuceneDictionary extends FileBasedDictionary implements AutoCloseable {
 
-  public static final String LUCENE_LOCATION_KEY = "dictionary.lucene.location";
-  /**
-   * Contains the field name for the keys in Lucene.
-   */
-  public static final String FIELD_NAME_KEY = "N-GRAM";
-  /**
-   * Contains the field name for the values in Lucene.
-   */
-  public static final String FIELD_NAME_VALUE = "URI";
   /**
    * Defines how many documents will be retrieved from the index for each query.
    */
@@ -69,6 +60,15 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    */
   public static final List<String> STOP_WORDS = ImmutableList
       .of("the", "of", "on", "in", "for", "at", "to");
+  private static final String LUCENE_LOCATION_KEY = "dictionary.lucene.location";
+  /**
+   * Contains the field name for the keys in Lucene.
+   */
+  private static final String FIELD_NAME_KEY = "N-GRAM";
+  /**
+   * Contains the field name for the values in Lucene.
+   */
+  private static final String FIELD_NAME_VALUE = "URI";
   private static final Version LUCENE_VERSION = Version.LUCENE_46;
   /**
    * Contains the buffer size, i.e. the number of entries in the bufferSize-hashmap before the
@@ -120,8 +120,8 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    */
   public LuceneDictionary(FileHandlerInterface handler, String indexLocation) {
     if (indexLocation == null) {
-      Properties properties = PropertiesInitializer.loadDefaultProperties();
-      indexLocation = properties.getProperty(LUCENE_LOCATION_KEY);
+      Configuration configuration = ConfigurationInitializer.loadConfiguration();
+      indexLocation = configuration.getString(LUCENE_LOCATION_KEY);
     }
 
     try {
