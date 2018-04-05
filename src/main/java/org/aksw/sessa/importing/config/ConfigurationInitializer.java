@@ -16,10 +16,10 @@ import org.slf4j.LoggerFactory;
 /**
  * This class builds the Configuration object and provides a singleton of it.
  */
-public class PropertiesInitializer {
+public class ConfigurationInitializer {
 
   private static final String DEFAULT_CONFIG_FILE = "default.properties";
-  private static final Logger log = LoggerFactory.getLogger(PropertiesInitializer.class);
+  private static final Logger log = LoggerFactory.getLogger(ConfigurationInitializer.class);
   public static Configuration configuration = null;
 
   public static Configuration getConfiguration() {
@@ -52,7 +52,7 @@ public class PropertiesInitializer {
     try {
       // loading default configuration for missing keys
       File defaultConfigFile = new File(
-          PropertiesInitializer.class.getClassLoader().getResource(DEFAULT_CONFIG_FILE).getFile());
+          ConfigurationInitializer.class.getClassLoader().getResource(DEFAULT_CONFIG_FILE).getFile());
       log.info("Trying to load default configuration...");
       FileBasedConfigurationBuilder<FileBasedConfiguration> defaultBuilder =
           new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
