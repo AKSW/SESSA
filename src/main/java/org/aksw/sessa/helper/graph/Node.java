@@ -17,6 +17,7 @@ public class Node<T> {
   private float energy;
   private Set<NGramEntryPosition> colors;
   private boolean isFactNode;
+  private boolean isInitialNode;
 
   /**
    * Initializes node with the given information. For example, the information can contain URIs. All
@@ -25,7 +26,7 @@ public class Node<T> {
    * @param nodeContent content to be stored in the node
    */
   public Node(T nodeContent) {
-    this(nodeContent, 0, new HashSet<>(), false);
+    this(nodeContent, 0, new HashSet<>(), false, false);
   }
 
   /**
@@ -35,12 +36,15 @@ public class Node<T> {
    * @param energy energy score of the node
    * @param colors represents colors for the node
    * @param isFactNode is the given node a fact-node?
+   * @param isInitialNode is the given node one of the initial nodes in the graph
    */
-  public Node(T nodeContent, float energy, Set<NGramEntryPosition> colors, boolean isFactNode) {
+  public Node(T nodeContent, float energy, Set<NGramEntryPosition> colors, boolean isFactNode,
+      boolean isInitialNode) {
     this.nodeContent = nodeContent;
     this.energy = energy;
     this.colors = colors;
     this.isFactNode = isFactNode;
+    this.isInitialNode = isInitialNode;
     this.id = 0;
   }
 
@@ -139,6 +143,23 @@ public class Node<T> {
    */
   public boolean isFactNode() {
     return isFactNode;
+  }
+
+  /**
+   * Returns true if this node is one of the initial nodes in this graph. This means that the
+   * content of this node is a candidate.
+   *
+   * @return true if this node is one of the initial nod.es in this graph
+   */
+  public boolean isInitialNode() {
+    return isInitialNode;
+  }
+
+  /**
+   * Marks this node as an initial node in this graph.
+   */
+  public void setAsInitialNode() {
+    isInitialNode = true;
   }
 
   /**
