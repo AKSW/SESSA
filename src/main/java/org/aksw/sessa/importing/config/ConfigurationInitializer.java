@@ -50,7 +50,8 @@ public class ConfigurationInitializer {
     Parameters params = new Parameters();
 
     // Try to load user-specified configuration first
-    if (System.getProperty("configuration.location") != null) {
+    if (userSpecifiedConfig != null) {
+      log.debug("Loading user-specified properties-file.");
       try {
         FileBasedConfigurationBuilder<FileBasedConfiguration> userBuilder =
             new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
