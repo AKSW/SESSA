@@ -129,8 +129,8 @@
     <!-- For the F1-measurements -->
     <dependency>
       <groupId>org.aksw.qa</groupId>
-      <artifactId>commons</artifactId>
-      <version>0.4.16</version>
+      <artifactId>datasets</artifactId>
+      <version>0.5.10</version>
     </dependency>
 
     <!-- This is the core artifact; several other ones build on that. -->
