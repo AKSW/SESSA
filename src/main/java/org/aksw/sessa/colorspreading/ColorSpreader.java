@@ -52,6 +52,7 @@ public class ColorSpreader {
       for (Candidate candidate : entry.getValue()) {
         Node<String> node = new Node<>(candidate.getUri());
         node.addColor(entry.getKey());
+        node.setAsInitialNode();
         node.setEnergy(candidate.getEnergy());
         lastActivatedNodes.add(node);
         graph.addNode(node);
