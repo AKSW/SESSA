@@ -32,7 +32,7 @@ public class SimpleMapDictionary implements DictionaryInterface {
   public SimpleMapDictionary(Map<String, Set<String>> dictionary) {
     this.dictionary = new HashMap<>(dictionary);
     filterQue = new PriorityQueue<>();
-    energyFunction = null;
+    energyFunction = (a,b,c) -> 1;
   }
 
   /**
