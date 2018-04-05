@@ -7,18 +7,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.aksw.qa.commons.datastructure.IQuestion;
 import org.aksw.qa.commons.load.Dataset;
 import org.aksw.qa.commons.load.LoaderController;
 import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
-import org.aksw.sessa.importing.PropertiesInitializer;
 import org.aksw.sessa.helper.files.handler.RdfFileHandler;
+import org.aksw.sessa.importing.config.ConfigurationInitializer;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.energy.LevenshteinDistanceFunction;
 import org.aksw.sessa.importing.dictionary.util.Filter;
+import org.apache.commons.configuration2.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 public class SESSAMeasurement {
 
   private static final Logger log = LoggerFactory.getLogger(SESSAMeasurement.class);
-  private static final String PROPERTIES_FILE = "application.properties";
   private static final String DEFAULT_PATH_KEY = "dictionary.files.rdf.location";
 
 
@@ -36,10 +35,10 @@ public class SESSAMeasurement {
 
   public SESSAMeasurement() {
     long startTime = System.nanoTime();
-    Properties properties = new Properties(PropertiesInitializer.loadProperties(PROPERTIES_FILE));
+    Configuration configuration = ConfigurationInitializer.getConfiguration();
     log.info("Building Lucene Dictionary from RDF files. This could take some time!");
-    sessa = new SESSA(properties);
-    try (Stream<Path> paths = Files.walk(Paths.get(properties.getProperty(DEFAULT_PATH_KEY)))) {
+    sessa = new SESSA(configuration);
+    try (Stream<Path> paths = Files.walk(Paths.get(configuration.getString(DEFAULT_PATH_KEY)))) {
       paths
           .filter(Files::isRegularFile)
           .forEach(path -> {
