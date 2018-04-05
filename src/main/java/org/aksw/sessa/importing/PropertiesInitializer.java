@@ -1,53 +1,71 @@
 package org.aksw.sessa.importing;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
+import java.io.File;
+import org.apache.commons.configuration2.CombinedConfiguration;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.FileBasedConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.tree.OverrideCombiner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class builds the Configuration object and provides a singleton of it.
+ */
 public class PropertiesInitializer {
 
-  public static final String DEFAULT_PATH_KEY = "dictionary.files.rdf.location";
-  public static final String DEFAULT_PATH = "src/main/resources";
-  public static final String LUCENE_OVERRIDE_KEY = "dictionary.lucene.override_on_start";
-  public static final String LUCENE_OVERRIDE = "false";
-  public static final String LUCENE_LOCATION_KEY = "dictionary.lucene.location";
-  public static final String LUCENE_LOCATION = "resources/lucene_index";
-
+  private static final String DEFAULT_CONFIG_FILE = "default.properties";
   private static final Logger log = LoggerFactory.getLogger(PropertiesInitializer.class);
+  public static Configuration configuration = null;
 
-  public static Properties loadProperties(String location) {
-    log.info("Trying to load properties file...");
-    Properties properties = new Properties();
-    // load default value
-    properties.setProperty(DEFAULT_PATH_KEY, DEFAULT_PATH);
-    properties.setProperty(LUCENE_OVERRIDE_KEY, LUCENE_OVERRIDE);
-    properties.setProperty(LUCENE_LOCATION_KEY, LUCENE_LOCATION);
-
-    // load properties from file
-    try (FileInputStream in = new FileInputStream(location)) {
-      log.info("Properties file found! Loading values...");
-      properties.load(in);
-    } catch (FileNotFoundException fnfE) {
-      log.info("Properties file not found. Using default values instead.");
-      log.debug("Path to properties file was {}", location);
-    } catch (IOException ioE) {
-      log.error(ioE.getLocalizedMessage());
-      log.error("Using default values instead.");
+  public static Configuration getConfiguration() {
+    if (configuration == null) {
+      configuration = loadConfiguration();
     }
-    return properties;
+    return configuration;
   }
 
-  public static Properties loadDefaultProperties() {
-    log.info("No file given. Loading default values only.");
-    Properties properties = new Properties();
-    // load default value
-    properties.setProperty(DEFAULT_PATH_KEY, DEFAULT_PATH);
-    properties.setProperty(LUCENE_OVERRIDE_KEY, LUCENE_OVERRIDE);
-    properties.setProperty(LUCENE_LOCATION_KEY, LUCENE_LOCATION);
-    return properties;
+  public static Configuration loadConfiguration() {
+    OverrideCombiner combiner = new OverrideCombiner();
+    CombinedConfiguration combinedConfig = new CombinedConfiguration(combiner);
+    Parameters params = new Parameters();
+
+    // Try to load user-specified configuration first
+    if (System.getProperty("configuration.location") != null) {
+      try {
+        FileBasedConfigurationBuilder<FileBasedConfiguration> userBuilder =
+            new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
+                .configure(params.properties()
+                    .setFileName(System.getProperty("configuration.location"))
+                    .setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
+        combinedConfig.addConfiguration(userBuilder.getConfiguration());
+      } catch (ConfigurationException cE) {
+        log.error(cE.getLocalizedMessage());
+      }
+    } else {
+      log.debug("No user-specific configuration defined. Using only default.");
+    }
+    try {
+      // loading default configuration for missing keys
+      File defaultConfigFile = new File(
+          PropertiesInitializer.class.getClassLoader().getResource(DEFAULT_CONFIG_FILE).getFile());
+      log.info("Trying to load default configuration...");
+      FileBasedConfigurationBuilder<FileBasedConfiguration> defaultBuilder =
+          new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
+              .configure(params.properties()
+                  .setFile(defaultConfigFile)
+                  .setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
+      combinedConfig.addConfiguration(defaultBuilder.getConfiguration(), "default");
+    } catch (ConfigurationException cE) {
+      log.error(cE.getLocalizedMessage());
+    } catch (NullPointerException npE) {
+      log.error("File {} could not be found within the resources.", DEFAULT_CONFIG_FILE);
+    }
+    return combinedConfig;
   }
 
 
