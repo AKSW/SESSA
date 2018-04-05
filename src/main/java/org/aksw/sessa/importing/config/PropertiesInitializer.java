@@ -1,4 +1,4 @@
-package org.aksw.sessa.importing;
+package org.aksw.sessa.importing.config;
 
 import java.io.File;
 import org.apache.commons.configuration2.CombinedConfiguration;
