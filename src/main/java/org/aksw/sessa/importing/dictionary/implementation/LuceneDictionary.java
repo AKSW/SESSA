@@ -181,6 +181,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
         String key = hitDoc.get(FIELD_NAME_KEY);
         String uri = hitDoc.get(FIELD_NAME_VALUE);
         Candidate candidate = new Candidate(uri, key);
+        candidate.setEnergy(energyFunction.calculateEnergyScore(nGram,uri, key));
         foundCandidateSet.add(candidate);
       }
     } catch (Exception e) {
