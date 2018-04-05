@@ -60,14 +60,14 @@ public class ConfigurationInitializer {
                     .setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
         combinedConfig.addConfiguration(userBuilder.getConfiguration());
       } catch (ConfigurationException cE) {
-        log.error(cE.getLocalizedMessage());
+        log.error("Given file not found. Using only default properties only!");
       }
     } else {
       log.debug("No user-specific configuration defined. Using only default.");
     }
     try {
       // loading default configuration for missing keys
-      log.info("Trying to load default configuration...");
+      log.info("Loading default configuration...");
       FileBasedConfigurationBuilder<FileBasedConfiguration> defaultBuilder =
           new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
               .configure(params.properties()
