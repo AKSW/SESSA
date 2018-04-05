@@ -119,14 +119,14 @@ public class NodeTest {
   @Test
   public void testGetEnergy_WithConstructor() {
     float energy = 2;
-    Node<Integer> node1 = new Node<Integer>(1, energy, null, false);
+    Node<Integer> node1 = new Node<Integer>(1, energy, null, false, false);
     Assert.assertThat(node1.getEnergy(), equalTo(energy));
   }
 
   @Test
   public void testGetEnergy_WithSet() {
     float energy = 2;
-    Node<Integer> node1 = new Node<Integer>(1, 5, null, false);
+    Node<Integer> node1 = new Node<Integer>(1, 5, null, false, false);
     node1.setEnergy(energy);
     Assert.assertThat(node1.getEnergy(), equalTo(energy));
   }
