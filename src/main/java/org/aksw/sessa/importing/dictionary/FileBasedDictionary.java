@@ -24,7 +24,7 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
   public FileBasedDictionary() {
     filterQue = new PriorityQueue<>(10,
         Collections.reverseOrder(Comparator.comparing(Filter::getNumberOfResults)));
-    energyFunction = null;
+    energyFunction = (a,b,c) -> 1;
   }
 
   /**
