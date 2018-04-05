@@ -37,7 +37,6 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
     sessa = new SESSA();
     long startTime = System.nanoTime();
     try {
-      Path path = FileSystems.getDefault().getPath(LuceneDictionary.DEFAULT_PATH_TO_INDEX);
         log.info("No Lucene Dictionary found.");
         log.info("Building Lucene Dictionary from RDF files. This could take some time!");
         //Change the handler and the file to be handled here
