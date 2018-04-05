@@ -3,15 +3,14 @@ package org.aksw.sessa.main;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
 import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.candidate.CandidateGenerator;
 import org.aksw.sessa.colorspreading.ColorSpreader;
-import org.aksw.sessa.importing.PropertiesInitializer;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
+import org.aksw.sessa.importing.config.ConfigurationInitializer;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
@@ -24,6 +23,7 @@ import org.aksw.sessa.query.models.QAModel;
 import org.aksw.sessa.query.processing.post.PostProcessing;
 import org.aksw.sessa.query.processing.pre.QueryProcessingInterface;
 import org.aksw.sessa.query.processing.pre.implementation.SimpleQueryProcessing;
+import org.apache.commons.configuration2.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ public class SESSA {
   private DictionaryInterface dictionary;
   private QueryProcessingInterface queryProcess;
 
-  private Properties properties;
+  private Configuration configuration;
 
   /**
    *
@@ -48,18 +48,18 @@ public class SESSA {
 
   public SESSA() {
     queryProcess = new SimpleQueryProcessing();
-    // load default properties
-    log.info("Trying to load properties file...");
-    properties = PropertiesInitializer.loadDefaultProperties();
+    // load default configuration
+    log.info("Trying to load configuration file...");
+    configuration = ConfigurationInitializer.getConfiguration();
   }
 
   /**
    *
    */
 
-  public SESSA(Properties properties) {
+  public SESSA(Configuration configuration) {
     queryProcess = new SimpleQueryProcessing();
-    this.properties = new Properties(properties);
+    this.configuration = configuration;
   }
 
   public void loadFileToHashMapDictionary(FileHandlerInterface handler) {
@@ -72,11 +72,10 @@ public class SESSA {
 
   public void loadFileToLuceneDictionary(FileHandlerInterface handler) {
     if (dictionary == null) {
-      String luceneLocation = properties.getProperty(LUCENE_LOCATION_KEY);
-      dictionary = new LuceneDictionary(luceneLocation);
-      if (properties.getProperty(LUCENE_OVERRIDE_KEY).toLowerCase().equals("true")) {
-        log.info("Properties set to override present dictionary. Deleting index.");
-        ((LuceneDictionary)dictionary).clearIndex();
+      dictionary = new LuceneDictionary();
+      if (configuration.getBoolean(LUCENE_OVERRIDE_KEY)) {
+        log.info("Properties set to override current dictionary on startup. Deleting index.");
+        ((LuceneDictionary) dictionary).clearIndex();
       }
     } else if (dictionary instanceof LuceneDictionary) {
       ((LuceneDictionary) dictionary).putAll(handler);
