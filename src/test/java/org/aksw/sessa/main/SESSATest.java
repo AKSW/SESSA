@@ -111,7 +111,7 @@ public class SESSATest {
 //  }
 
   @Test
-  public void testAnswer_WhichShouldGiveRdfType_BeforePreProcessing(){
+  public void testAnswer_WhichShouldGiveRdfType(){
     question = "musical music by elton john";
     QAModel[] qaModels = sessa.getQAModels(question);
     Node<String> node = new Node<>("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
