@@ -30,6 +30,21 @@ public class ConfigurationInitializer {
   }
 
   public static Configuration loadConfiguration() {
+    File userSpecifiedConfig;
+    if (System.getProperty("configuration.location") == null) {
+      userSpecifiedConfig = null;
+    } else {
+      userSpecifiedConfig = new File(System.getProperty("configuration.location"));
+    }
+    File defaultConfigFile = new File(
+        ConfigurationInitializer.class.getClassLoader().getResource(DEFAULT_CONFIG_FILE)
+            .getFile());
+    return loadConfiguration(userSpecifiedConfig, defaultConfigFile);
+  }
+
+
+  protected static Configuration loadConfiguration(File userSpecifiedConfig,
+      File defaultConfig) {
     OverrideCombiner combiner = new OverrideCombiner();
     CombinedConfiguration combinedConfig = new CombinedConfiguration(combiner);
     Parameters params = new Parameters();
@@ -40,7 +55,7 @@ public class ConfigurationInitializer {
         FileBasedConfigurationBuilder<FileBasedConfiguration> userBuilder =
             new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
                 .configure(params.properties()
-                    .setFileName(System.getProperty("configuration.location"))
+                    .setFile(userSpecifiedConfig)
                     .setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
         combinedConfig.addConfiguration(userBuilder.getConfiguration());
       } catch (ConfigurationException cE) {
@@ -51,13 +66,11 @@ public class ConfigurationInitializer {
     }
     try {
       // loading default configuration for missing keys
-      File defaultConfigFile = new File(
-          ConfigurationInitializer.class.getClassLoader().getResource(DEFAULT_CONFIG_FILE).getFile());
       log.info("Trying to load default configuration...");
       FileBasedConfigurationBuilder<FileBasedConfiguration> defaultBuilder =
           new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
               .configure(params.properties()
-                  .setFile(defaultConfigFile)
+                  .setFile(defaultConfig)
                   .setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
       combinedConfig.addConfiguration(defaultBuilder.getConfiguration(), "default");
     } catch (ConfigurationException cE) {
@@ -67,6 +80,5 @@ public class ConfigurationInitializer {
     }
     return combinedConfig;
   }
-
 
 }
