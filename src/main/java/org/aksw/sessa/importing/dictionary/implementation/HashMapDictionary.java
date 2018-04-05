@@ -75,7 +75,7 @@ public class HashMapDictionary extends FileBasedDictionary {
     if (foundUris != null) {
       for (String uri : foundUris) {
         Candidate candidate = new Candidate(uri, nGram);
-        candidate.setEnergy(energyFunction.calculateEnergyScore(nGram,uri, key));
+        candidate.setEnergy(energyFunction.calculateEnergyScore(nGram,uri, nGram));
         candidateSet.add(candidate);
         dictionarySize++;
       }
