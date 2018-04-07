@@ -17,7 +17,7 @@ public class ConfigurationInitializerTest {
 
   private final String LUCENE_OVERRIDE_KEY = "dictionary.lucene.override_on_start";
   private final String LUCENE_LOCATION_KEY = "dictionary.lucene.location";
-  private final String DICTIONARY_FILTER_KEY = "dictionary.filter.filters";
+  private final String DICTIONARY_FILTER_KEY = "dictionary.filter.names";
 
 
   @Test
