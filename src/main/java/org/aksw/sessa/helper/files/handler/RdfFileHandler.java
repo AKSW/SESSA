@@ -14,6 +14,7 @@ import org.apache.jena.graph.Triple;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.riot.RDFParser;
+import org.apache.jena.riot.RiotException;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.apache.jena.riot.lang.PipedRDFStream;
 import org.apache.jena.riot.lang.PipedTriplesStream;
@@ -94,14 +95,18 @@ public class RdfFileHandler implements FileHandlerInterface {
   @Override
   public Entry<String, String> nextEntry() throws IOException {
     Triple stmt;
-    do {
-      if (iter.hasNext()) {
-        stmt = iter.next();
-      } else {
-        return null;
-      }
-    } while (!stmt.getPredicate().matches(rdfsLabelNode));
-
+    try {
+      do {
+        if (iter.hasNext()) {
+          stmt = iter.next();
+        } else {
+          return null;
+        }
+      } while (!stmt.getPredicate().matches(rdfsLabelNode));
+    } catch (RiotException rE) {
+      throw new IOException(
+          "Could not parse file '" + getFileName() + "'. It may be malformed or missing.");
+    }
     Node subject = stmt.getSubject();
     Node object = stmt.getObject();
     return new SimpleEntry<>(
