@@ -11,6 +11,7 @@ import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.importing.config.ConfigurationInitializer;
+import org.aksw.sessa.importing.config.exception.MalformedConfigurationException;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
@@ -34,53 +35,30 @@ public class SESSA {
 
   private static final Logger log = LoggerFactory.getLogger(SESSA.class);
 
+  private static final String DICTIONARY_TYPE = "dictionary.type";
   private static final String LUCENE_OVERRIDE_KEY = "dictionary.lucene.override_on_start";
-  private static final String LUCENE_LOCATION_KEY = "dictionary.lucene.location";
 
-  private DictionaryInterface dictionary;
+  private FileBasedDictionary dictionary;
   private QueryProcessingInterface queryProcess;
 
   private Configuration configuration;
 
-  /**
-   *
-   */
 
-  public SESSA() {
-    queryProcess = new SimpleQueryProcessing();
-    // load default configuration
-    log.info("Trying to load configuration file...");
-    configuration = ConfigurationInitializer.getConfiguration();
+  public SESSA() throws MalformedConfigurationException {
+    this(ConfigurationInitializer.getConfiguration());
   }
 
-  /**
-   *
-   */
 
-  public SESSA(Configuration configuration) {
+  public SESSA(Configuration configuration) throws MalformedConfigurationException {
     queryProcess = new SimpleQueryProcessing();
     this.configuration = configuration;
+    dictionary = initDictionary();
   }
 
-  public void loadFileToHashMapDictionary(FileHandlerInterface handler) {
-    if (dictionary == null) {
-      dictionary = new HashMapDictionary(handler);
-    } else if (dictionary instanceof HashMapDictionary) {
-      ((FileBasedDictionary) dictionary).putAll(handler);
-    }
+  public void loadFileToDictionary(FileHandlerInterface handler) {
+    dictionary.putAll(handler);
   }
 
-  public void loadFileToLuceneDictionary(FileHandlerInterface handler) {
-    if (dictionary == null) {
-      dictionary = new LuceneDictionary();
-      if (configuration.getBoolean(LUCENE_OVERRIDE_KEY)) {
-        log.info("Properties set to override current dictionary on startup. Deleting index.");
-        ((LuceneDictionary) dictionary).clearIndex();
-      }
-    } else if (dictionary instanceof LuceneDictionary) {
-      ((LuceneDictionary) dictionary).putAll(handler);
-    }
-  }
 
   public void addFilter(Filter filter) {
     dictionary.addFilter(filter);
@@ -183,6 +161,23 @@ public class SESSA {
       PostProcessing postProc = new PostProcessing();
       QAModel postQaModel = postProc.process(qaModel);
       return new QAModel[]{qaModel, postQaModel};
+    }
+  }
+
+  private FileBasedDictionary initDictionary()
+      throws MalformedConfigurationException {
+    switch (configuration.getString(DICTIONARY_TYPE)) {
+      case "lucene":
+        LuceneDictionary dict = new LuceneDictionary();
+        if (configuration.getBoolean(LUCENE_OVERRIDE_KEY)) {
+          dict.clearIndex();
+        }
+        return dict;
+      case "hashmap":
+        return new HashMapDictionary();
+      default:
+        throw new MalformedConfigurationException(
+            String.format("Could not determine value of property '%s'", DICTIONARY_TYPE));
     }
   }
 }
