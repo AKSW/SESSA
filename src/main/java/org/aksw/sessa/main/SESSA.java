@@ -44,26 +44,51 @@ public class SESSA {
   private Configuration configuration;
 
 
+  /**
+   * Loads SESSA with default configuration or configuration given via application param.
+   */
   public SESSA() throws MalformedConfigurationException {
     this(ConfigurationInitializer.getConfiguration());
   }
 
 
+  /**
+   * Loads SESSA with the given configuration.
+   *
+   * @param configuration configuration that should be applied to SESSA
+   * @throws MalformedConfigurationException is thrown when the configuration file is malformed
+   */
   public SESSA(Configuration configuration) throws MalformedConfigurationException {
     queryProcess = new SimpleQueryProcessing();
     this.configuration = configuration;
     dictionary = initDictionary();
   }
 
+  /**
+   * Loads given file (in the handler) to the dictionary.
+   *
+   * @param handler Handler that contains file supported by the handler
+   */
   public void loadFileToDictionary(FileHandlerInterface handler) {
     dictionary.putAll(handler);
   }
 
 
+  /**
+   * Adds a filter to the dictionary.
+   *
+   * @param filter the filter that should be applied to the dictionary results before returning the
+   * candidates.
+   */
   public void addFilter(Filter filter) {
     dictionary.addFilter(filter);
   }
 
+  /**
+   * Sets the applied energy function.
+   *
+   * @param function energy function to be applied to all nodes
+   */
   public void setEnergyFunction(EnergyFunctionInterface function) {
     dictionary.setEnergyFunction(function);
   }
