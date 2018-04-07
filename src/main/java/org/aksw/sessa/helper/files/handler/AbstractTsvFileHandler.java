@@ -20,16 +20,23 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
   private final String CHARSET_NAME = "UTF-8";
 
   /**
+   * Constructs simple file handler without file. File has to be loaded with {@link
+   * #loadFile(String)}.
+   */
+  AbstractTsvFileHandler() {
+    file = null;
+    sc = null;
+    otherEntries = null;
+  }
+
+  /**
    * Initializes reader with given file and stack as empty stack.
    *
    * @param file file name that should be read
    * @throws IOException If an I/O error occurs
    */
   AbstractTsvFileHandler(String file) throws IOException {
-    this.file = file;
-    FileInputStream inputStream = new FileInputStream(file);
-    sc = new Scanner(inputStream, CHARSET_NAME);
-    otherEntries = new Stack<>();
+    loadFile(file);
   }
 
   /**
@@ -73,5 +80,13 @@ public abstract class AbstractTsvFileHandler implements FileHandlerInterface {
   @Override
   public void close() throws IOException {
     sc.close();
+  }
+
+  @Override
+  public void loadFile(String file) throws IOException {
+    this.file = file;
+    FileInputStream inputStream = new FileInputStream(file);
+    sc = new Scanner(inputStream, CHARSET_NAME);
+    otherEntries = new Stack<>();
   }
 }

@@ -5,10 +5,10 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
+import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.util.Filter;
-import org.aksw.sessa.candidate.Candidate;
 import org.slf4j.LoggerFactory;
 
 public abstract class FileBasedDictionary implements DictionaryInterface {
@@ -16,7 +16,7 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
   protected PriorityQueue<Filter> filterQue;
   protected EnergyFunctionInterface energyFunction;
 
-  protected org.slf4j.Logger log = LoggerFactory.getLogger(DictionaryInterface.class);
+  protected org.slf4j.Logger log = LoggerFactory.getLogger(FileBasedDictionary.class);
 
   /**
    * Constructs the dictionary with the given energy function.

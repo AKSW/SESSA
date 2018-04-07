@@ -14,7 +14,14 @@ import java.util.Map.Entry;
 public class ReverseTsvFileHandler extends AbstractTsvFileHandler {
 
   /**
-   * Initializes reader with given file and stack as empty stack.
+   * Initializes basic handler. File has to be loaded with {@link #loadFile(String)}.
+   */
+  public ReverseTsvFileHandler() {
+    super();
+  }
+
+  /**
+   * Initializes handler with given file and stack as empty stack.
    *
    * @param file file name that should be read
    * @throws IOException If an I/O error occurs

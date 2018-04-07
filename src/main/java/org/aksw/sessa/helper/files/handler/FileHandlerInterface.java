@@ -28,6 +28,14 @@ public interface FileHandlerInterface extends AutoCloseable {
   String getFileName();
 
   /**
+   * loads given file into the handler.
+   *
+   * @param file file to be processed by the handler
+   * @throws IOException if error occurs
+   */
+  void loadFile(String file) throws IOException;
+
+  /**
    * Closes the used readers and releases any system resources associated with it.
    *
    * @throws IOException If an I/O error occurs
