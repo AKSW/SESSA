@@ -161,6 +161,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    * @param nGram n-gram whose associated value is to be returned
    * @return mapping of n-grams to set of URIs
    */
+  @Override
   public Set<Candidate> get(final String nGram) {
     if (STOP_WORDS.contains(nGram.toLowerCase())) {
       return new HashSet<>();
@@ -209,6 +210,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   /**
    * Closes all files handled, i.e. the index-files.
    */
+  @Override
   public void close() {
     try {
       iReader.close();
@@ -236,9 +238,10 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    *
    * @param handler handler with file information
    */
+  @Override
   public void putAll(FileHandlerInterface handler) {
     try {
-      log.debug("Starting indexing for  file '{}'", handler.getFileName());
+      log.debug("Starting indexing for file '{}'", handler.getFileName());
       int count = 0;
       Map<String, Set<String>> candidateEntries = new HashMap<>();
       for (Entry<String, String> entry; (entry = handler.nextEntry()) != null; ) {
