@@ -15,6 +15,7 @@ import org.aksw.sessa.importing.config.ConfigurationInitializer;
 import org.aksw.sessa.importing.config.exception.MalformedConfigurationException;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.energy.LevenshteinDistanceFunction;
+import org.aksw.sessa.importing.dictionary.energy.PageRankFunction;
 import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.aksw.sessa.main.SESSA;
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
@@ -32,13 +33,14 @@ import org.slf4j.LoggerFactory;
 public class SESSAGerbilWrapper extends AbstractQASystem {
 
   private static final Logger log = LoggerFactory.getLogger(SESSAGerbilWrapper.class);
+  private static final String LUCENE_OVERRIDE_KEY = "dictionary.lucene.override_on_start";
+  private static final String DICTIONARY_TYPE = "dictionary.type";
   private static final String FILES_KEY = "dictionary.files.location";
+  private static final String FILTER_NAMES_KEY = "dictionary.filter.names";
+  private static final String FILTER_LIMITS_KEY = "dictionary.filter.limits";
+  private static final String ENERGY_FUNCTION_KEY = "dictionary.energy_function";
 
   private SESSA sessa;
-  private String RDF_labels = "src/main/resources/dbpedia_3Eng_class.ttl";
-  private String RDF_ontology = "src/main/resources/dbpedia_3Eng_property.ttl";
-  private String RDF_DBpedia_Ontology = "src/main/resources/dbpedia_2016-10.nt";
-  private String RDF_DBpedia_Labels = "src/main/resources/labels_en.ttl";
 
   /**
    * Initialize SESSA with the standard dictionary files if there is no Lucene index already.
@@ -47,31 +49,38 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
     sessa = new SESSA();
     BaseHierarchicalConfiguration configuration = ConfigurationInitializer.getConfiguration();
     long startTime = System.nanoTime();
-    loadDictionaries(sessa, configuration);
-    long endTime = System.nanoTime();
-    log.info("Finished importing Lucene Dictionary (in {}sec).",
-        (endTime - startTime) / (1000 * 1000 * 1000));
-    addFiltersAndEnergyFunction();
+    if (configuration.getBoolean(LUCENE_OVERRIDE_KEY) &&
+        configuration.getString(DICTIONARY_TYPE).equals("lucene")) {
+      log.info("Skipping building dictionary.");
+    } else {
+      log.info("Building dictionary from files. This could take some time!");
+      loadDictionaries(configuration);
+      long endTime = System.nanoTime();
+      log.info("Finished importing dictionary (in {}sec).",
+          (endTime - startTime) / (1000 * 1000 * 1000));
+    }
+    addFilters(configuration);
+    applyEnergyFunction(configuration);
   }
 
-  private void loadDictionaries(SESSA sessa, BaseHierarchicalConfiguration configuration) {
+  private void loadDictionaries(BaseHierarchicalConfiguration configuration) {
     HierarchicalConfiguration subConfig = configuration.configurationAt(FILES_KEY);
     if (subConfig.containsKey("rdf")) {
       log.info("Found entry for rdf-files in configuration file. Importing...");
-      loadSingleDictionary(sessa, new RdfFileHandler(), subConfig.getString("rdf"));
+      loadSingleDictionary(new RdfFileHandler(), subConfig.getString("rdf"));
     }
     if (subConfig.containsKey("tsv")) {
       log.info("Found entry for tsv-files in configuration file. Importing...");
-      loadSingleDictionary(sessa, new TsvFileHandler(), subConfig.getString("tsv"));
+      loadSingleDictionary(new TsvFileHandler(), subConfig.getString("tsv"));
     }
     if (subConfig.containsKey("reverse_tsv")) {
       log.info("Found entry for reverse tsv-files in configuration file. Importing...");
-      loadSingleDictionary(sessa, new ReverseTsvFileHandler(), subConfig.getString("reverse_tsv"));
+      loadSingleDictionary(new ReverseTsvFileHandler(), subConfig.getString("reverse_tsv"));
     }
   }
 
 
-  private void loadSingleDictionary(SESSA sessa, FileHandlerInterface handler,
+  private void loadSingleDictionary(FileHandlerInterface handler,
       String pathString) {
     log.debug("Path to files is '{}'", pathString);
     try (Stream<Path> path = Files.walk(Paths.get(pathString))) {
@@ -93,6 +102,59 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
       log.info(
           "Could not load any file in given path '{}'.", pathString);
     }
+  }
+
+  /**
+   * Use this method for adding filters and manipulate the energy score.
+   */
+  private void addFilters(BaseHierarchicalConfiguration configuration)
+      throws MalformedConfigurationException {
+    String[][] filters = new String[2][];
+    filters[0] = configuration.getStringArray(FILTER_NAMES_KEY);
+    filters[1] = configuration.getStringArray(FILTER_LIMITS_KEY);
+    if (filters[0].length < filters[1].length) {
+      log.info(
+          "The number of filters and limits in the configuration is not the same! Using smaller value.");
+    }
+    int length = filters[0].length < filters[1].length ? filters[0].length : filters[1].length;
+    for (int i = 0; i < length; i++) {
+      EnergyFunctionInterface function = getFunction(filters[0][i]);
+      int limit;
+      try {
+        limit = Integer.parseInt(filters[1][i]);
+        log.debug("\t Limit is {}", limit);
+      } catch (NumberFormatException nfE) {
+        throw new MalformedConfigurationException(String
+            .format("Error in %s: Given limit is not an integer. #%d:%s", FILTER_LIMITS_KEY, i,
+                filters[1][i]));
+      }
+      Filter filter = new Filter(function, limit);
+      sessa.addFilter(filter);
+    }
+  }
+
+  private EnergyFunctionInterface getFunction(String functionName)
+      throws MalformedConfigurationException {
+    switch (functionName) {
+      case "levenshtein":
+        log.debug("Add Levenshtein filter.");
+        return new LevenshteinDistanceFunction();
+      case "pagerank":
+        log.debug("Add PageRank filter.");
+        return new PageRankFunction();
+      default:
+        throw new MalformedConfigurationException(
+            String.format("Could not determine value of property '%s'. Given value: %s",
+                FILTER_NAMES_KEY, functionName));
+    }
+  }
+
+
+  private void applyEnergyFunction(BaseHierarchicalConfiguration configuration)
+      throws MalformedConfigurationException {
+    String energyFunctionName = configuration.getString(ENERGY_FUNCTION_KEY);
+    EnergyFunctionInterface lFunction = getFunction(energyFunctionName);
+    sessa.setEnergyFunction(lFunction);
   }
 
   /**
@@ -131,18 +193,4 @@ public class SESSAGerbilWrapper extends AbstractQASystem {
     return answers;
   }
 
-
-  /**
-   * Use this method for adding filters and manipulate the energy score.
-   */
-  private void addFiltersAndEnergyFunction() {
-    Filter lFilter = new Filter(new LevenshteinDistanceFunction(), 5);
-    //Filter pFilter = new Filter(new PagerRankFunction(), 3);
-
-    EnergyFunctionInterface lFunction = new LevenshteinDistanceFunction();
-    sessa.addFilter(lFilter);
-    sessa.setEnergyFunction(lFunction);
-    //sessa.addFilter(pRFilter);
-
-  }
 }
