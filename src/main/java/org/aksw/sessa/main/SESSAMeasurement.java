@@ -15,6 +15,7 @@ import org.aksw.qa.commons.load.LoaderController;
 import org.aksw.qa.commons.measure.AnswerBasedEvaluation;
 import org.aksw.sessa.helper.files.handler.RdfFileHandler;
 import org.aksw.sessa.importing.config.ConfigurationInitializer;
+import org.aksw.sessa.importing.config.exception.MalformedConfigurationException;
 import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.energy.LevenshteinDistanceFunction;
 import org.aksw.sessa.importing.dictionary.util.Filter;
@@ -33,7 +34,7 @@ public class SESSAMeasurement {
 
   private SESSA sessa;
 
-  public SESSAMeasurement() {
+  public SESSAMeasurement() throws MalformedConfigurationException {
     long startTime = System.nanoTime();
     Configuration configuration = ConfigurationInitializer.getConfiguration();
     log.info("Building Lucene Dictionary from RDF files. This could take some time!");
@@ -43,15 +44,15 @@ public class SESSAMeasurement {
           .filter(Files::isRegularFile)
           .forEach(path -> {
             try {
-              sessa.loadFileToLuceneDictionary(new RdfFileHandler(path.toString()));
+              sessa.loadFileToDictionary(new RdfFileHandler(path.toString()));
             } catch (IOException ioE) {
               log.error(ioE.getLocalizedMessage());
             }
           });
     } catch (IOException ioE) {
       log.error(ioE.getLocalizedMessage());
-      log.info("Could not load any file. Trying to initiate dictionary from previous run instead.");
-      sessa.loadFileToLuceneDictionary(null);
+      log.info(
+          "Could not load any file. If you use Lucene dictionary, there may be already an index.");
     }
 
     long endTime = System.nanoTime();
@@ -60,7 +61,7 @@ public class SESSAMeasurement {
     addFiltersAndEnergyFunction();
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws MalformedConfigurationException {
     SESSAMeasurement myMess = new SESSAMeasurement();
     long startTime = System.nanoTime();
     Dataset qaldTrainMultilingual = Dataset.QALD3_Test_dbpedia;

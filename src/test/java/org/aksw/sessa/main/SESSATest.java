@@ -28,16 +28,17 @@ public class SESSATest {
   public static final String TSV_FILE = "src/test/resources/en_surface_forms_small.tsv";
   public static final String REVERSE_TSV_FILE = "src/test/resources/small_reverse_dictionary.tsv";
   private static final Logger log = LoggerFactory.getLogger(SESSATest.class);
-  private SESSA sessa = new SESSA();
+  private SESSA sessa;
   private String question;
   private Set<String> answer;
 
   @Before
   public void initialize() throws IOException {
+    sessa = new SESSA();
     FileHandlerInterface handler = new TsvFileHandler(TSV_FILE);
     FileHandlerInterface handler2 = new ReverseTsvFileHandler(REVERSE_TSV_FILE);
-    sessa.loadFileToHashMapDictionary(handler);
-    sessa.loadFileToHashMapDictionary(handler2);
+    sessa.loadFileToDictionary(handler);
+    sessa.loadFileToDictionary(handler2);
   }
 
   @Test
@@ -111,7 +112,7 @@ public class SESSATest {
 //  }
 
   @Test
-  public void testAnswer_WhichShouldGiveRdfType_BeforePreProcessing(){
+  public void testAnswer_WhichShouldGiveRdfType_BeforePreProcessing() {
     question = "musical music by elton john";
     QAModel[] qaModels = sessa.getQAModels(question);
     Node<String> node = new Node<>("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
@@ -139,11 +140,11 @@ public class SESSATest {
     Assert.assertThat(answerNode.getExplanation(), equalTo(question.split(" ").length));
   }
 
-
   // Some test for popular questions
 
   @Test
-  @Ignore // cant be answered, as there is the URI http://dbpedia.org/resource/President_of_the_USA which gets associated with the whole question
+  @Ignore
+  // cant be answered, as there is the URI http://dbpedia.org/resource/President_of_the_USA which gets associated with the whole question
   public void testAnswer_PresidentOfUSA() {
     question = "current president of usa";
     answer = sessa.answer(question);
