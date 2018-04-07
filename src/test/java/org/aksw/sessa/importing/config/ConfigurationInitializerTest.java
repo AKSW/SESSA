@@ -6,7 +6,10 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 import java.io.File;
+import java.util.Iterator;
+import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,6 +49,4 @@ public class ConfigurationInitializerTest {
     Configuration config = ConfigurationInitializer.loadConfiguration();
     Assert.assertThat(config.getBoolean(LUCENE_OVERRIDE_KEY), is(false));
   }
-
-
 }

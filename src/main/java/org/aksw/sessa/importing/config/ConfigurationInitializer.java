@@ -1,6 +1,7 @@
 package org.aksw.sessa.importing.config;
 
 import java.io.File;
+import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.CombinedConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.FileBasedConfiguration;
@@ -20,16 +21,16 @@ public class ConfigurationInitializer {
 
   private static final String DEFAULT_CONFIG_FILE = "default.properties";
   private static final Logger log = LoggerFactory.getLogger(ConfigurationInitializer.class);
-  public static Configuration configuration = null;
+  public static BaseHierarchicalConfiguration configuration = null;
 
-  public static Configuration getConfiguration() {
+  public static BaseHierarchicalConfiguration getConfiguration() {
     if (configuration == null) {
       configuration = loadConfiguration();
     }
     return configuration;
   }
 
-  public static Configuration loadConfiguration() {
+  public static BaseHierarchicalConfiguration loadConfiguration() {
     File userSpecifiedConfig;
     if (System.getProperty("configuration.location") == null) {
       userSpecifiedConfig = null;
@@ -43,7 +44,7 @@ public class ConfigurationInitializer {
   }
 
 
-  protected static Configuration loadConfiguration(File userSpecifiedConfig,
+  protected static BaseHierarchicalConfiguration loadConfiguration(File userSpecifiedConfig,
       File defaultConfig) {
     OverrideCombiner combiner = new OverrideCombiner();
     CombinedConfiguration combinedConfig = new CombinedConfiguration(combiner);
