@@ -54,14 +54,6 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    * Contains the path to the index.
    */
   public static final String DEFAULT_PATH_TO_INDEX = "resources/index";
-
-  /**
-   * Contais the buffer size, i.e. the number of entries in the bufferSize-hashmap before the
-   * changes are committed to the Lucene dictionary. Smaller numbers will lead to performance loss
-   * due to the committing cost. Larger numbers will lead to more memory consumption.
-   */
-  private int bufferSize = 1000000;
-
   /**
    * Contains the field name for the keys in Lucene.
    */
@@ -80,6 +72,12 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   public static final List<String> STOP_WORDS = ImmutableList
       .of("the", "of", "on", "in", "for", "at", "to");
   private static final Version LUCENE_VERSION = Version.LUCENE_46;
+  /**
+   * Contais the buffer size, i.e. the number of entries in the bufferSize-hashmap before the
+   * changes are committed to the Lucene dictionary. Smaller numbers will lead to performance loss
+   * due to the committing cost. Larger numbers will lead to more memory consumption.
+   */
+  private int bufferSize = 1000000;
   private Directory directory;
   private Similarity similarity;
   private IndexSearcher iSearcher;
