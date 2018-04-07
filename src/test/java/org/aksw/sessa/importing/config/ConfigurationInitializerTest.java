@@ -37,7 +37,7 @@ public class ConfigurationInitializerTest {
     Configuration config = ConfigurationInitializer
         .loadConfiguration(userSpecifiedConfig, defaultConfigFile);
     Assert.assertThat(config.getBoolean(LUCENE_OVERRIDE_KEY), is(true));
-    Assert.assertThat(config.getString(LUCENE_LOCATION_KEY), is("lucene_index"));
+    Assert.assertThat(config.getString(LUCENE_LOCATION_KEY), is("src/test/resources/index"));
   }
 
   @Test
