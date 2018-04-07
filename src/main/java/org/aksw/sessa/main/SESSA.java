@@ -168,12 +168,15 @@ public class SESSA {
       throws MalformedConfigurationException {
     switch (configuration.getString(DICTIONARY_TYPE)) {
       case "lucene":
+        log.info("Using Lucene Dictionary.");
         LuceneDictionary dict = new LuceneDictionary();
         if (configuration.getBoolean(LUCENE_OVERRIDE_KEY)) {
+          log.debug("Application configured to delete index on startup. Deleting...");
           dict.clearIndex();
         }
         return dict;
       case "hashmap":
+        log.info("Using HashMap-based Dictionary.");
         return new HashMapDictionary();
       default:
         throw new MalformedConfigurationException(
