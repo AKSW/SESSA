@@ -13,19 +13,14 @@ wget downloads.dbpedia.org/2016-10/dbpedia_2016-10.nt
 wget downloads.dbpedia.org/2016-10/core-i18n/en/labels_en.ttl.bz2
 bunzip2 labels_en.ttl.bz2
 ```
-## Requirements
-Because SESSA contains a web-service which builds onto the GerbilQA-Benchmarking-Template,
-you also have install the GerbilQA-Benchmarking-Template first.
+## Configuration
+SESSA can be used with a configuration file.
+After the project is build, a user specified configuration file can be used via the system properties.
+Example:
 ```
-git clone https://github.com/dice-group/GerbilQA-Benchmarking-Template.git
-cd GerbilQA-Benchmarking-Template
-mvn clean install  
+java -Dconfiguration.location=/path/to/file -jar SESSA.jar 
 ```
-After that SESSA can be compiled, e.g. via
-```
-mvn clean package
-```
-
+See the [configuration file](https://github.com/dice-group/SESSA/src/main/resources/default.properties) for details on the configuration properties.
 ## Running SESSA
 Because SESSA can be implemented into other projects or act as a standalone web service,
 there are multiple ways to use SESSA. 
