@@ -30,10 +30,9 @@ RUN cd /sessa/resources && \
 RUN cd /sessa/resources && \
   wget downloads.dbpedia.org/2016-10/core-i18n/en/labels_en.ttl.bz2 && \
   bunzip2 labels_en.ttl.bz2
- set default java flags
+# set default java flags
 ENV JAVA_OPTS="-Xmx4G"
 # expose port
 EXPOSE 8080
 # assign start command
 ENTRYPOINT ["java", "-jar", "sessa.jar"]
-CMD ["-Dconfiguration.location=application.properties"]
