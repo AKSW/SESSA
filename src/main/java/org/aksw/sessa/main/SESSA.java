@@ -83,6 +83,7 @@ public class SESSA {
     dictionary = initDictionary();
     File f = new File(configuration.getString(LUCENE_LOCATION_KEY));
     if (configuration.getBoolean(LUCENE_OVERRIDE_KEY) &&
+    if (!configuration.getBoolean(LUCENE_OVERRIDE_KEY) &&
         configuration.getString(DICTIONARY_TYPE).equals("lucene") &&
         f.exists()) {
       log.info("Skipping building dictionary.");
