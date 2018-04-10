@@ -80,12 +80,13 @@ public class SESSA {
     long startTime = System.nanoTime();
     queryProcess = new SimpleQueryProcessing();
     this.configuration = configuration;
-    dictionary = initDictionary();
     File f = new File(configuration.getString(LUCENE_LOCATION_KEY));
-    if (configuration.getBoolean(LUCENE_OVERRIDE_KEY) &&
+    boolean luceneIndexExists = f.exists();
+    dictionary = initDictionary();
+
     if (!configuration.getBoolean(LUCENE_OVERRIDE_KEY) &&
         configuration.getString(DICTIONARY_TYPE).equals("lucene") &&
-        f.exists()) {
+        luceneIndexExists) {
       log.info("Skipping building dictionary.");
     } else {
       log.info("Building dictionary from files. This could take some time!");
