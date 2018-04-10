@@ -2,9 +2,8 @@
 
 Keyword Search is a scalable search engine on structured resources provided by DBpedia. It allows user to enter simple queries (like on Google) and then generate results in response to that queries.
 
-Recommended files to run SESSA (and needed files to run SESSAMeasurement):
+Setup to run with recommended dictionary files for SESSA:
 ```
-cd src/main
 mkdir resources
 cd resources
 wget https://raw.githubusercontent.com/dice-group/NLIWOD/master/qa.hawk/resources/dbpedia_3Eng_class.ttl
