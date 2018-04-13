@@ -191,6 +191,12 @@ public class SESSA {
     return colorSpreader.getGraph();
   }
 
+  /**
+   * Method mainly used for testing purposes
+   *
+   * @param question question for which a graph should be returned
+   * @return QA-model for the asked question
+   */
   QAModel[] getQAModels(String question) {
     if (question.equals("")) {
       return null;
