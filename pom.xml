@@ -154,11 +154,6 @@
       <version>4.6.0</version>
     </dependency>
 
-    <!--
-      The following dependency has to be build first, as there is no repository for it.
-      Github-URL: https://github.com/dice-group/GerbilQA-Benchmarking-Template
-      How to install: mvn clean install
-    -->
     <dependency>
       <groupId>org.dice-research</groupId>
       <artifactId>gerbilQABencmarkingTemplate</artifactId>
