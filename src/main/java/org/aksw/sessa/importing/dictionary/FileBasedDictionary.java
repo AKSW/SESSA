@@ -28,7 +28,7 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
   public FileBasedDictionary() {
     filterQue = new PriorityQueue<>(10,
         Collections.reverseOrder(Comparator.comparing(Filter::getNumberOfResults)));
-    energyFunction = null;
+    energyFunction = (a, b, c) -> 1;
   }
 
   /**
@@ -78,5 +78,23 @@ public abstract class FileBasedDictionary implements DictionaryInterface {
   @Override
   public void setEnergyFunction(EnergyFunctionInterface energyFunction) {
     this.energyFunction = energyFunction;
+  }
+
+  /**
+   * Calculates the energy of all candidates based on all information in the candidate and the query
+   * string.
+   *
+   * @param candidateSet candidate set, in which all candidates should get their energy calculated
+   * @param query query string, i.e. the string with which the candidate was found in the
+   * dictionary
+   * @return updated candidate set with energy function applied
+   */
+  protected Set<Candidate> calculateEnergy(Set<Candidate> candidateSet, String query) {
+    for (Candidate candidate : candidateSet) {
+      float energy = energyFunction
+          .calculateEnergyScore(query, candidate.getUri(), candidate.getKey());
+      candidate.setEnergy(energy);
+    }
+    return candidateSet;
   }
 }

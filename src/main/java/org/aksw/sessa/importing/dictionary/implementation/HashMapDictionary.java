@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
-import org.aksw.sessa.candidate.Candidate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,6 @@ public class HashMapDictionary extends FileBasedDictionary {
       addToDictionary(handler);
     }
   }
-
 
   /**
    * Adds every entry that the file handler gives to the dictionary
@@ -88,9 +87,7 @@ public class HashMapDictionary extends FileBasedDictionary {
       }
     }
     Set<Candidate> filteredCandidateSet = this.filter(nGram, candidateSet);
-    if (energyFunction != null) {
-      this.calculateEnergy(filteredCandidateSet, nGram);
-    }
+    filteredCandidateSet = this.calculateEnergy(filteredCandidateSet, nGram);
     return filteredCandidateSet;
   }
 
@@ -118,13 +115,5 @@ public class HashMapDictionary extends FileBasedDictionary {
    */
   public Set<Entry<String, Set<String>>> entrySet() {
     return dictionary.entrySet();
-  }
-
-  private void calculateEnergy(Set<Candidate> candidateSet, String nGram) {
-    for (Candidate candidate : candidateSet) {
-      float energy = energyFunction
-          .calculateEnergyScore(nGram, candidate.getUri(), candidate.getKey());
-      candidate.setEnergy(energy);
-    }
   }
 }

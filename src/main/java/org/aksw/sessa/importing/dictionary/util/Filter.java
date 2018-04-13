@@ -104,7 +104,8 @@ public class Filter {
   }
 
   /**
-   *
+   * Returns the used energy function.
+   * @return the used energy function
    */
   public EnergyFunctionInterface getEnergyFunction() {
     return energyFunction;

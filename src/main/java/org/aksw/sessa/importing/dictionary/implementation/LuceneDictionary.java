@@ -71,7 +71,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   private static final String FIELD_NAME_VALUE = "URI";
   private static final Version LUCENE_VERSION = Version.LUCENE_46;
   /**
-   * Contains the buffer size, i.e. the number of entries in the bufferSize-hashmap before the
+   * Contais the buffer size, i.e. the number of entries in the bufferSize-hashmap before the
    * changes are committed to the Lucene dictionary. Smaller numbers will lead to performance loss
    * due to the committing cost. Larger numbers will lead to more memory consumption.
    */
@@ -196,7 +196,9 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
     } catch (Exception e) {
       log.error(e.getLocalizedMessage() + " -> " + nGram, e);
     }
-    return this.filter(nGram, foundCandidateSet);
+    foundCandidateSet = this.filter(nGram, foundCandidateSet);
+    foundCandidateSet = this.calculateEnergy(foundCandidateSet, nGram);
+    return foundCandidateSet;
   }
 
   /**
