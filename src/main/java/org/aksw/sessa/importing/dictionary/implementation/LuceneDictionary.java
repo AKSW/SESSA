@@ -120,7 +120,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    */
   public LuceneDictionary(FileHandlerInterface handler, String indexLocation) {
     if (indexLocation == null) {
-      Configuration configuration = ConfigurationInitializer.loadConfiguration();
+      Configuration configuration = ConfigurationInitializer.getConfiguration();
       indexLocation = configuration.getString(LUCENE_LOCATION_KEY);
     }
 
@@ -146,7 +146,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   }
 
   /**
-   * Contais the buffer size, i.e. the number of entries in the buffer-hashmap before the changes
+   * Contains the buffer size, i.e. the number of entries in the buffer-hashmap before the changes
    * are committed to the Lucene dictionary. Smaller numbers will lead to performance loss due to
    * the committing cost. Larger numbers will lead to more memory consumption.
    */

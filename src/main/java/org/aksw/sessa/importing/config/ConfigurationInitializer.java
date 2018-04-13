@@ -22,6 +22,12 @@ public class ConfigurationInitializer {
   private static final Logger log = LoggerFactory.getLogger(ConfigurationInitializer.class);
   public static BaseHierarchicalConfiguration configuration = null;
 
+
+  /**
+   * Provides a singleton object of the configuration
+   *
+   * @return singleton of the configuration
+   */
   public static BaseHierarchicalConfiguration getConfiguration() {
     if (configuration == null) {
       configuration = loadConfiguration();
@@ -29,7 +35,7 @@ public class ConfigurationInitializer {
     return configuration;
   }
 
-  public static BaseHierarchicalConfiguration loadConfiguration() {
+  protected static BaseHierarchicalConfiguration loadConfiguration() {
     File userSpecifiedConfig;
     if (System.getProperty("configuration.location") == null) {
       userSpecifiedConfig = null;
