@@ -42,7 +42,7 @@ It can be build via the 'docker build'-command and is also accessible via [docke
 Make sure to expose the 8080 port in the container to the outside.
 Example (via docker hub):
 ```
-docker run -p8080:8080 dicegroup/sessa
+docker run -p 8080:8080 dicegroup/sessa
 ```
 
 ### Using SESSA for your own service
