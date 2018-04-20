@@ -21,7 +21,7 @@ Example:
 ```
 java -Dconfiguration.location=/path/to/file -jar SESSA.jar 
 ```
-See the [configuration file](https://github.com/dice-group/SESSA/src/main/resources/default.properties) for details on the configuration properties.
+See the [configuration file](https://github.com/dice-group/SESSA/blob/master/src/main/resources/default.properties) for details on the configuration properties.
 ## Running SESSA
 Because SESSA can be implemented into other projects or act as a standalone web service,
 there are multiple ways to use SESSA. 
