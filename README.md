@@ -2,7 +2,9 @@
 
 Keyword Search is a scalable search engine on structured resources provided by DBpedia. It allows user to enter simple queries (like on Google) and then generate results in response to that queries.
 
-Setup to run with recommended dictionary files for SESSA:
+The below mentioned files are recommended to use with SESSA.
+You can provide your own files, too.
+You can change the location of the resources in a configuration file (see under Configuration)
 ```
 mkdir resources
 cd resources
@@ -13,7 +15,7 @@ wget downloads.dbpedia.org/2016-10/core-i18n/en/labels_en.ttl.bz2
 bunzip2 labels_en.ttl.bz2
 ```
 ## Configuration
-SESSA can be used with a configuration file.
+SESSA can be used with a user-specified configuration file.
 After the project is build, a user specified configuration file can be used via the system properties.
 Example:
 ```
@@ -33,6 +35,15 @@ After that SESSA runs on http://localhost:8080. Test it by simply sending an HTT
 
 Example Request:   
 `curl -d "query=Harold and Maude, compose, music?&lang=en" -X POST http://localhost:8080/gerbil`
+
+### Run SESSA as Web Application via docker
+SESSA can also be build in a docker container.
+It can be build via the 'docker build'-command and is also accessible via [docker hub](https://hub.docker.com/r/dicegroup/sessa/). 
+Make sure to expose the 8080 port in the container to the outside.
+Example (via docker hub):
+```
+docker run -p8080:8080 dicegroup/sessa
+```
 
 ### Using SESSA for your own service
 * Load the appropriate FileHandler for your dictionary files (if any)
