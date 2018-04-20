@@ -193,10 +193,22 @@ public class NGramHierarchy {
     extendHierarchy(extension.split(" "));
   }
 
+  /**
+   * Returns the position of the given n-gram in the n-gram hierarchy.
+   *
+   * @param nGram n-gram for which the position should be given back
+   * @return position of the given n-gram
+   */
   public NGramEntryPosition getPosition(String nGram) {
     return getPosition(nGram.split(" "));
   }
 
+  /**
+   * Returns the position of the given n-gram (in array-format) in the n-gram hierarchy.
+   *
+   * @param forNGram n-gram for which the position should be given back
+   * @return position of the given n-gram
+   */
   public NGramEntryPosition getPosition(String[] forNGram) {
     int pos = -1;
     for (int i = 0; i < nGram.size(); i++) {
@@ -222,6 +234,7 @@ public class NGramHierarchy {
    *
    * @return all keywords in their representative order as string (with space as delimiter).
    */
+  @Override
   public String toString() {
     return String.join(" ", nGram);
   }

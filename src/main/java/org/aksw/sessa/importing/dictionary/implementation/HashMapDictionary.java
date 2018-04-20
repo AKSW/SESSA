@@ -26,6 +26,13 @@ public class HashMapDictionary extends FileBasedDictionary {
   private int dictionarySize;
 
   /**
+   * Initializes an empty dictionary
+   */
+  public HashMapDictionary() {
+    this(null);
+  }
+
+  /**
    * Initializes the dictionary with given file handler. The file will be parsed into the
    * dictionary.
    *
@@ -33,18 +40,18 @@ public class HashMapDictionary extends FileBasedDictionary {
    */
   public HashMapDictionary(FileHandlerInterface handler) {
     dictionarySize = 0;
-    dictionary = createDictionary(handler);
+    dictionary = new HashMap<>();
+    if(handler != null){
+      addToDictionary(handler);
+    }
   }
 
-
   /**
-   * Creates the dictionary based on every entry that the file handler gives
+   * Adds every entry that the file handler gives to the dictionary
    *
    * @param handler file handler that has file information
-   * @return mapping of n-grams to set of URIs
    */
-  protected Map<String, Set<String>> createDictionary(FileHandlerInterface handler) {
-    Map<String, Set<String>> dictionary = new HashMap<>();
+  private void addToDictionary(FileHandlerInterface handler) {
     try {
       for (Entry<String, String> entry; (entry = handler.nextEntry()) != null; ) {
         String key = entry.getKey();
@@ -59,7 +66,6 @@ public class HashMapDictionary extends FileBasedDictionary {
     } catch (IOException e) {
       log.error(e.getLocalizedMessage());
     }
-    return dictionary;
   }
 
   /**
@@ -91,7 +97,7 @@ public class HashMapDictionary extends FileBasedDictionary {
    * @param handler handler that has file information
    */
   public void putAll(FileHandlerInterface handler) {
-    dictionary.putAll(createDictionary(handler));
+    addToDictionary(handler);
   }
 
   /**

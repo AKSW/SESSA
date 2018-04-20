@@ -11,12 +11,16 @@ import org.aksw.sessa.importing.dictionary.energy.EnergyFunctionInterface;
 import org.aksw.sessa.importing.dictionary.util.Filter;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Abstract class which acts as a entry-point for every dictionary that uses dictionary files to
+ * fill itself.
+ */
 public abstract class FileBasedDictionary implements DictionaryInterface {
 
   protected PriorityQueue<Filter> filterQue;
   protected EnergyFunctionInterface energyFunction;
 
-  protected org.slf4j.Logger log = LoggerFactory.getLogger(DictionaryInterface.class);
+  protected org.slf4j.Logger log = LoggerFactory.getLogger(FileBasedDictionary.class);
 
   /**
    * Constructs the dictionary with the given energy function.

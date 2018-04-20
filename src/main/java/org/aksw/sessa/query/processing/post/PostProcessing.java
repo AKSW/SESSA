@@ -4,8 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
+import org.aksw.sessa.importing.config.ConfigurationInitializer;
 import org.aksw.sessa.importing.rdf.DbpediaSparqlQuery;
 import org.aksw.sessa.query.models.QAModel;
+import org.apache.commons.configuration2.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +25,8 @@ public class PostProcessing {
     log.debug("Starting post processing...");
     QAModel newQAModel = new QAModel(qAModel);
     Set<Node> results = qAModel.getResults();
+    Configuration config = ConfigurationInitializer.getConfiguration();
+    double relExplanationLimit = config.getDouble("sessa.relative_explanation_limit");
 
     //handling low information answers (too many results)
     if(results.size() > MAX_RESULT_SIZE) {
@@ -30,8 +34,10 @@ public class PostProcessing {
       newQAModel.setResults(new HashSet<>());
     }
     //handling low information answers (explanation score too low)
-    if(qAModel.getExplanationScore() < qAModel.getMaxPossibleExplanationScore()) {
-      log.debug("Explanation score too low (is:{}, maxPossible:{}. Returning empty set.",
+    double relExplanation = 1.0 * qAModel.getExplanationScore() / qAModel.getMaxPossibleExplanationScore();
+    if(relExplanation < relExplanationLimit) {
+      log.debug("Relative explanation score under the limit of {} (is:{}, maxPossible:{}. Returning empty set.",
+          relExplanationLimit,
           qAModel.getExplanationScore(),
           qAModel.getMaxPossibleExplanationScore());
       newQAModel.setResults(new HashSet<>());

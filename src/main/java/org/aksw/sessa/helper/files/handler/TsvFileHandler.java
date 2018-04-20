@@ -14,6 +14,13 @@ import java.util.Map.Entry;
 public class TsvFileHandler extends AbstractTsvFileHandler {
 
   /**
+   * Initializes basic handler. File has to be loaded with {@link #loadFile(String)}.
+   */
+  public TsvFileHandler() {
+    super();
+  }
+
+  /**
    * Initializes reader with given file and stack as empty stack.
    *
    * @param file file name that should be read

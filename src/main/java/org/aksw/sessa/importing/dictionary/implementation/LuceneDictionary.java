@@ -3,7 +3,6 @@ package org.aksw.sessa.importing.dictionary.implementation;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,9 +12,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.aksw.sessa.candidate.Candidate;
 import org.aksw.sessa.helper.files.handler.FileHandlerInterface;
+import org.aksw.sessa.importing.config.ConfigurationInitializer;
 import org.aksw.sessa.importing.dictionary.DictionaryInterface;
 import org.aksw.sessa.importing.dictionary.FileBasedDictionary;
 import org.aksw.sessa.importing.dictionary.util.DictionaryEntrySimilarity;
+import org.apache.commons.configuration2.Configuration;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
@@ -51,18 +52,6 @@ import org.apache.lucene.util.Version;
 public class LuceneDictionary extends FileBasedDictionary implements AutoCloseable {
 
   /**
-   * Contains the path to the index.
-   */
-  public static final String DEFAULT_PATH_TO_INDEX = "resources/index";
-  /**
-   * Contains the field name for the keys in Lucene.
-   */
-  public static final String FIELD_NAME_KEY = "N-GRAM";
-  /**
-   * Contains the field name for the values in Lucene.
-   */
-  public static final String FIELD_NAME_VALUE = "URI";
-  /**
    * Defines how many documents will be retrieved from the index for each query.
    */
   public static final int NUMBER_OF_DOCS_RECEIVED_FROM_INDEX = 100;
@@ -71,6 +60,15 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    */
   public static final List<String> STOP_WORDS = ImmutableList
       .of("the", "of", "on", "in", "for", "at", "to");
+  private static final String LUCENE_LOCATION_KEY = "dictionary.lucene.location";
+  /**
+   * Contains the field name for the keys in Lucene.
+   */
+  private static final String FIELD_NAME_KEY = "N-GRAM";
+  /**
+   * Contains the field name for the values in Lucene.
+   */
+  private static final String FIELD_NAME_VALUE = "URI";
   private static final Version LUCENE_VERSION = Version.LUCENE_46;
   /**
    * Contais the buffer size, i.e. the number of entries in the bufferSize-hashmap before the
@@ -91,7 +89,16 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    * location is the default location.
    */
   public LuceneDictionary() {
-    this(null, DEFAULT_PATH_TO_INDEX);
+    this(null, null);
+  }
+
+  /**
+   * Calls {@link #LuceneDictionary(FileHandlerInterface, String) LuceneDictionary(null,
+   * indexLocation)}. This means that the given index will remain as is and additional dictionary
+   * entries have to be added via {@link #putAll(FileHandlerInterface)}. (
+   */
+  public LuceneDictionary(String indexLocation) {
+    this(null, indexLocation);
   }
 
   /**
@@ -102,7 +109,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    * @param handler file handler, which contains file and is capable of parsing said file
    */
   public LuceneDictionary(FileHandlerInterface handler) {
-    this(handler, DEFAULT_PATH_TO_INDEX);
+    this(handler, null);
   }
 
   /**
@@ -112,19 +119,23 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    * @param indexLocation indicates where the index should be saved
    */
   public LuceneDictionary(FileHandlerInterface handler, String indexLocation) {
+    if (indexLocation == null) {
+      Configuration configuration = ConfigurationInitializer.getConfiguration();
+      indexLocation = configuration.getString(LUCENE_LOCATION_KEY);
+    }
+
     try {
       maxResultSize = NUMBER_OF_DOCS_RECEIVED_FROM_INDEX;
       SimpleAnalyzer analyzer = new SimpleAnalyzer(LUCENE_VERSION);
       Path path = FileSystems.getDefault().getPath(indexLocation);
-      boolean filesExists = Files.exists(path);
       directory = MMapDirectory.open(path.toFile());
       //directory = new RAMDirectory(); // alternative to file based Lucene
       IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, analyzer);
       similarity = new DictionaryEntrySimilarity();
       config.setSimilarity(similarity);
       iWriter = new IndexWriter(directory, config);
+      commitAndUpdate(); // ones to set the iReader
       if (handler != null) {
-        commitAndUpdate();
         putAll(handler);
       }
       log.debug("Loaded LuceneDictionary. Total number of entries in dictionary: {}",
@@ -135,7 +146,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   }
 
   /**
-   * Contais the buffer size, i.e. the number of entries in the buffer-hashmap before the changes
+   * Contains the buffer size, i.e. the number of entries in the buffer-hashmap before the changes
    * are committed to the Lucene dictionary. Smaller numbers will lead to performance loss due to
    * the committing cost. Larger numbers will lead to more memory consumption.
    */
@@ -150,6 +161,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    * @param nGram n-gram whose associated value is to be returned
    * @return mapping of n-grams to set of URIs
    */
+  @Override
   public Set<Candidate> get(final String nGram) {
     if (STOP_WORDS.contains(nGram.toLowerCase())) {
       return new HashSet<>();
@@ -200,6 +212,7 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
   /**
    * Closes all files handled, i.e. the index-files.
    */
+  @Override
   public void close() {
     try {
       iReader.close();
@@ -227,9 +240,10 @@ public class LuceneDictionary extends FileBasedDictionary implements AutoCloseab
    *
    * @param handler handler with file information
    */
+  @Override
   public void putAll(FileHandlerInterface handler) {
     try {
-      log.debug("Starting indexing for  file '{}'", handler.getFileName());
+      log.debug("Starting indexing for file '{}'", handler.getFileName());
       int count = 0;
       Map<String, Set<String>> candidateEntries = new HashMap<>();
       for (Entry<String, String> entry; (entry = handler.nextEntry()) != null; ) {

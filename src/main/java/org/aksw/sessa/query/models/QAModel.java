@@ -8,6 +8,9 @@ import org.aksw.sessa.helper.graph.Graph;
 import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 
+/**
+ * Data class which holds all needed information about the question answering process.
+ */
 public class QAModel {
 
   private String question;
@@ -19,7 +22,7 @@ public class QAModel {
   private int explanationScore;
   private int maxPossibleExplanationScore;
 
-  public QAModel(){
+  public QAModel() {
     question = "";
     preProcessedQuestion = "";
     graph = new Graph();
@@ -30,7 +33,7 @@ public class QAModel {
     maxPossibleExplanationScore = 0;
   }
 
-  public QAModel(QAModel other){
+  public QAModel(QAModel other) {
     question = other.getQuestion();
     preProcessedQuestion = other.getPreProcessedQuestion();
     graph = other.getGraph();
@@ -73,7 +76,7 @@ public class QAModel {
 
   public void setResults(Set<Node> results) {
     this.results = results;
-    if(results != null && !results.isEmpty()) {
+    if (results != null && !results.isEmpty()) {
       explanationScore = results.iterator().next().getExplanation();
     }
   }

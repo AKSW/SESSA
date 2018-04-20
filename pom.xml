@@ -129,8 +129,8 @@
     <!-- For the F1-measurements -->
     <dependency>
       <groupId>org.aksw.qa</groupId>
-      <artifactId>commons</artifactId>
-      <version>0.4.16</version>
+      <artifactId>datasets</artifactId>
+      <version>0.5.10</version>
     </dependency>
 
     <!-- This is the core artifact; several other ones build on that. -->
@@ -154,11 +154,6 @@
       <version>4.6.0</version>
     </dependency>
 
-    <!--
-      The following dependency has to be build first, as there is no repository for it.
-      Github-URL: https://github.com/dice-group/GerbilQA-Benchmarking-Template
-      How to install: mvn clean install
-    -->
     <dependency>
       <groupId>org.dice-research</groupId>
       <artifactId>gerbilQABencmarkingTemplate</artifactId>
@@ -181,6 +176,13 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-configuration2 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-configuration2</artifactId>
+      <version>2.2</version>
     </dependency>
 
 
