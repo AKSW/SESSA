@@ -34,7 +34,7 @@ After that SESSA runs on http://localhost:8080. Test it by simply sending an HTT
 - `lang`: language of the question (which will be ignored for now)
 
 Example Request:   
-`curl -d "query=Harold and Maude, compose, music?&lang=en" -X POST http://localhost:8080/gerbil`
+`curl -d "query=bill gates wife birthplace&lang=en" -X POST http://localhost:8080/gerbil`
 
 ### Run SESSA as Web Application via docker
 SESSA can also be build in a docker container.
