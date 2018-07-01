@@ -53,6 +53,9 @@ public class ColorSpreader {
         Node<String> node = new Node<>(candidate.getUri());
         node.addColor(entry.getKey());
         node.setEnergy(candidate.getEnergy());
+        if (graph.containsNode(node)) {
+          node.newId();
+        }
         lastActivatedNodes.add(node);
         graph.addNode(node);
       }
