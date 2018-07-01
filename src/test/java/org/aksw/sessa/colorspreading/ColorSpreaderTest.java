@@ -1,13 +1,18 @@
 package org.aksw.sessa.colorspreading;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.aksw.sessa.helper.graph.Graph;
+import org.aksw.sessa.helper.graph.GraphInterface;
 import org.aksw.sessa.helper.graph.Node;
 import org.aksw.sessa.candidate.Candidate;
+import org.aksw.sessa.helper.graph.SelfBuildingGraph;
+import org.aksw.sessa.helper.graph.SelfbuildingGraphTest;
 import org.aksw.sessa.query.models.NGramEntryPosition;
 import org.junit.Assert;
 import org.junit.Before;
@@ -56,21 +61,31 @@ public class ColorSpreaderTest {
     wifeSet.add(new Candidate(wife));
     wifeSet.add(new Candidate(theWife));
     nodeMapping.put(wifeEntry, wifeSet);
-
-    colorSpread = new ColorSpreader(nodeMapping);
-  }
-
-  @Before
-  public void before() {
-
   }
 
   @Test
   public void testSpreadColors_billGatesTestCase() {
+    colorSpread = new ColorSpreader(nodeMapping);
     Set<Node> results = colorSpread.spreadColors();
-    log.debug("{}",colorSpread.getGraph().toString());
+    log.debug("{}", colorSpread.getGraph().toString());
     for (Node result : results) {
       Assert.assertThat(((String) result.getContent()), containsString("Dallas"));
     }
+  }
+
+  /**
+   * Test for #35
+   */
+  @Test
+  public void testInitialGraph_withDoubleBillGates() {
+    String bg = "http://dbpedia.org/resource/Bill_Gates";
+    NGramEntryPosition bgEntry = new NGramEntryPosition(2, 4);
+    Set<Candidate> bgSet = new HashSet<>();
+    bgSet.add(new Candidate(bg));
+    nodeMapping.put(bgEntry, bgSet);
+    colorSpread = new ColorSpreader(nodeMapping);
+    GraphInterface graph = colorSpread.getGraph();
+    System.out.println(graph.toString());
+    Assert.assertThat(graph.getNodes(), hasSize(7));
   }
 }
